@@ -479,12 +479,9 @@ def update(model):
         
     #New snow/ICB radius
     if prm.iron_snow:
-        # try:
-        #     if snow.snow_radius(profiles['r'], profiles['T'], profiles['Tm']) > core.r_snow:
-        #      breakpoint()
-        # except:
-        #     breakpoint()
         core.r_snow = snow.snow_radius(profiles['r'], profiles['T'], profiles['Tm'])
+        if core.r_snow == 0:
+            logger.critical(f'it: {model.it}. Snow zone has covered entire core!! Not defined how to procede')
     else:
         core.ri = prof.ic_radius(profiles['r'],
                                 prof.adiabat(profiles['r'], core.Tcen, prm.core_adiabat_params),

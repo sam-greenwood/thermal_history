@@ -418,7 +418,7 @@ class ThermalModel(BaseModel):
         save_time = str(datetime.datetime.now())
 
         #Get all relevant attributes from parameters to add to save_dict
-        keys = [key for key in self.parameters.__dict__.keys() if '__' not in key]
+        keys = [key for key in dir(self.parameters) if '__' not in key]
         keys = [key for key in keys if not hasattr(getattr(self.parameters,key), '__call__')]
 
         #Add dictionary containing parameters
