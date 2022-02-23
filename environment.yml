@@ -1,0 +1,7 @@
+name: thermal_history
+dependencies:
+  - python=3
+  - numpy
+  - matplotlib
+  - scipy
+  - numba

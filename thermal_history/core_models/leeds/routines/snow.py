@@ -1,0 +1,245 @@
+import numpy as np
+from numba import njit
+from thermal_history.utils.optimised_funcs import trapezoid
+
+import logging
+logger = logging.getLogger(__name__)
+
+@njit
+def snow_radius(r,T,Tm):
+    '''
+    Finds the snow zone radius by intersection of the temperature with the melting curve.
+
+    Parameters
+    ----------
+    r
+        Radius (array)
+    T
+        Temperature (array)
+    Tm
+        Melting temperature (array)
+
+    Returns
+    -------
+    r_snow
+        Snow zone radius
+    '''
+
+    #Snow hasn't started yet
+    if np.min(T-Tm) > 0:
+        r_snow = r[-1]
+
+    elif Tm[0] >= T[0]:
+        r_snow = r[0]
+    
+    #Find first intersection of Tm and T
+    else:
+        for i in range(r.size):
+
+            if Tm[i]>=T[i]:
+
+                dr = r[i]-r[i-1]
+                m1 = (T[i]-T[i-1])/dr
+                m2 = (Tm[i]-Tm[i-1])/dr
+                r_snow = r[i-1] + (T[i-1]-Tm[i-1])/(m2-m1)
+                break
+
+        if r_snow > r[-1]:
+            r_snow = r[-1]
+        elif r_snow < r[0]:
+            r_snow = r[0]
+
+    return r_snow
+
+def snow_composition(Ta,Tm_fe,initial_conc,snow_index):
+
+    '''
+    Calculates the composition of the slurry such that the melting temperature
+    is elevated to the adiabatic temperature. The Williams and Nimmo (2004)
+    parameterisation for the melting curve is assumed:
+    Tm = Tm_fe*(1-conc_l+initial_conc)
+
+    Inputs
+    ------
+    Ta
+        Adiabatic temperature (array)
+    Tm_fe
+        Melting temperature of pure iron (array)
+    intial_conc
+        Initial concentration of liquid
+    snow_index
+        Index from which snow zone starts in arrays
+
+    Returns
+    -------
+    conc_l_snow
+        Radial concentration profile in snow zone
+    '''
+
+    n = snow_index
+
+    conc_l_snow = (1 + initial_conc)*(1 - Ta[n:]/Tm_fe[n:])
+
+    if np.min(conc_l_snow) < 0:
+       logger.warning('Warning conc_l below zero!: {}'.format(np.min(conc_l_snow)))
+
+    return conc_l_snow
+
+@njit
+def Cl_calc(phi,L,T,conc_l,dmu_dc,snow_index):
+    '''
+    Returns the Cl factor which normalises changes in slurry mass fraction
+    to changes in temperature.
+    '''
+
+    n = snow_index
+    Cl = np.zeros(phi.size)
+
+    Cl[n:] = -L[n:]*(1-phi[n:])/(T[n:]*conc_l[n:]*dmu_dc[n:])
+
+    return Cl
+
+def latent_snow(r, rho, L, Cl, conc_l_profile, Ta, snow_index):
+    '''
+    Returns the normalised rate of latent heat release from changes in mass fraction throughout
+    the slurry.
+
+    Parameters
+    ----------
+    r
+        Radius (array)
+    rho
+        Density (array)
+    L
+        Latent heat (array)
+    Cl
+        Cl factor relating slurry mass fraction changes to temperature (array)
+    conc_l_profile
+        Light element concentration profile (array)
+    Ta
+        Adiabatic temperature (array)
+    snow_index
+        Index from which snow zone starts in arrays
+
+    Returns
+    -------
+    Ql_tilde, El_tilde
+        Normalised energy and entropy release
+    '''
+
+    n = snow_index
+
+    if np.array(L).size == 1:
+        L = np.ones(r.size)*L
+
+    Ql_tilde = 4*np.pi*trapezoid(r[n:], rho[n:]*L[n:]*(Cl[n:]/conc_l_profile[n:])*(Ta[n:]/Ta[0])*r[n:]**2)[-1]
+
+    El_tilde = 4*np.pi*trapezoid(r[n:], rho[n:]*L[n:]*(Cl[n:]/conc_l_profile[n:])*(Ta[n:]/Ta[0])*(1/Ta[-1] - 1/Ta[n:])*r[n:]**2)[-1]
+
+    return Ql_tilde, El_tilde
+
+def Cp_factor(r, rho, Cl, Ta, M_liquid, snow_index):
+    '''
+    Calculates factor relating changes in mass fraction of the liquid region to those of the slurry
+
+    Parameters
+    ----------
+    r
+        Radius (array)
+    rho
+        Density (array)
+    Cl
+        Cl factor relating slurry mass fraction changes to temperature (array)
+    Ta
+        Adiabatic temperature (array)
+    M_liquid
+        Mass of the liquid region
+    snow_index
+        Index from which snow zone starts in arrays
+
+    Returns
+    -------
+    Cp
+        Cp factor
+    '''
+
+    n = snow_index
+
+    Cp = -4*np.pi*trapezoid(r[n:], rho[n:]*Cl[n:]*(Ta[n:]/Ta[0])*r[n:]**2)[-1]/M_liquid
+
+    return Cp
+
+def gravitational_freezing(r, rho, psi, alpha_c, Cl, Ta, snow_index):
+    '''
+    Calculates the gravitational energy/entropy associated with reducing density of snow zone.
+
+    Parameters
+    ----------
+    r
+        Radius (array)
+    rho
+        Density (array)
+    psi
+        Gravitational potential (array)
+    alpha_c
+        Chemical expansivity
+    Cl
+        Cl factor relating slurry mass fraction changes to temperature (array)
+    Ta
+        Adiabatic temperature (array)
+    snow_index
+        Index from which snow zone starts in arrays
+
+    Returns
+    -------
+    Qg_tilde, Eg_tilde
+        Normalised energy/entropy
+    '''
+
+    n = snow_index
+
+    Qg_tilde = -4*np.pi*trapezoid(r[n:], rho[n:]*psi[n:]*alpha_c*Cl[n:]*(Ta[n:]/Ta[0])*r[n:]**2)[-1]
+
+    Eg_tilde = Qg_tilde/Ta[-1]
+
+    return Qg_tilde, Eg_tilde
+
+def gravitational_melting(r, rho, psi, alpha_c, Cp, Cc, Cr, Tcmb, snow_index):
+    '''
+    Calculates the gravitational energy/entropy associated with increasing density of liquid region
+
+    Parameters
+    ----------
+    r
+        Radius (array)
+    rho
+        Density (array)
+    psi
+        Gravitational potential (array)
+    alpha_c
+        Chemical expansivity
+    Cp
+        Cp factor relating changes in mass fraction of the liquid region to those of the slurry
+    Cc
+        Cc factor relating changes in snow zone radius to changes in mass fraction of the liquid
+    Cr
+        Cr factor relating changes in snow zone radius to changes in temperature
+    Ta
+        Adiabatic temperature (array)
+    snow_index
+        Index from which snow zone starts in arrays
+
+    Returns
+    -------
+    Qg_tilde, Eg_tilde
+        Normalised energy/entropy
+    '''
+
+    n = snow_index
+    if n == 0:
+        Qg_tilde, Eg_tilde = 0, 0
+    else:
+        Qg_tilde = 4*np.pi*trapezoid(r[:n], rho[:n]*psi[:n]*alpha_c*(Cp+(Cc*Cr))*r[:n]**2)[-1]
+        Eg_tilde = Qg_tilde/Tcmb
+
+    return Qg_tilde, Eg_tilde

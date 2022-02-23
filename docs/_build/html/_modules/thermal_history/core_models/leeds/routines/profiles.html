@@ -1,0 +1,935 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>thermal_history.core_models.leeds.routines.profiles &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../thermal_history.html">thermal_history API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>thermal_history.core_models.leeds.routines.profiles</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for thermal_history.core_models.leeds.routines.profiles</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Radial Profiles Functions</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">curve_fit</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">linspace</span><span class="p">,</span> <span class="n">trapezoid</span><span class="p">,</span> <span class="n">polyval</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="n">G</span> <span class="o">=</span> <span class="mf">6.67e-11</span> <span class="c1">#Gravitational constant</span>
+
+<div class="viewcode-block" id="basic_profiles"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.basic_profiles">[docs]</a><span class="k">def</span> <span class="nf">basic_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Main function setting radial profiles for core properties.</span>
+
+<span class="sd">    Sets radius, rho, g, P, cp, alpha_T, psi, Ta, dTa_dr profiles.</span>
+<span class="sd">    Also will set the adiabat polynomials if required.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel class</span>
+<span class="sd">        Main class being used for the calculation</span>
+<span class="sd">    setup : bool, optional</span>
+<span class="sd">        Flag to setup the profiles dictionary during model setup, by default False</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">n_profiles</span>
+
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+
+    <span class="k">if</span> <span class="n">setup</span><span class="p">:</span>
+        <span class="n">profiles</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">,</span> <span class="s1">&#39;rho&#39;</span><span class="p">,</span> <span class="s1">&#39;g&#39;</span><span class="p">,</span> <span class="s1">&#39;P&#39;</span><span class="p">,</span> <span class="s1">&#39;cp&#39;</span><span class="p">,</span> <span class="s1">&#39;alpha&#39;</span><span class="p">,</span> <span class="s1">&#39;psi&#39;</span><span class="p">,</span> <span class="s1">&#39;Ta&#39;</span><span class="p">,</span> <span class="s1">&#39;dTa_dr&#39;</span><span class="p">]:</span>
+            <span class="n">profiles</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">profiles</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span>
+        <span class="c1">#Get existing pressure at new ri to keep new pressure field with this value.</span>
+        <span class="c1">#This ensures pressure field is not changing through time at ri, avoiding</span>
+        <span class="c1">#difference between ri(r+dt) and ri(t)+Ct*dT_dt. This could be properly</span>
+        <span class="c1">#accounted for as in Gubbins et al. (2003)</span>
+        <span class="c1"># P_ri = np.interp(core.ri, profiles[&#39;r&#39;], profiles[&#39;P&#39;])</span>
+
+    <span class="c1">#Radial array</span>
+    <span class="n">r_cmb</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span>
+    <span class="n">ri</span>    <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">ri</span>
+    <span class="n">r_snow</span><span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">r_snow</span>
+    <span class="n">rs</span>    <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">rs</span>
+
+    <span class="c1">#Just want the unique radii in order</span>
+    <span class="n">radii</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">r_snow</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">]))</span>
+
+    <span class="c1">#Set radial grid</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">radial_grid</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+    <span class="c1">#Add to profiles after pressure has been calculated</span>
+
+    <span class="c1">#Find indexes for the start of each layer</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">ri</span><span class="p">:</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">_ri_idx</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">rs</span><span class="p">:</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">_rs_idx</span> <span class="o">=</span> <span class="n">i</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">==</span> <span class="n">r_snow</span><span class="p">:</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">_snow_idx</span> <span class="o">=</span> <span class="n">i</span>
+
+    <span class="n">ri_idx</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">_ri_idx</span>
+
+    <span class="c1">#Density</span>
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_liquid_density_params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ri</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">rho</span><span class="p">[:</span><span class="n">ri_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">density</span><span class="p">(</span><span class="n">r</span><span class="p">[:</span><span class="n">ri_idx</span><span class="p">],</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_solid_density_params</span><span class="p">)</span>
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;rho&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">rho</span>
+    <span class="c1">##########################</span>
+
+
+    <span class="c1">#Gravity</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">gravity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_liquid_density_params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ri</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">g_ri</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">]</span>
+        <span class="n">g</span><span class="p">[:</span><span class="n">ri_idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">gravity</span><span class="p">(</span><span class="n">r</span><span class="p">[:</span><span class="n">ri_idx</span><span class="p">],</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_solid_density_params</span><span class="p">)</span>
+        <span class="n">g</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">:]</span> <span class="o">=</span> <span class="n">g</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">:]</span> <span class="o">+</span> <span class="p">(</span><span class="n">g</span><span class="p">[</span><span class="n">ri_idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">g_ri</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="n">ri</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="n">r</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;g&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">g</span>
+    <span class="c1">##########################</span>
+
+
+    <span class="c1">#Gravitational Potential</span>
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">grav_potential</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_liquid_density_params</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">ri</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">psi_ri</span> <span class="o">=</span> <span class="n">psi</span><span class="p">[</span><span class="n">ri_idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">psi</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">:]</span> <span class="o">=</span> <span class="n">grav_potential</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">:],</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_liquid_density_params</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">psi</span><span class="p">[</span><span class="n">ri_idx</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">psi_ri</span><span class="p">)</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">:]</span><span class="o">/</span><span class="n">ri</span>
+
+    <span class="n">psi</span> <span class="o">=</span> <span class="n">psi</span> <span class="o">-</span> <span class="n">psi</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="c1">#shift reference to psi(cmb)=0</span>
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;psi&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">psi</span>
+    <span class="c1">##########################</span>
+
+
+    <span class="c1">#Pressure. Doesn&#39;t update with each iteration.</span>
+    <span class="k">if</span> <span class="n">setup</span><span class="p">:</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="n">rho</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">g</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">])[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="n">prm</span><span class="o">.</span><span class="n">P_cmb</span>  <span class="c1">#Integrate top down and swap order back</span>
+        <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P</span>  <span class="c1">#swap order back</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">])</span> <span class="c1">#Pressure field remains the same to keep dri_dt consisent with intercept of Tm/T</span>
+        <span class="c1"># P = trapezoid(r[::-1], -rho[::-1]*g[::-1]) + prm.P_cmb  #Integrate top down</span>
+        <span class="c1"># P = P[::-1] #swap order back</span>
+        <span class="c1"># profiles[&#39;P&#39;] = P</span>
+
+        <span class="c1"># P += P_ri-P[ri_idx] #Keep Pressure field constant in time (at least in the viscinity of ri)</span>
+
+
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">P</span>
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+
+    <span class="c1">##########################</span>
+
+
+    <span class="c1">#Specific heat</span>
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;cp&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">specific_heat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_cp_params</span><span class="p">)</span>
+    <span class="c1">##########################</span>
+
+    <span class="c1">#Thermal expansion</span>
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">thermal_expansivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_alpha_T_params</span><span class="p">)</span>
+    <span class="c1">##########################</span>
+
+    <span class="c1">#Adiabatic temperature profile</span>
+    <span class="k">if</span> <span class="n">setup</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span> <span class="o">=</span> <span class="n">fit_adiabat_polynomials</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;cp&#39;</span><span class="p">],</span> <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">])</span>
+
+        <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">T_cmb</span><span class="o">/</span><span class="n">polyval</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">prm</span><span class="o">.</span><span class="n">Tcen</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">T_cmb</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">T_cen</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span><span class="p">)</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">T_cen</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Tcen has been specified, takes priority over T_cmb&#39;</span><span class="p">)</span>
+
+
+    <span class="n">Ta</span> <span class="o">=</span> <span class="n">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ta</span>
+
+    <span class="k">if</span> <span class="n">setup</span><span class="p">:</span>
+        <span class="c1">#Set initial temperature profile to adiabat</span>
+        <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">Ta</span>
+    <span class="c1">##########################</span>
+
+    <span class="c1">#Adiabatic gradient</span>
+    <span class="n">dTa_dr</span> <span class="o">=</span> <span class="n">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dTa_dr&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">dTa_dr</span>
+    <span class="c1">##########################</span>
+
+    <span class="n">core</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="n">profiles</span></div>
+
+
+<div class="viewcode-block" id="temp_dependent_profiles"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.temp_dependent_profiles">[docs]</a><span class="k">def</span> <span class="nf">temp_dependent_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Set the temperature dependent profiles.</span>
+
+<span class="sd">    Sets the k, Qa, T profiles.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel class</span>
+<span class="sd">        Main class being used for the calculation</span>
+<span class="sd">    setup : bool, optional</span>
+<span class="sd">        Flag to setup the profiles dictionary during model setup, by default False</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+    <span class="n">sl</span>   <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
+    <span class="n">prm</span>  <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">n_profiles</span>
+
+    <span class="n">profiles</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span>
+
+    <span class="k">if</span> <span class="n">setup</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="s1">&#39;Qa&#39;</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">]:</span>
+            <span class="n">profiles</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]</span>
+
+    <span class="c1">#Temperature profile</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Ta&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+    <span class="c1">#If a stable layer is present, interpolate it&#39;s temperature profile onto the upper core.</span>
+    <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">setup</span><span class="p">)</span> <span class="ow">and</span> <span class="n">prm</span><span class="o">.</span><span class="n">stable_layer</span><span class="p">:</span>
+        <span class="n">T</span><span class="p">[</span><span class="n">core</span><span class="o">.</span><span class="n">_rs_idx</span><span class="p">:]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">core</span><span class="o">.</span><span class="n">_rs_idx</span><span class="p">:],</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">])</span>
+
+    <span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span>
+
+
+    <span class="c1">#Conductivity (may depend on temperature depending on user choise of params.)</span>
+    <span class="n">k</span> <span class="o">=</span> <span class="n">conductivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_conductivity_params</span><span class="p">)</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">k</span>
+    <span class="c1">##########################</span>
+
+    <span class="c1">#Adiabatic heat flow. Depends on k and hence may depend on T.</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Qa&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">adiabatic_heat_flow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span>  <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span></div>
+
+
+
+
+<span class="c1"># @njit</span>
+<div class="viewcode-block" id="radial_grid"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.radial_grid">[docs]</a><span class="k">def</span> <span class="nf">radial_grid</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">n_points</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Create the radial grid across the core.</span>
+
+<span class="sd">    Creates the adaptive radial grid that ensures 2 radii at each interface to allow</span>
+<span class="sd">    for resolving dicontinuous variables. E.g. 2 points at the ICB to resolve density jump.</span>
+<span class="sd">    </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    radii : array</span>
+<span class="sd">        radii for layer interfaces throughout the core, in order.</span>
+<span class="sd">    n_points : int </span>
+<span class="sd">        Number of radial grid points</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        radial grid</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">sizes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">radii</span><span class="o">.</span><span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+
+    <span class="c1">#Calculate proportional number of radial points for each region (need at least 2 for lower and upper radii)</span>
+    <span class="c1">#These must also be int&#39;s as they are used for indexing</span>
+    <span class="n">sizes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">n_points</span><span class="o">*</span><span class="n">radii</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">radii</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">2</span><span class="p">])</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">sizes</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="nb">int</span><span class="p">(</span><span class="n">n_points</span><span class="o">*</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="o">/</span><span class="n">radii</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="mi">2</span><span class="p">])</span>
+
+    <span class="c1">#The rounding to a whole number of grid points above means there may be too many/few</span>
+    <span class="c1">#grid points. Take off/add 1 grid point from/to each region progressively until</span>
+    <span class="c1">#there are the correct total of n_points.</span>
+    <span class="n">dn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_points</span>
+
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="ow">not</span> <span class="n">dn</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">dn</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span> <span class="c1">#points must be taken off</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">delta</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1">#points must be added</span>
+
+        <span class="k">if</span> <span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">delta</span>
+
+        <span class="n">dn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span> <span class="o">-</span> <span class="n">n_points</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">sizes</span><span class="p">)</span><span class="o">-</span><span class="mi">1</span><span class="p">:</span> <span class="c1">#If we&#39;re at the end of sizes, restart again until dn=0</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">i</span><span class="o">+=</span><span class="mi">1</span>  <span class="c1">#Move to the next layer</span>
+
+    <span class="c1">#Create radius array</span>
+    <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">n_points</span><span class="p">)</span>
+
+    <span class="c1">#Add linear spacing between each radii</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">sizes</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">end</span> <span class="o">=</span> <span class="n">start</span><span class="o">+</span><span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="n">r</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">radii</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="n">sizes</span><span class="p">[</span><span class="n">i</span><span class="p">])</span>
+        <span class="n">start</span><span class="o">=</span><span class="n">end</span>
+
+    <span class="k">return</span> <span class="n">r</span></div>
+
+
+<div class="viewcode-block" id="density"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.density">[docs]</a><span class="k">def</span> <span class="nf">density</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Density in the core</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : float or array</span>
+<span class="sd">        radius</span>
+<span class="sd">    density_params : array</span>
+<span class="sd">        radial polynomial coefficients for density</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or array</span>
+<span class="sd">        density at r</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">rho</span> <span class="o">=</span> <span class="n">polyval</span><span class="p">(</span><span class="n">density_params</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">r</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">rho</span></div>
+
+
+<div class="viewcode-block" id="gravity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.gravity">[docs]</a><span class="k">def</span> <span class="nf">gravity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Gravity in the core</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : float or array</span>
+<span class="sd">        radius</span>
+<span class="sd">    density_params : array</span>
+<span class="sd">        radial polynomial coefficients for density</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or array</span>
+<span class="sd">        gravity at r</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">density_params</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">density_params</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">poly</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">density_params</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+
+    <span class="n">g</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">G</span><span class="p">)</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">g</span></div>
+
+
+<div class="viewcode-block" id="grav_potential"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.grav_potential">[docs]</a><span class="k">def</span> <span class="nf">grav_potential</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Gravitational potential in the core</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : float or array</span>
+<span class="sd">        radius</span>
+<span class="sd">    density_params : array</span>
+<span class="sd">        radial polynomial coefficients for density</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or array</span>
+<span class="sd">        gravititational potential at r</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1">#gravity polynomials</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">density_params</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span><span class="n">density_params</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">3</span><span class="p">)</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span><span class="n">poly</span><span class="p">))</span>
+
+    <span class="c1">#integrate to gravitational potential</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">poly</span><span class="o">/</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">poly</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(([</span><span class="mi">0</span><span class="p">],</span><span class="n">poly</span><span class="p">))</span>
+
+    <span class="n">psi</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">G</span><span class="p">)</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">psi</span></div>
+
+
+<div class="viewcode-block" id="specific_heat"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.specific_heat">[docs]</a><span class="k">def</span> <span class="nf">specific_heat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">cp_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Specific heat capacity as a function of Pressure.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    P : array</span>
+<span class="sd">        Pressure</span>
+<span class="sd">    cp_params : array</span>
+<span class="sd">        pressure polynomial coefficients for specific heat</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        specific heat capacity at P</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If more than constant cp is given (cp_params is longer than one number), not yet implemented</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+
+    <span class="n">cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">cp_params</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">cp</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">cp_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+       <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Not yet implimented! Include code here to calculate pressure dependence of cp&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">cp</span></div>
+
+
+<div class="viewcode-block" id="thermal_expansivity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.thermal_expansivity">[docs]</a><span class="k">def</span> <span class="nf">thermal_expansivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span>  <span class="n">alpha_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Thermal expansivity as a function of Pressure.</span>
+
+<span class="sd">    Parameterisation of thermal expansivity given in Knibbe and Van Westrenen (2018).</span>
+<span class="sd">    If only a single value is given in the alpha_params array, then alpha will be constant</span>
+<span class="sd">    with this value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    P : array</span>
+<span class="sd">        pressure</span>
+<span class="sd">    alpha_params : array </span>
+<span class="sd">        parameters for thermal expansivity in the order: alpha_T at ambient pressure, bulk modulus, derivative of bulk modulus with pressure</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        thermal expansivity at P</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">alpha_params</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">alpha</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">alpha_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">alpha_0</span> <span class="o">=</span> <span class="n">alpha_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">KT</span> <span class="o">=</span> <span class="n">alpha_params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">dK_dP</span> <span class="o">=</span> <span class="n">alpha_params</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">alpha_0</span><span class="o">*</span><span class="n">KT</span><span class="o">/</span><span class="p">(</span><span class="n">KT</span> <span class="o">+</span> <span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">dK_dP</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">alpha</span></div>
+
+
+<div class="viewcode-block" id="fit_adiabat_polynomials"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.fit_adiabat_polynomials">[docs]</a><span class="k">def</span> <span class="nf">fit_adiabat_polynomials</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculate radial polynomial coefficients for adiabatic temperature</span>
+
+<span class="sd">    Numerically integrates the adiabatic gradient to get the temperature based on</span>
+<span class="sd">    given gravity, specific heat and thermal expansivity arrays. Then fits 3rd order</span>
+<span class="sd">    polynomial coefficients normalised to the temperature at r[0]. The linear temperature</span>
+<span class="sd">    dependence is also forced to be zero such that the adiabatic gradient is zero at r=0.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    g : float or array</span>
+<span class="sd">        gravity</span>
+<span class="sd">    cp : float or array</span>
+<span class="sd">        specific heat</span>
+<span class="sd">    alpha : float or array</span>
+<span class="sd">        thermal expansivity</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        adiabatic temperature polynomial coefficients</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">g</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">cp</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">cp</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">alpha</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">alpha</span><span class="p">)</span>
+
+
+    <span class="c1">#Numerically integrate adiabatic gradient for T[0]=1</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dr</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">cp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">breakpoint</span><span class="p">()</span>
+
+    <span class="c1">#We require zero adiabatic gradient at r=0, so fit radial polynomials</span>
+    <span class="c1">#such that poly = [1,0,x1,x2]</span>
+    <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="o">*</span><span class="n">args</span><span class="p">):</span>
+        <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">args</span><span class="p">,</span><span class="mi">0</span><span class="p">,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">r</span><span class="p">)</span>
+
+    <span class="c1">#Solve for x1,x2 and then create full poly array</span>
+    <span class="n">poly</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">curve_fit</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">p0</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="k">return</span> <span class="n">poly</span></div>
+
+
+<div class="viewcode-block" id="adiabat"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.adiabat">[docs]</a><span class="k">def</span> <span class="nf">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">adiabat_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Adiabatic temperature</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    Tcen : float</span>
+<span class="sd">        Temperature at center of core</span>
+<span class="sd">    adiabat_params : array</span>
+<span class="sd">        adiabat polynomial coefficients</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        Adiabatic temperature at r</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">Ta</span> <span class="o">=</span> <span class="n">Tcen</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">adiabat_params</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">r</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Ta</span></div>
+
+
+<div class="viewcode-block" id="adiabat_grad"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.adiabat_grad">[docs]</a><span class="k">def</span> <span class="nf">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">adiabat_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Adiabatic temperature gradient</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    Tcen : float</span>
+<span class="sd">        Temperature at center of core</span>
+<span class="sd">    adiabat_params : array</span>
+<span class="sd">        adiabat polynomial coefficients</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        Adiabatic temperature gradient at r</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">adiabat_params</span><span class="o">.</span><span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">poly</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+        <span class="n">poly</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">adiabat_params</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="p">(</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="n">Ta</span> <span class="o">=</span> <span class="n">Tcen</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">r</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Ta</span></div>
+
+
+<div class="viewcode-block" id="conductivity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.conductivity">[docs]</a><span class="k">def</span> <span class="nf">conductivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">conductivity_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Thermal conductivity</span>
+
+<span class="sd">    Calculates the thermal conductivity that, depending on the supplied parameters,</span>
+<span class="sd">    can be a function of radius, temperature, or pressure. The first element of the</span>
+<span class="sd">    conductivity parameters should be a string (&#39;r&#39;/&#39;T&#39;/&#39;P&#39;) indicating the type of</span>
+<span class="sd">    polynomial coefficients. If only a single value is give, the thermal conductivity</span>
+<span class="sd">    is given as constant with that value.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    P : arrat</span>
+<span class="sd">        pressure</span>
+<span class="sd">    T : array</span>
+<span class="sd">        temperature</span>
+<span class="sd">    conductivity_params : array</span>
+<span class="sd">        Conducitvity polynomial coefficients</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        thermal conductivity at r/P/T</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If more than one value is given in conductivity_params but no string is given indicating type of polynomial coefficients.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">conductivity_params</span><span class="p">)</span><span class="o">==</span><span class="mi">1</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="o">*</span><span class="n">conductivity_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">elif</span> <span class="n">conductivity_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">polyval</span><span class="p">(</span><span class="n">conductivity_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">T</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">conductivity_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;P&#39;</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">polyval</span><span class="p">(</span><span class="n">conductivity_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">P</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">conductivity_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;r&#39;</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">polyval</span><span class="p">(</span><span class="n">conductivity_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float&#39;</span><span class="p">)[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">r</span><span class="p">)</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unless only one value is given in core_conductivity_params, first value must be a string denoting if polynomials are in r/T/P&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">k</span></div>
+
+
+<div class="viewcode-block" id="adiabatic_heat_flow"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.adiabatic_heat_flow">[docs]</a><span class="k">def</span> <span class="nf">adiabatic_heat_flow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">Tcen</span><span class="p">,</span><span class="n">adiabat_poly</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Adiabatic heat flow</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    k : array</span>
+<span class="sd">        thermal conductivity</span>
+<span class="sd">    Tcen : float</span>
+<span class="sd">        Temperature at center of core</span>
+<span class="sd">    adiabat_poly : array</span>
+<span class="sd">        adiabat polynomial coefficients</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        Adiabatic heat flow at r</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">Qa</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span> <span class="o">*</span> <span class="o">-</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">Tcen</span><span class="p">,</span><span class="n">adiabat_poly</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Qa</span></div>
+
+
+<div class="viewcode-block" id="entropy_melting"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.entropy_melting">[docs]</a><span class="k">def</span> <span class="nf">entropy_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">ent_melt_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Change in entropy on fusion</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    P : float or array</span>
+<span class="sd">        pressure</span>
+<span class="sd">    ent_melt_params : array</span>
+<span class="sd">        pressure polynomial coefficients for change in entropy on fusion</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        Change in entropy on fusion</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">ds_fe</span> <span class="o">=</span> <span class="n">polyval</span><span class="p">(</span><span class="n">ent_melt_params</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">P</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ds_fe</span></div>
+
+
+<div class="viewcode-block" id="mass"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.mass">[docs]</a><span class="k">def</span> <span class="nf">mass</span><span class="p">(</span><span class="n">rho_ic_poly</span><span class="p">,</span> <span class="n">rho_oc_poly</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;mass of regions within the core</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rho_ic_poly : array</span>
+<span class="sd">        inner core density polynomial coefficients</span>
+<span class="sd">    rho_oc_poly : array</span>
+<span class="sd">        outer core density polynomial coefficient</span>
+<span class="sd">    ri : float</span>
+<span class="sd">        inner core radius</span>
+<span class="sd">    rs : float</span>
+<span class="sd">        radius for base of stable layer</span>
+<span class="sd">    r_cmb : float</span>
+<span class="sd">        CMB radius</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float, float, float)</span>
+<span class="sd">        Masses for the inner core, convecting outer core, stable layer, total mass</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1">#Integrate density polynomials to get mass polynomials</span>
+    <span class="n">poly_ic</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">rho_ic_poly</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+    <span class="n">poly_oc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">rho_oc_poly</span><span class="o">.</span><span class="n">size</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">rho_ic_poly</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">poly_ic</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rho_ic_poly</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="n">i</span>
+
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">rho_oc_poly</span><span class="o">.</span><span class="n">size</span><span class="o">+</span><span class="mi">3</span><span class="p">):</span>
+        <span class="n">poly_oc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">rho_oc_poly</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">3</span><span class="p">]</span><span class="o">/</span><span class="n">i</span>
+
+
+    <span class="n">M_ic</span>   <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">poly_ic</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">ri</span><span class="p">)</span>
+    <span class="n">M_conv</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">polyval</span><span class="p">(</span><span class="n">poly_oc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">rs</span><span class="p">)</span> <span class="o">-</span> <span class="n">polyval</span><span class="p">(</span><span class="n">poly_oc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">ri</span><span class="p">))</span>
+    <span class="n">Ms</span>     <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">polyval</span><span class="p">(</span><span class="n">poly_oc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">r_cmb</span><span class="p">)</span> <span class="o">-</span> <span class="n">polyval</span><span class="p">(</span><span class="n">poly_oc</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">rs</span><span class="p">))</span>
+
+    <span class="n">M</span> <span class="o">=</span> <span class="n">M_ic</span> <span class="o">+</span> <span class="n">M_conv</span> <span class="o">+</span> <span class="n">Ms</span>
+
+    <span class="k">return</span> <span class="n">M_ic</span><span class="p">,</span> <span class="n">M_conv</span><span class="p">,</span> <span class="n">Ms</span><span class="p">,</span> <span class="n">M</span></div>
+
+
+<div class="viewcode-block" id="mass_correct"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.mass_correct">[docs]</a><span class="k">def</span> <span class="nf">mass_correct</span><span class="p">(</span><span class="n">solid_params</span><span class="p">,</span> <span class="n">liquid_params</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Correct outer core density polynomials to account for changing LE concentration.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    solid_params : array</span>
+<span class="sd">        inner core density polynomial coefficients</span>
+<span class="sd">    liquid_params : array</span>
+<span class="sd">        outer core density polynomial coefficients</span>
+<span class="sd">    ri : float</span>
+<span class="sd">        inner core radius</span>
+<span class="sd">    M : float</span>
+<span class="sd">        mass of the core</span>
+<span class="sd">    r_cmb : float</span>
+<span class="sd">        CMB radius</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        corrected outer core density polynomial coefficients</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">M_ic</span><span class="p">,</span> <span class="n">M_conv</span><span class="p">,</span> <span class="n">Ms</span> <span class="o">=</span> <span class="n">mass</span><span class="p">(</span><span class="n">solid_params</span><span class="p">,</span> <span class="n">liquid_params</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">)[:</span><span class="mi">3</span><span class="p">]</span>
+    <span class="n">M_oc</span> <span class="o">=</span> <span class="n">M_conv</span><span class="o">+</span><span class="n">Ms</span>
+
+    <span class="n">M_oc_target</span> <span class="o">=</span> <span class="n">M</span> <span class="o">-</span> <span class="n">M_ic</span>
+
+    <span class="n">dM</span> <span class="o">=</span> <span class="n">M_oc_target</span> <span class="o">-</span> <span class="n">M_oc</span>
+
+    <span class="n">drho</span> <span class="o">=</span> <span class="mi">3</span><span class="o">*</span><span class="n">dM</span><span class="o">/</span><span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="p">(</span><span class="n">r_cmb</span><span class="o">**</span><span class="mi">3</span><span class="o">-</span><span class="n">ri</span><span class="o">**</span><span class="mi">3</span><span class="p">))</span>
+
+    <span class="n">liquid_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">liquid_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">drho</span>
+
+
+
+    <span class="k">return</span> <span class="n">liquid_params</span></div>
+
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#Calculate inner core radius</span>
+<span class="c1">###############################################################################</span>
+<span class="c1"># import matplotlib.pyplot as plt</span>
+<span class="c1">#@jit</span>
+<div class="viewcode-block" id="ic_radius"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.ic_radius">[docs]</a><span class="k">def</span> <span class="nf">ic_radius</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">Ta</span><span class="p">,</span><span class="n">Tm</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Find the inner core radius by intersection of melting curve</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        temperature</span>
+<span class="sd">    Tm : array</span>
+<span class="sd">        melting temperature</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        inner core radius</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If ri comes to be NaN, r, T, Tm arrays will be logged.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">Tm</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">ri</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">elif</span> <span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">Tm</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+        <span class="n">ri</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+                <span class="n">dr</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="n">m1</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
+                <span class="n">m2</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
+                <span class="n">ri</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">m2</span><span class="o">-</span><span class="n">m1</span><span class="p">)</span>
+
+                <span class="k">break</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">ri</span><span class="p">):</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Inner core radius is NaN</span><span class="se">\n\n</span><span class="s1"> r   T   Tm</span><span class="se">\n</span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">((</span><span class="n">r</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">Tm</span><span class="p">))</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Inner core radius is NaN, logging r, Ta, Tm arrays&#39;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">ri</span></div>
+
+
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

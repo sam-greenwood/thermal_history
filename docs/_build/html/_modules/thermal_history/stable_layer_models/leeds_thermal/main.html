@@ -1,0 +1,627 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>thermal_history.stable_layer_models.leeds_thermal.main &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../" src="../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
+        <script src="../../../../_static/jquery.js"></script>
+        <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../thermal_history.html">thermal_history API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>thermal_history.stable_layer_models.leeds_thermal.main</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for thermal_history.stable_layer_models.leeds_thermal.main</h1><div class="highlight"><pre>
+<span></span><span class="n">Description</span> <span class="o">=</span> <span class="s1">&#39;General stable layer model for thermal/chemical/thermo-chemical stratification.&#39;</span>
+
+
+<span class="c1">#List individually confirmed compatibility with other regions</span>
+<span class="n">compatibility</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;core&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;greenwood21&#39;</span><span class="p">],</span>
+                 <span class="s1">&#39;mantle&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;driscoll_bercovici14&#39;</span><span class="p">]}</span>
+
+<span class="kn">from</span> <span class="nn">...core_models.leeds.routines</span> <span class="kn">import</span> <span class="n">profiles</span> <span class="k">as</span> <span class="n">prof</span>
+<span class="kn">from</span> <span class="nn">...core_models.leeds.routines</span> <span class="kn">import</span> <span class="n">energy</span> <span class="k">as</span> <span class="n">en</span>
+<span class="kn">from</span> <span class="nn">...core_models.leeds.routines</span> <span class="kn">import</span> <span class="n">chemistry</span> <span class="k">as</span> <span class="n">chem</span>
+
+<span class="kn">from</span> <span class="nn">.routines</span> <span class="kn">import</span> <span class="n">functions</span> <span class="k">as</span> <span class="n">func</span>
+<span class="kn">from</span> <span class="nn">.routines.diffusion</span> <span class="kn">import</span> <span class="n">diffusion</span>
+
+<span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">linspace</span><span class="p">,</span> <span class="n">trapezoid</span><span class="p">,</span> <span class="n">polyval</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">bisect</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span>
+
+<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+    <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+
+    <span class="c1">#Initial size of stable layer</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">layer_thickness</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">rs</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span> <span class="o">-</span> <span class="n">prm</span><span class="o">.</span><span class="n">layer_thickness</span>
+
+    <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">layer_thickness</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
+        <span class="n">prm</span><span class="o">.</span><span class="n">primordial_layer</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+    <span class="c1">#If no core model is being used, assume simple case of fully molten core</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">prm</span><span class="o">.</span><span class="n">core</span><span class="p">:</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">T_cmb</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">T_cmb</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">ri</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">r_snow</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span>
+
+        <span class="c1">#Set core profiles</span>
+        <span class="n">prof</span><span class="o">.</span><span class="n">basic_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">prof</span><span class="o">.</span><span class="n">temp_dependent_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+
+    <span class="c1">#Initialise profiles dictionaries</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span>
+
+    <span class="c1">#Create radial profiles</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span> <span class="o">-</span> <span class="n">prm</span><span class="o">.</span><span class="n">layer_thickness</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span>      <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">rs</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="evolve"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.evolve">[docs]</a><span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+
+    <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">Q_cmb</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mantle</span><span class="o">.</span><span class="n">Q_cmb</span>
+
+    <span class="n">T_grad_cmb</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">Q_cmb</span><span class="o">/</span><span class="p">(</span><span class="o">-</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+    <span class="n">ADR</span> <span class="o">=</span> <span class="n">T_grad_cmb</span><span class="o">/</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dTa_dr&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">ADR</span> <span class="o">=</span> <span class="n">ADR</span>
+
+    <span class="c1">#Check if conditions are sub-adiabatic and a layer should begin to grow</span>
+    <span class="n">check</span>  <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">pure_thermal_check</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="c1">#Initialise energies/entropies associated with this state.</span>
+    <span class="n">Qs</span><span class="p">,</span> <span class="n">Es</span><span class="p">,</span> <span class="n">Ek</span><span class="p">,</span> <span class="n">Ej</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+
+    <span class="c1">#initialise BC&#39;s</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">lb_T</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">ub_T</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span><span class="mi">0</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">alpha_D</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">baro_grad</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="c1">#Check if Qcmb would give a layer this time-step.</span>
+    <span class="k">if</span> <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">check</span><span class="p">:</span>
+
+        <span class="n">sl</span><span class="o">.</span><span class="n">ds_dt</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">dT_dt_s</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span><span class="p">)</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+
+    <span class="c1">#Otherwise run the method.</span>
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="n">r_initial</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
+        <span class="n">T_initial</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span>
+        <span class="n">dr</span> <span class="o">=</span> <span class="n">r_initial</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">r_initial</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+
+        <span class="c1">#Calculate Ek</span>
+        <span class="k">if</span> <span class="n">dr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span> <span class="c1">#Layer is still of 0 thickness</span>
+            <span class="n">Ek</span> <span class="o">==</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dT_dr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">T_initial</span><span class="p">,</span> <span class="n">dr</span><span class="p">,</span> <span class="n">edge_order</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+            <span class="n">k</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r_initial</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">])</span>
+            <span class="n">Ek</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapz</span><span class="p">(</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">dT_dr</span><span class="o">/</span><span class="n">T_initial</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">r_initial</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">r_initial</span><span class="p">)</span>
+
+
+        <span class="c1"># rho =  prof.density(r_initial, prm.core_density_liquid_params)</span>
+        <span class="c1"># g   =  np.interp(r_initial, core.profiles[&#39;r&#39;], core.profiles[&#39;g&#39;])</span>
+
+    
+        <span class="c1">#Time step model</span>
+        <span class="n">pure_thermal_method</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="c1">#New radial profiles</span>
+        <span class="n">r_new</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
+        <span class="n">T_new</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span>
+
+        <span class="c1">#Secular cooling. Compare final profiles to those at the beginning of the time-step.</span>
+        <span class="k">if</span> <span class="n">r_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;=</span> <span class="n">r_initial</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1">#Layer has grown</span>
+
+            <span class="c1">#Need to append on adiabat values onto initial temperatures</span>
+            <span class="n">T_initial_temp</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r_new</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r_new</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">r_new</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">r_initial</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">T_initial_temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r_new</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">r_initial</span><span class="p">,</span> <span class="n">T_initial</span><span class="p">)</span>
+            <span class="n">T_initial</span> <span class="o">=</span> <span class="n">T_initial_temp</span>
+
+            <span class="n">r1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T1</span> <span class="o">=</span> <span class="n">r_new</span><span class="p">,</span> <span class="n">T_new</span><span class="p">,</span> <span class="n">T_initial</span>
+
+        <span class="k">elif</span> <span class="n">r_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">r_initial</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>  <span class="c1">#Layer has shrunk</span>
+
+            <span class="c1">#Need to append on adiabatic values onto new temperature</span>
+            <span class="n">T_new_temp</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r_initial</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span> <span class="o">+</span> <span class="n">core</span><span class="o">.</span><span class="n">dT_dt</span><span class="o">*</span><span class="n">model</span><span class="o">.</span><span class="n">dt</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r_initial</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">r_initial</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">r_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+                    <span class="n">T_new_temp</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r_initial</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">r_new</span><span class="p">,</span> <span class="n">T_new</span><span class="p">)</span>
+
+            <span class="n">T_new</span> <span class="o">=</span> <span class="n">T_new_temp</span>
+
+            <span class="n">r1</span><span class="p">,</span> <span class="n">T2</span><span class="p">,</span> <span class="n">T1</span> <span class="o">=</span> <span class="n">r_initial</span><span class="p">,</span> <span class="n">T_new</span><span class="p">,</span> <span class="n">T_initial</span>
+
+        <span class="n">dT_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">T2</span><span class="o">-</span><span class="n">T1</span><span class="p">)</span><span class="o">/</span><span class="n">model</span><span class="o">.</span><span class="n">dt</span>
+
+
+        <span class="n">cp</span>  <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;cp&#39;</span><span class="p">])</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_liquid_density_params</span><span class="p">)</span>
+        <span class="n">Qs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">en</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r1</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">dT_dt</span><span class="o">*</span><span class="n">rho</span><span class="o">*</span><span class="n">cp</span><span class="p">)</span>
+        <span class="n">Es</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">en</span><span class="o">.</span><span class="n">integrate</span><span class="p">(</span><span class="n">r1</span><span class="p">,</span> <span class="n">r1</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">dT_dt</span><span class="o">*</span><span class="n">rho</span><span class="o">*</span><span class="n">cp</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">T1</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">T1</span><span class="p">))</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">dT_dt_s</span> <span class="o">=</span> <span class="n">dT_dt</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>  <span class="c1">#Save cooling rate at base of layer</span>
+
+
+        <span class="n">Ej</span> <span class="o">=</span> <span class="n">Es</span> <span class="o">-</span> <span class="n">Ek</span>
+
+    <span class="c1">#Save energies/entropies to model attributes</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">Qs</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">Es</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">Ek</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">Ej</span> <span class="o">=</span> <span class="n">Qs</span><span class="p">,</span> <span class="n">Es</span><span class="p">,</span> <span class="n">Ek</span><span class="p">,</span> <span class="n">Ej</span>
+
+    <span class="c1">#Add onto core results</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">Qs</span> <span class="o">+=</span> <span class="n">Qs</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">Ej</span> <span class="o">+=</span> <span class="n">Ej</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">Es</span> <span class="o">+=</span> <span class="n">Es</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">Ek</span> <span class="o">+=</span> <span class="n">Ek</span>
+
+    <span class="c1">#Make sure profiles have size maximum_resolution, so they can be saved.</span>
+    <span class="n">n</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">size</span>
+
+    <span class="k">if</span> <span class="n">n</span> <span class="o">&gt;</span> <span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span><span class="p">:</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">linspace</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span><span class="p">)</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">])</span>
+
+    <span class="k">elif</span> <span class="n">n</span> <span class="o">&lt;</span> <span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span><span class="p">:</span>
+
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span><span class="o">-</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+        <span class="n">T</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">],</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span><span class="o">-</span><span class="n">n</span><span class="p">)</span><span class="o">*</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span><span class="p">,</span> <span class="n">T</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">T_cmb</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">T_s</span><span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="n">core</span><span class="o">.</span><span class="n">T_cmb</span><span class="p">,</span>  <span class="n">core</span><span class="o">.</span><span class="n">T_s</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">T_cmb</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">T_s</span></div>
+
+
+<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.update">[docs]</a><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+
+    <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="c1">#Update profiles</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+
+    <span class="c1">#Update core profiles if no core model is being used.</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">prm</span><span class="o">.</span><span class="n">core</span><span class="p">:</span>
+        <span class="n">prof</span><span class="o">.</span><span class="n">basic_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+    <span class="c1">#Update layer size</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span> <span class="o">-=</span> <span class="n">sl</span><span class="o">.</span><span class="n">ds_dt</span> <span class="o">*</span> <span class="n">model</span><span class="o">.</span><span class="n">dt</span>
+    <span class="k">if</span> <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">rs</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span> <span class="o">-</span> <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">T_cmb</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="c1">#If layer covers entire core, Tcen is temp at base of layer.</span>
+    <span class="k">if</span> <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span> <span class="o">==</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span><span class="p">:</span>
+        <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Tcen</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span></div>
+
+
+<span class="c1">#Required parameters. &#39;Name&#39;: &#39;Description&#39;</span>
+<span class="n">required_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;core_liquid_density_params&#39;</span><span class="p">:</span> <span class="s1">&#39;Outer core density polynomials (radial). List(float)&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;r_cmb&#39;</span><span class="p">:</span> <span class="s1">&#39;CMB radius. Float&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;layer_thickness&#39;</span><span class="p">:</span> <span class="s1">&#39;Initial stable layer thickness. Float.&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;core_alpha_T_params&#39;</span><span class="p">:</span> <span class="s1">&#39;Core thermal expansivity pressure polynomial coefficients. List(Float)&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;core_cp_params&#39;</span><span class="p">:</span> <span class="s1">&#39;Core specific heat capacity pressure polynomial coefficients. List(Float)&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;core_conductivity_params&#39;</span><span class="p">:</span> <span class="s1">&#39;List, first element is a string followed by the core thermal conductivity polynomial coefficients. The string (either </span><span class="se">\&#39;</span><span class="s1">r</span><span class="se">\&#39;</span><span class="s1">/</span><span class="se">\&#39;</span><span class="s1">T</span><span class="se">\&#39;</span><span class="s1">/</span><span class="se">\&#39;</span><span class="s1">P</span><span class="se">\&#39;</span><span class="s1">) indicates if the polynomials are radial, temperature, or pressire coefficients. List(string, Float, Float...)&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;entrainment_T&#39;</span><span class="p">:</span> <span class="s1">&#39;Entrainment coefficient on thermal stratification (assumed 0). Float&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;P_cmb&#39;</span><span class="p">:</span> <span class="s1">&#39;CMB pressure. Float&#39;</span><span class="p">}</span>
+
+<span class="c1">#Optional parameters. &#39;Name&#39;: (&#39;Description&#39;, default_value)</span>
+<span class="n">optional_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;entrainment_T&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 0) Float in the range 0 &lt;= x &lt; 1. Entrainment coefficient, modifies the adiabatic heat flow out the convecting region by the factor (1-x) to represent entrainment of stable fluid at the base of the stratified layer.&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+                   <span class="s1">&#39;max_resolution&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 100) Maximum number of nodes in grid. Int&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+                   <span class="s1">&#39;min_resolution&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 10) Minumum number of nodes in grid. Int&#39;</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span>
+                   <span class="s1">&#39;resolution&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 1/1000) Target number of nodes per meter when constructing the grid. Float.&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="o">/</span><span class="mi">1000</span><span class="p">),</span>
+                   <span class="s1">&#39;depth_tolerance&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 1000) Layer size below which the layer is assumed full eroded. Note this default value will be halved when considering chemically stable layers fot stability. Float&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span>
+                   <span class="s1">&#39;init_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 5000) Size the stable layer should be initialised if conditions promote layer growth and a layer does not yet exist. Note this default value will be halved when considering chemically stable layers fot stability. Float&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span>
+                   <span class="s1">&#39;mix_layer&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: False) Boolean, if True, uses an experimental function to calculate the T/c profile of a layer that has the top portion mixed.&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                   <span class="s1">&#39;thermal_stratification&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: True). Boolean, internal flag to tell the code that thermal stratification is being used&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
+                   <span class="s1">&#39;chemical_stratification&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: False). Boolean, internal flag to tell the code that chemical stratification is not being used&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)}</span>
+
+
+<div class="viewcode-block" id="progress"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.progress">[docs]</a><span class="k">def</span> <span class="nf">progress</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;text to display during calculation</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel</span>
+<span class="sd">        Main model class</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    str</span>
+<span class="sd">        text to display to STDOUT</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
+
+    <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">ADR</span><span class="p">)</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;layer thickness: </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> km    ADR(rc): </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span>
+
+    <span class="k">return</span> <span class="n">text</span></div>
+
+
+<span class="c1">#3 Methods for 3 different cases</span>
+
+<div class="viewcode-block" id="pure_thermal_method"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.pure_thermal_method">[docs]</a><span class="k">def</span> <span class="nf">pure_thermal_method</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+    <span class="n">sl</span>  <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="c1">#Read in values from model</span>
+    <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span>
+    <span class="n">r_s</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span> <span class="o">-</span> <span class="n">layer_thickness</span>
+    <span class="n">r_s_original</span> <span class="o">=</span> <span class="n">r_s</span><span class="o">*</span><span class="mi">1</span>
+
+    <span class="n">r_cmb</span>      <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span>
+    <span class="n">resolution</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">resolution</span>
+    <span class="n">min_res</span>    <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">min_resolution</span>
+    <span class="n">max_res</span>    <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">max_resolution</span>
+
+    <span class="n">TOL</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">depth_tolerance</span>   <span class="c1">#Minimum layer size</span>
+    <span class="n">init_size</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">init_size</span>
+
+    <span class="n">core_adiabat</span>      <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span>
+    <span class="n">rho_poly</span>          <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_liquid_density_params</span>
+
+    <span class="n">E_T</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">entrainment_T</span>
+
+    <span class="n">Q_cmb</span>  <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mantle</span><span class="o">.</span><span class="n">Q_cmb</span>
+
+    <span class="n">Tcen</span>   <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Tcen</span>
+    <span class="n">dTa_dt</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">dT_dt</span>
+
+    <span class="n">T_grad_cmb</span> <span class="o">=</span> <span class="n">Q_cmb</span><span class="o">/</span><span class="p">(</span><span class="o">-</span><span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r_cmb</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+    <span class="n">ADR</span> <span class="o">=</span> <span class="n">T_grad_cmb</span><span class="o">/</span><span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dTa_dr&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">ADR</span> <span class="o">=</span> <span class="n">ADR</span>
+
+
+    <span class="n">r</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span>
+    <span class="n">T</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span>
+
+
+    <span class="c1">#Set upper boundary conditions</span>
+    <span class="n">ub</span> <span class="o">=</span> <span class="n">T_grad_cmb</span>
+
+    <span class="c1">#For stability, reduce the time step size when layer is relatively thin.</span>
+    <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="k">if</span> <span class="n">layer_thickness</span> <span class="o">&lt;=</span> <span class="n">init_size</span><span class="o">*</span><span class="mi">3</span><span class="p">:</span>
+        <span class="n">factor</span> <span class="o">=</span> <span class="mf">0.01</span>
+
+    <span class="n">time_gone</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">time_gone</span> <span class="o">&lt;</span> <span class="n">model</span><span class="o">.</span><span class="n">dt</span><span class="p">:</span>
+
+
+        <span class="c1">#Initialise layer with minium tolerance thickness</span>
+        <span class="k">if</span> <span class="n">layer_thickness</span> <span class="o">&lt;</span> <span class="n">TOL</span><span class="p">:</span>
+
+            <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">init_size</span>
+            <span class="n">r_s</span> <span class="o">=</span> <span class="n">r_cmb</span> <span class="o">-</span> <span class="n">layer_thickness</span>
+
+            <span class="c1">#Number of grid points in this iteration</span>
+            <span class="n">n_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">([</span><span class="n">min_res</span><span class="p">,</span><span class="n">layer_thickness</span><span class="o">*</span><span class="n">resolution</span><span class="p">]))</span>
+            <span class="n">n_points</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">([</span><span class="n">max_res</span><span class="p">,</span><span class="n">n_points</span><span class="p">]))</span>
+
+            <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">r_s</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">,</span> <span class="n">n_points</span><span class="p">)</span>
+            <span class="n">T</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">core_adiabat</span><span class="p">)</span>
+
+
+        <span class="c1"># dt_small = factor*(prm.ys*1e4 * layer_thickness/300) #Time step scaling for stability</span>
+        <span class="c1"># if dt_small &gt; model.dt:</span>
+        <span class="c1">#     dt_small = model.dt</span>
+
+        <span class="n">dt_small</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">dt</span><span class="o">*</span><span class="n">factor</span>
+
+        <span class="k">if</span> <span class="n">time_gone</span> <span class="o">+</span> <span class="n">dt_small</span> <span class="o">&gt;</span> <span class="n">model</span><span class="o">.</span><span class="n">dt</span><span class="p">:</span>
+            <span class="n">dt_small</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">dt</span> <span class="o">-</span> <span class="n">time_gone</span>
+
+        <span class="c1">#Regrid core radial profiles onto finer stable layer grid</span>
+        <span class="n">rs_idx</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">_rs_idx</span>
+        <span class="n">rho</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">density</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rho_poly</span><span class="p">)</span>
+        <span class="n">k</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">])</span>
+        <span class="n">cp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;cp&#39;</span><span class="p">])</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;alpha&#39;</span><span class="p">])</span>
+
+        <span class="c1">#Thermal diffusivity</span>
+        <span class="n">D_T</span> <span class="o">=</span> <span class="n">k</span><span class="o">/</span><span class="p">(</span><span class="n">rho</span><span class="o">*</span><span class="n">cp</span><span class="p">)</span>
+        <span class="c1">#dk_dr * 1/(rho*cp). Not the same as the diffusivity gradient</span>
+        <span class="n">dD_dr</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">gradient</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">edge_order</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">rho</span><span class="o">*</span><span class="n">cp</span><span class="p">)</span>
+
+
+        <span class="c1">#Cool adiabat</span>
+        <span class="n">Tcen</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Tcen</span> <span class="o">+</span> <span class="n">dTa_dt</span><span class="o">*</span><span class="p">(</span><span class="n">time_gone</span><span class="o">+</span><span class="n">dt_small</span><span class="p">)</span>
+
+        <span class="n">Ta</span><span class="p">,</span> <span class="n">Ta_grad</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">core_adiabat</span><span class="p">),</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">core_adiabat</span><span class="p">)</span>
+
+        <span class="c1">#Lower boundary condition (using entrainment)</span>
+        <span class="n">lb</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">E_T</span><span class="p">)</span><span class="o">*</span><span class="n">Ta_grad</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">lb_type</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1">#If whole core is stratified, lower BC should be zero flux</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">lb</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+        <span class="c1">#Calculate diffusion solution</span>
+        <span class="n">T_new</span> <span class="o">=</span> <span class="n">diffusion</span><span class="p">(</span><span class="n">T</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">dt_small</span><span class="p">,</span> <span class="n">D_T</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dD_dr</span><span class="p">,</span> <span class="p">(</span><span class="n">lb_type</span><span class="p">,</span><span class="n">lb</span><span class="p">),(</span><span class="mi">1</span><span class="p">,</span><span class="n">ub</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">Tcen</span> <span class="o">=</span> <span class="n">T_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">T_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+            <span class="n">breakpoint</span><span class="p">()</span>
+
+
+        <span class="c1">#Mix layer (experimental function, not used by default)</span>
+        <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">mix_layer</span><span class="p">:</span>
+            <span class="n">T_rel</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">mix_profile</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">cp</span><span class="o">*</span><span class="n">rho</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">,</span> <span class="n">T_new</span><span class="o">-</span><span class="n">Ta</span><span class="p">)</span>
+            <span class="n">T_new</span> <span class="o">=</span> <span class="n">T_rel</span> <span class="o">+</span> <span class="n">Ta</span>
+
+        <span class="c1">#Determine if layer should retreat</span>
+        <span class="n">r_s_new</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">retreat_layer</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">T_new</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">),</span> <span class="n">Tcen</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">core_adiabat</span><span class="p">,</span> <span class="p">(</span><span class="n">resolution</span><span class="p">,</span><span class="n">min_res</span><span class="p">,</span><span class="n">max_res</span><span class="p">),</span> <span class="n">alpha</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">ADR</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">r_s_new</span> <span class="o">=</span> <span class="mi">0</span>
+
+
+        <span class="c1">#Grow layer</span>
+        <span class="k">if</span> <span class="n">r_s_new</span> <span class="o">==</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+
+            <span class="c1">#Find radius on adiabat that matches temperature at base of layer</span>
+            <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">guess</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">Tcen</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">T</span> <span class="o">-</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">guess</span><span class="p">,</span><span class="n">Tcen</span><span class="p">,</span><span class="n">core_adiabat</span><span class="p">)</span>
+            
+            <span class="k">if</span> <span class="n">T_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">Tcen</span><span class="p">:</span> <span class="c1">#Layer has reached center of core</span>
+                <span class="n">r_s_new</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">r_s_new</span> <span class="o">=</span> <span class="n">bisect</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="n">r_cmb</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">T_new</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="n">Tcen</span><span class="p">),</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+        <span class="c1">#Shrink layer</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#Give up if layer will still not grow after generous time step increases.</span>
+            <span class="k">if</span> <span class="n">r_s_new</span> <span class="o">&gt;=</span> <span class="n">r_cmb</span><span class="o">-</span><span class="n">TOL</span><span class="p">:</span>
+
+                <span class="c1">#No stratification</span>
+                <span class="n">r_s_new</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span>
+                <span class="n">factor</span> <span class="o">=</span> <span class="n">factor</span><span class="o">*</span><span class="mi">2</span>
+
+                <span class="k">if</span> <span class="n">factor</span> <span class="o">&gt;</span> <span class="mi">64</span> <span class="ow">or</span> <span class="n">ADR</span> <span class="o">&gt;=</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">dt_small</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">dt</span> <span class="o">-</span> <span class="n">time_gone</span>
+                    <span class="n">factor</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="n">layer_thickness</span> <span class="o">=</span> <span class="n">r_cmb</span> <span class="o">-</span> <span class="n">r_s_new</span>
+
+        <span class="c1">#Regrid domain, keeping temperature relative to the adiabat.</span>
+        <span class="n">T_rel</span> <span class="o">=</span> <span class="n">T_new</span> <span class="o">-</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">core_adiabat</span><span class="p">)</span>
+
+        <span class="n">r</span><span class="p">,</span> <span class="n">T_rel</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">change_domain_size</span><span class="p">(</span><span class="n">T_rel</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">r_s_new</span><span class="p">,</span> <span class="p">(</span><span class="n">resolution</span><span class="p">,</span><span class="n">min_res</span><span class="p">,</span><span class="n">max_res</span><span class="p">))</span>
+
+        <span class="n">T</span> <span class="o">=</span> <span class="n">T_rel</span> <span class="o">+</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">core_adiabat</span><span class="p">)</span>
+
+        <span class="n">time_gone</span> <span class="o">+=</span> <span class="n">dt_small</span>
+
+
+    <span class="c1">#Save new profiles.</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">ds_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_s_new</span> <span class="o">-</span> <span class="n">r_s_original</span><span class="p">)</span><span class="o">/</span><span class="n">model</span><span class="o">.</span><span class="n">dt</span>
+
+    <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">sl</span><span class="o">.</span><span class="n">lb_T</span> <span class="o">=</span> <span class="n">lb</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">ub_T</span> <span class="o">=</span> <span class="n">ub</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

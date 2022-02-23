@@ -1,0 +1,631 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>thermal_history.model_classes &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+        <script src="../../_static/jquery.js"></script>
+        <script src="../../_static/underscore.js"></script>
+        <script src="../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../thermal_history.html">thermal_history API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>thermal_history.model_classes</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for thermal_history.model_classes</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">stat</span> <span class="kn">import</span> <span class="n">filemode</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="kn">import</span> <span class="nn">thermal_history.utils</span> <span class="k">as</span> <span class="nn">utils</span>
+
+<span class="c1">#Defined here are the classes for the 3 different regions that can be modelled, plus the main class that the user will interact with (which will contain the other 3)</span>
+
+
+<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">:</span>
+    <span class="sd">&#39;&#39;&#39;Base class from which each class associated with regions of the planet (core, stable layer, mantle etc)</span>
+<span class="sd">    inherits from.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">it</span> <span class="o">=</span> <span class="mi">1</span>                <span class="c1">#iteration counter</span>
+    <span class="n">ys</span> <span class="o">=</span> <span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">365</span>     <span class="c1">#seconds in a year</span>
+
+    <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;base&#39;</span>  <span class="c1">#Type of model class</span>
+    <span class="n">parameters</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">method_module</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Initialises class with given method</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        method_module : module, optional</span>
+<span class="sd">            Imported module for given method, by default None</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+
+        <span class="c1">#Set setup, evolution, and update functions</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span> <span class="o">=</span> <span class="n">method_module</span>
+
+
+<div class="viewcode-block" id="BaseModel.setup"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Defines setup() based on the specific method in __init__().</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseModel.evolve"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Defines evolve() based on the specific method in __init__().</span>
+<span class="sd">        &#39;&#39;&#39;</span>   
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="BaseModel.update"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Defines update() based on the specific method in __init__().</span>
+<span class="sd">        &#39;&#39;&#39;</span>   
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.state"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.state">[docs]</a>    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39; Creates dictionary with all attributes.</span>
+<span class="sd">        The current &#39;state&#39; of the model. This retrieves all attributes of the model class,</span>
+<span class="sd">        with exceptions listed in the &#39;ignore_list&#39; variable, and returns them in a</span>
+<span class="sd">        dictionary. Used primarily for producing a dictionary of values to save.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        state</span>
+<span class="sd">            Dictionary containing model attributes (minus those ignored)</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">ignore_list</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;model_type&#39;</span><span class="p">,</span><span class="s1">&#39;ys&#39;</span><span class="p">,</span><span class="s1">&#39;filename&#39;</span><span class="p">,</span><span class="s1">&#39;parameters&#39;</span><span class="p">,</span><span class="s1">&#39;profiles&#39;</span><span class="p">,</span><span class="s1">&#39;_next_profiles&#39;</span><span class="p">]</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ignore_list</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_&#39;</span><span class="p">)]</span>
+
+        <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span></div></div>
+
+<div class="viewcode-block" id="StableLayer"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.StableLayer">[docs]</a><span class="k">class</span> <span class="nc">StableLayer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Stable layer model class</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;stable_layer&#39;</span></div>
+
+    <span class="c1">##################</span>
+
+<div class="viewcode-block" id="Mantle"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.Mantle">[docs]</a><span class="k">class</span> <span class="nc">Mantle</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Mantle model class which inherits the BaseModel class.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;mantle&#39;</span>
+
+    <span class="c1">#DEFAULTS</span>
+    <span class="n">cmb_mass_flux</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1">#Mass flow</span></div>
+
+    <span class="c1">##################</span>
+
+<div class="viewcode-block" id="Core"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.Core">[docs]</a><span class="k">class</span> <span class="nc">Core</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Core model class which inherits the BaseModel class.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;core&#39;</span></div>
+
+    <span class="c1">##################</span>
+
+<div class="viewcode-block" id="ThermalModel"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel">[docs]</a><span class="k">class</span> <span class="nc">ThermalModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Main thermal history model class. Contains the primary methods for calculating the evolution of the planet. This is the main class the user interacts with.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_type : string</span>
+<span class="sd">        String denoting the model type for internal checking</span>
+
+<span class="sd">    time: float</span>
+<span class="sd">        Current time of the model. Initialised at zero by default and incrimented by the time step whenever evolve() is called.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;thermal&#39;</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="s1">&#39;out.log&#39;</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Setup the model based on given parameters and methods</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        parameters : Parameters class  </span>
+<span class="sd">            Class containing all the parameters</span>
+<span class="sd">        methods : Dict</span>
+<span class="sd">            Dictionary containting the imported method modules for each region (core/stable_layer/mantle)</span>
+<span class="sd">        verbose : bool, optional</span>
+<span class="sd">            Print progress to STDOUT, by default True</span>
+<span class="sd">        log_file : String, optional</span>
+<span class="sd">            Name of the log file</span>
+<span class="sd">        log_level : int, optional</span>
+<span class="sd">            Numerical code for setting the logging level (10: DEBUG, 20: INFO, 30: WARNING, 40: ERROR, 50: CRITICAL), by default 30.</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">time</span>
+
+        <span class="c1">#---------------------------------------------</span>
+        <span class="c1">#Initialise models for regions of the planet.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mantle</span>       <span class="o">=</span> <span class="n">Mantle</span><span class="p">(</span><span class="n">method_module</span><span class="o">=</span><span class="n">methods</span><span class="p">[</span><span class="s1">&#39;mantle&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">core</span>         <span class="o">=</span> <span class="n">Core</span><span class="p">(</span><span class="n">method_module</span><span class="o">=</span><span class="n">methods</span><span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span> <span class="o">=</span> <span class="n">StableLayer</span><span class="p">(</span><span class="n">method_module</span><span class="o">=</span><span class="n">methods</span><span class="p">[</span><span class="s1">&#39;stable_layer&#39;</span><span class="p">])</span>
+
+        <span class="n">regions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;mantle&#39;</span><span class="p">,</span> <span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="s1">&#39;stable_layer&#39;</span><span class="p">]</span> <span class="c1">#Order they are calculated</span>
+        <span class="n">setup_order</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="s1">&#39;stable_layer&#39;</span><span class="p">,</span> <span class="s1">&#39;mantle&#39;</span><span class="p">]</span> <span class="c1">#setup must be run in radius order to calculate gravity field.</span>
+        <span class="c1">#Add any additional regions to the planet here^</span>
+        <span class="c1">#----------------------------------------------</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">regions</span> <span class="o">=</span> <span class="p">[</span><span class="n">r</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">==</span><span class="kc">None</span><span class="p">]</span> <span class="c1">#list of just regions being solved.</span>
+
+        <span class="c1">#Set verbose</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span><span class="o">=</span><span class="n">verbose</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Regions to be modelled:&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+
+        <span class="c1">#Set intitial conditions</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">setup_order</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">methods</span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="o">==</span><span class="kc">None</span><span class="p">]:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+
+        <span class="c1"># #Set log level and log file</span>
+        <span class="c1"># import logging</span>
+        <span class="c1"># if debug:</span>
+        <span class="c1">#     logging.basicConfig(filename=self.parameters.filename+&#39;.log&#39;, level=logging.DEBUG)</span>
+        <span class="c1"># else:</span>
+        <span class="c1">#     logging.basicConfig(filename=self.parameters.filename+&#39;.log&#39;, level=logging.INFO)</span>
+
+        <span class="c1"># self.logger = logging.getLogger(__name__)</span>
+
+        <span class="c1">#Print out initial conditions</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">~~~~~ Initial Conditions ~~~~~&#39;</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">time (Myr) = </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">time</span><span class="o">/</span><span class="p">(</span><span class="mf">1e6</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">ys</span><span class="p">)</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+                <span class="n">region</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">r</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">-------&#39;</span><span class="p">)</span>
+
+                <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">region</span><span class="o">.</span><span class="n">state</span><span class="p">()</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                    <span class="n">value</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">region</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;time&#39;</span><span class="p">,</span><span class="s1">&#39;profiles&#39;</span><span class="p">,</span><span class="s1">&#39;profile_names&#39;</span><span class="p">]</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;_&#39;</span><span class="p">:</span>
+                        <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="ow">in</span> <span class="p">[</span><span class="nb">list</span><span class="p">,</span><span class="nb">tuple</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">]:</span>
+                            <span class="n">print_string</span> <span class="o">=</span> <span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">value</span><span class="p">])</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;10</span><span class="si">}</span><span class="s1">= </span><span class="si">{</span><span class="n">print_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+                        <span class="k">elif</span> <span class="ow">not</span> <span class="n">value</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+                            <span class="n">print_string</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s1">.4e</span><span class="si">}</span><span class="s1">&#39;</span>
+                            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;10</span><span class="si">}</span><span class="s1">= </span><span class="si">{</span><span class="n">print_string</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">log_file</span> <span class="o">=</span> <span class="n">log_file</span>
+        <span class="n">handler</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="n">filename</span><span class="o">=</span><span class="n">log_file</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;w&#39;</span><span class="p">)</span>
+        <span class="n">handler</span><span class="o">.</span><span class="n">addFilter</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">PackagePathFilter</span><span class="p">)</span>
+
+        <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">log_level</span><span class="p">,</span>
+                        <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> [</span><span class="si">%(packagepath)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] </span><span class="si">%(levelname)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">-%b-%y %H:%M:%S&#39;</span><span class="p">,</span>
+                        <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">handler</span><span class="p">])</span>
+
+<div class="viewcode-block" id="ThermalModel.state"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.state">[docs]</a>    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Create dictionary of current variables in the model.</span>
+
+<span class="sd">        This retrieves all attributes of all model classes</span>
+<span class="sd">        contained with the ThermalModel by calling their state() methods and returns them</span>
+<span class="sd">        in a dictionary.</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict</span>
+<span class="sd">            Dictionary containing all attributes for all regions being modelled</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+
+        <span class="n">full_state</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">full_state</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="n">full_state</span></div>
+
+<div class="viewcode-block" id="ThermalModel.evolve"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Evolve the model one timestep.</span>
+
+<span class="sd">        When this is called, the evolve method for each region is called, results are appended to the save_dict and the update method for each region is called.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        dt : Float</span>
+<span class="sd">            Time step for the model iteration (seconds)</span>
+<span class="sd">        print_freq : int, optional</span>
+<span class="sd">            Number of iterations between progress messages printed to screen, by default 100</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If a negative step time is used when a stable layer is being solved for. Diffusion requires dt&gt;0.</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">stable_layer</span> <span class="ow">and</span> <span class="n">dt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Cannot have a negative timestep with stable layer calculation!&#39;</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">dt</span> <span class="o">=</span> <span class="n">dt</span>
+
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+                <span class="n">region</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
+                <span class="n">region</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
+                <span class="n">region</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="c1">#Set up save_dict if not already setup</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="s1">&#39;save_dict&#39;</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">setup_save_dict</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">append_to_save_dict</span><span class="p">()</span>
+
+
+        <span class="c1">#Update values and print progress</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">it</span><span class="o">%</span><span class="n">print_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="ThermalModel.update"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        Calls update methods for each region and save to model classes</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="c1">#Update iteration and time</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">it</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dt</span>
+
+        <span class="c1">#Update each calculated region</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThermalModel.setup_save_dict"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.setup_save_dict">[docs]</a>    <span class="k">def</span> <span class="nf">setup_save_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Setup the dictionary that holds all data to be saved, stored as the save_dict attribute.</span>
+
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">            Only integers, floating point numbers and numpy arrays will be saved. Furthermore, the profiles</span>
+<span class="sd">            are not saved since they take a lot of memory. If you would like to save the profiles at each time-step,</span>
+<span class="sd">            this can be done manually after the users calls ThermalModel.evolve() at each timestep.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="n">save_dict</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1">#Accepted types in save_dict</span>
+        <span class="n">types</span> <span class="o">=</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span><span class="nb">float</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">integer</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">floating</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+        <span class="c1">#Ignore list. Only final profiles are added when write_data() method is called.</span>
+        <span class="n">ignore</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;profiles&#39;</span><span class="p">,</span><span class="s1">&#39;next_profiles&#39;</span><span class="p">]</span>
+
+        <span class="c1">#Iterate through each calculated region</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+
+            <span class="c1">#Setup dictionary for specific region</span>
+            <span class="n">save_dict</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">=</span><span class="p">{}</span>
+
+            <span class="n">model</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="p">()</span>
+
+            <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">],</span><span class="n">types</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">ignore</span><span class="p">]</span>
+
+            <span class="c1">#Add all attributes of region that have a type given in types and are not in the ignore list.</span>
+            <span class="c1"># for key in keys:</span>
+            <span class="c1">#     value = state[key]</span>
+            <span class="c1">#     if type(value) == np.ndarray:</span>
+            <span class="c1">#         s = (len(value),)</span>
+            <span class="c1">#     else:</span>
+            <span class="c1">#         s = (1,)</span>
+
+            <span class="c1">#     save_dict[r][key] = np.zeros(s)</span>
+            <span class="c1">#     save_dict[r][key][:] = value</span>
+
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+                <span class="n">value</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                <span class="c1"># if type(value) == np.ndarray:</span>
+                <span class="c1">#     s = list(value)</span>
+                <span class="c1"># else:</span>
+                <span class="c1">#     s = value</span>
+
+                <span class="n">save_dict</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">)]</span>
+
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span> <span class="o">=</span> <span class="n">save_dict</span></div>
+
+<div class="viewcode-block" id="ThermalModel.append_to_save_dict"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.append_to_save_dict">[docs]</a>    <span class="k">def</span> <span class="nf">append_to_save_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Append latest model data to the save_dict</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1">#Append latest results to the save_dict</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+            <span class="n">model</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">r</span><span class="p">)</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">state</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">state</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="c1"># self.save_dict[r][key] = np.row_stack((self.save_dict[r][key],state[key]))</span>
+
+                    <span class="n">value</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="n">key</span><span class="p">]</span>
+                    <span class="c1"># if type(value) == np.ndarray:</span>
+                    <span class="c1">#     s = list(value)</span>
+                    <span class="c1"># else:</span>
+                    <span class="c1">#     s = value</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
+
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not append </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> to save_dict&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> not pre-exisiting in save_dict[&#39;</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&#39;].</span><span class="se">\</span>
+<span class="s2">                            Check this variable is created on the first iteration of the model and is included when ThermalModel.setup_save_dict() is called.&quot;</span><span class="p">)</span>
+                    <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="ThermalModel.print_progress"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.print_progress">[docs]</a>    <span class="k">def</span> <span class="nf">print_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Print progress to STDOUT</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="c1">#Print Progress</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;iteration: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">it</span><span class="si">}</span><span class="s1">&#39;</span>
+
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">_method_module</span><span class="p">,</span> <span class="s1">&#39;progress&#39;</span><span class="p">):</span>
+                <span class="n">text</span> <span class="o">+=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">progress</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="ThermalModel.save_dict_to_numpy_array"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.save_dict_to_numpy_array">[docs]</a>    <span class="k">def</span> <span class="nf">save_dict_to_numpy_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Convert the lists in save_dict to numpy arrays</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Dict</span>
+<span class="sd">            Copy of save_dict except that all values are converted to numpy arrays.</span>
+<span class="sd">        &#39;&#39;&#39;</span>        
+
+        <span class="n">x</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">key1</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">x</span><span class="p">[</span><span class="n">key1</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">key2</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="p">[</span><span class="n">key1</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">x</span><span class="p">[</span><span class="n">key1</span><span class="p">][</span><span class="n">key2</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">squeeze</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="p">[</span><span class="n">key1</span><span class="p">][</span><span class="n">key2</span><span class="p">])</span>
+                <span class="k">except</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Unable to convert save_dict[</span><span class="se">\&#39;</span><span class="si">{</span><span class="n">key1</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">][</span><span class="se">\&#39;</span><span class="si">{</span><span class="n">key2</span><span class="si">}</span><span class="se">\&#39;</span><span class="s1">] to a numpy array, leaving it as a list&#39;</span><span class="p">)</span>
+                    <span class="n">x</span><span class="p">[</span><span class="n">key1</span><span class="p">][</span><span class="n">key2</span><span class="p">]</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="p">[</span><span class="n">key1</span><span class="p">][</span><span class="n">key2</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">x</span></div>
+
+<div class="viewcode-block" id="ThermalModel.write_data"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Writes the model data to a binary file.</span>
+<span class="sd">        </span>
+<span class="sd">        The parameters and final profiles will be added to the save_dict which is then written to</span>
+<span class="sd">        a binary file using pickle. The time at which this function is called is also added to the</span>
+<span class="sd">        parameters. The save_dict is also passed through save_dict_to_numpy_array() to convert all</span>
+<span class="sd">        values to numpy arrays first.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fname : Str</span>
+<span class="sd">            Name of the output file (.pik will be appended if not already included)</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If a file with the same name already exists.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;.pik&#39;</span> <span class="ow">in</span> <span class="n">fname</span> <span class="ow">and</span> <span class="n">fname</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.pik&#39;</span><span class="p">:</span>
+            <span class="n">fname</span> <span class="o">+=</span> <span class="s1">&#39;.pik&#39;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists!&#39;</span><span class="p">)</span>
+
+        <span class="c1">#Convert to numpy array</span>
+        <span class="n">numpy_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_dict_to_numpy_array</span><span class="p">()</span>
+
+        <span class="c1">#Get current time for metadata</span>
+        <span class="n">save_time</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+        <span class="c1">#Get all relevant attributes from parameters to add to save_dict</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="s1">&#39;__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;__call__&#39;</span><span class="p">)]</span>
+
+        <span class="c1">#Add dictionary containing parameters</span>
+        <span class="n">numpy_dict</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;save_time&#39;</span><span class="p">:</span> <span class="n">save_time</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">numpy_dict</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="c1">#Add in final timestep profiles if they exist</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="s1">&#39;stable_layer&#39;</span><span class="p">,</span> <span class="s1">&#39;mantle&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="s1">&#39;profiles&#39;</span><span class="p">):</span>
+                <span class="n">numpy_dict</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;profiles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">profiles</span>
+     
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">numpy_dict</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Wrote </span><span class="si">{}</span><span class="s1"> to file&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span></div></div>
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

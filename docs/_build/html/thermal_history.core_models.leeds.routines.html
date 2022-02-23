@@ -1,0 +1,1428 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>routines (package) &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="simple_test (package)" href="thermal_history.core_models.simple_test.html" />
+    <link rel="prev" title="leeds (package)" href="thermal_history.core_models.leeds.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="thermal_history.html">thermal_history API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="thermal_history.html#subpackages">Subpackages</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="thermal_history.core_models.html">core_models (package)</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="thermal_history.core_models.html#subpackages">Subpackages</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.mantle_models.html">mantle_models (package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.stable_layer_models.html">stable_layer_models (package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.utils.html">utils (package)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_history.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_history.html#module-thermal_history.model">model (module)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="thermal_history.html#module-thermal_history.model_classes">model_classes (module)</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="thermal_history.html">thermal_history API</a> &raquo;</li>
+        
+          <li><a href="thermal_history.core_models.html">core_models (package)</a> &raquo;</li>
+        
+          <li><a href="thermal_history.core_models.leeds.html">leeds (package)</a> &raquo;</li>
+        
+      <li>routines (package)</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/thermal_history.core_models.leeds.routines.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="routines-package">
+<h1>routines (package)<a class="headerlink" href="#routines-package" title="Permalink to this headline">¶</a></h1>
+<p>Functions frequently called by the main module.</p>
+<section id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</section>
+<section id="profiles-module">
+<h2>profiles (module)<a class="headerlink" href="#profiles-module" title="Permalink to this headline">¶</a></h2>
+<p>Functions related to radial profiles of core properties</p>
+<span class="target" id="module-thermal_history.core_models.leeds.routines.profiles"></span><dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.adiabat">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">adiabat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adiabat_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#adiabat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.adiabat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adiabatic temperature</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>Tcen</strong> (<em>float</em>) – Temperature at center of core</p></li>
+<li><p><strong>adiabat_params</strong> (<em>array</em>) – adiabat polynomial coefficients</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Adiabatic temperature at r</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.adiabat_grad">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">adiabat_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adiabat_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#adiabat_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.adiabat_grad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adiabatic temperature gradient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>Tcen</strong> (<em>float</em>) – Temperature at center of core</p></li>
+<li><p><strong>adiabat_params</strong> (<em>array</em>) – adiabat polynomial coefficients</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Adiabatic temperature gradient at r</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.adiabatic_heat_flow">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">adiabatic_heat_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adiabat_poly</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#adiabatic_heat_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.adiabatic_heat_flow" title="Permalink to this definition">¶</a></dt>
+<dd><p>Adiabatic heat flow</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>k</strong> (<em>array</em>) – thermal conductivity</p></li>
+<li><p><strong>Tcen</strong> (<em>float</em>) – Temperature at center of core</p></li>
+<li><p><strong>adiabat_poly</strong> (<em>array</em>) – adiabat polynomial coefficients</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Adiabatic heat flow at r</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.basic_profiles">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">basic_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#basic_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.basic_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Main function setting radial profiles for core properties.</p>
+<p>Sets radius, rho, g, P, cp, alpha_T, psi, Ta, dTa_dr profiles.
+Also will set the adiabat polynomials if required.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>ThermalModel class</em>) – Main class being used for the calculation</p></li>
+<li><p><strong>setup</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to setup the profiles dictionary during model setup, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.conductivity">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">conductivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conductivity_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#conductivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.conductivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thermal conductivity</p>
+<p>Calculates the thermal conductivity that, depending on the supplied parameters,
+can be a function of radius, temperature, or pressure. The first element of the
+conductivity parameters should be a string (‘r’/’T’/’P’) indicating the type of
+polynomial coefficients. If only a single value is give, the thermal conductivity
+is given as constant with that value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>P</strong> (<em>arrat</em>) – pressure</p></li>
+<li><p><strong>T</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>conductivity_params</strong> (<em>array</em>) – Conducitvity polynomial coefficients</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>thermal conductivity at r/P/T</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If more than one value is given in conductivity_params but no string is given indicating type of polynomial coefficients.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.density">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.density" title="Permalink to this definition">¶</a></dt>
+<dd><p>Density in the core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>float</em><em> or </em><em>array</em>) – radius</p></li>
+<li><p><strong>density_params</strong> (<em>array</em>) – radial polynomial coefficients for density</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>density at r</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.entropy_melting">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">entropy_melting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ent_melt_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#entropy_melting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.entropy_melting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Change in entropy on fusion</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em><em> or </em><em>array</em>) – pressure</p></li>
+<li><p><strong>ent_melt_params</strong> (<em>array</em>) – pressure polynomial coefficients for change in entropy on fusion</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Change in entropy on fusion</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.fit_adiabat_polynomials">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">fit_adiabat_polynomials</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#fit_adiabat_polynomials"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.fit_adiabat_polynomials" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate radial polynomial coefficients for adiabatic temperature</p>
+<p>Numerically integrates the adiabatic gradient to get the temperature based on
+given gravity, specific heat and thermal expansivity arrays. Then fits 3rd order
+polynomial coefficients normalised to the temperature at r[0]. The linear temperature
+dependence is also forced to be zero such that the adiabatic gradient is zero at r=0.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>g</strong> (<em>float</em><em> or </em><em>array</em>) – gravity</p></li>
+<li><p><strong>cp</strong> (<em>float</em><em> or </em><em>array</em>) – specific heat</p></li>
+<li><p><strong>alpha</strong> (<em>float</em><em> or </em><em>array</em>) – thermal expansivity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>adiabatic temperature polynomial coefficients</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.grav_potential">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">grav_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#grav_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.grav_potential" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gravitational potential in the core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>float</em><em> or </em><em>array</em>) – radius</p></li>
+<li><p><strong>density_params</strong> (<em>array</em>) – radial polynomial coefficients for density</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>gravititational potential at r</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.gravity">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#gravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.gravity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gravity in the core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>float</em><em> or </em><em>array</em>) – radius</p></li>
+<li><p><strong>density_params</strong> (<em>array</em>) – radial polynomial coefficients for density</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>gravity at r</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.ic_radius">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">ic_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#ic_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.ic_radius" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find the inner core radius by intersection of melting curve</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>Tm</strong> (<em>array</em>) – melting temperature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>inner core radius</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If ri comes to be NaN, r, T, Tm arrays will be logged.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.mass">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_ic_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_oc_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_cmb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.mass" title="Permalink to this definition">¶</a></dt>
+<dd><p>mass of regions within the core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_ic_poly</strong> (<em>array</em>) – inner core density polynomial coefficients</p></li>
+<li><p><strong>rho_oc_poly</strong> (<em>array</em>) – outer core density polynomial coefficient</p></li>
+<li><p><strong>ri</strong> (<em>float</em>) – inner core radius</p></li>
+<li><p><strong>rs</strong> (<em>float</em>) – radius for base of stable layer</p></li>
+<li><p><strong>r_cmb</strong> (<em>float</em>) – CMB radius</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Masses for the inner core, convecting outer core, stable layer, total mass</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float, float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.mass_correct">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">mass_correct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solid_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_cmb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#mass_correct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.mass_correct" title="Permalink to this definition">¶</a></dt>
+<dd><p>Correct outer core density polynomials to account for changing LE concentration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>solid_params</strong> (<em>array</em>) – inner core density polynomial coefficients</p></li>
+<li><p><strong>liquid_params</strong> (<em>array</em>) – outer core density polynomial coefficients</p></li>
+<li><p><strong>ri</strong> (<em>float</em>) – inner core radius</p></li>
+<li><p><strong>M</strong> (<em>float</em>) – mass of the core</p></li>
+<li><p><strong>r_cmb</strong> (<em>float</em>) – CMB radius</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>corrected outer core density polynomial coefficients</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.radial_grid">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">radial_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">radii</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n_points</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#radial_grid"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.radial_grid" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create the radial grid across the core.</p>
+<p>Creates the adaptive radial grid that ensures 2 radii at each interface to allow
+for resolving dicontinuous variables. E.g. 2 points at the ICB to resolve density jump.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radii</strong> (<em>array</em>) – radii for layer interfaces throughout the core, in order.</p></li>
+<li><p><strong>n_points</strong> (<em>int</em>) – Number of radial grid points</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>radial grid</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.specific_heat">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">specific_heat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#specific_heat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.specific_heat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Specific heat capacity as a function of Pressure.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>P</strong> (<em>array</em>) – Pressure</p></li>
+<li><p><strong>cp_params</strong> (<em>array</em>) – pressure polynomial coefficients for specific heat</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>specific heat capacity at P</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If more than constant cp is given (cp_params is longer than one number), not yet implemented</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.temp_dependent_profiles">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">temp_dependent_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">setup</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#temp_dependent_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.temp_dependent_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the temperature dependent profiles.</p>
+<p>Sets the k, Qa, T profiles.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>ThermalModel class</em>) – Main class being used for the calculation</p></li>
+<li><p><strong>setup</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to setup the profiles dictionary during model setup, by default False</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.thermal_expansivity">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.profiles.</span></span><span class="sig-name descname"><span class="pre">thermal_expansivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#thermal_expansivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.thermal_expansivity" title="Permalink to this definition">¶</a></dt>
+<dd><p>Thermal expansivity as a function of Pressure.</p>
+<p>Parameterisation of thermal expansivity given in Knibbe and Van Westrenen (2018).
+If only a single value is given in the alpha_params array, then alpha will be constant
+with this value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>P</strong> (<em>array</em>) – pressure</p></li>
+<li><p><strong>alpha_params</strong> (<em>array</em>) – parameters for thermal expansivity in the order: alpha_T at ambient pressure, bulk modulus, derivative of bulk modulus with pressure</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>thermal expansivity at P</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="chemistry-module">
+<h2>chemistry (module)<a class="headerlink" href="#chemistry-module" title="Permalink to this headline">¶</a></h2>
+<p>Functions related to core chemistry</p>
+<span class="target" id="module-thermal_history.core_models.leeds.routines.chemistry"></span><dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.LE_frac_dep">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">LE_frac_dep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm_fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ri_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_sol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ent_mel_poly</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#LE_frac_dep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.LE_frac_dep" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the concentration of light elements in the solid inner core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em>) – Pressure at the inner core boundary</p></li>
+<li><p><strong>Tm_fe</strong> (<em>float</em>) – Melting temperture of pure iron at the ICB</p></li>
+<li><p><strong>ri_idx</strong> (<em>int</em>) – index for ICB in radial arrays</p></li>
+<li><p><strong>conc_l</strong> (<em>array</em>) – mass fraction of light element in the liquid</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and the light elements</p></li>
+<li><p><strong>dmu</strong> (<em>array</em>) – change in chemical potential between solid/liquid</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for liquid</p></li>
+<li><p><strong>lambda_sol</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for solid</p></li>
+<li><p><strong>ent_mel_poly</strong> (<em>array</em>) – radial polynomials for entropy of melting</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mass fraction of light element in the solid</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.baro_coeff">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">baro_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#baro_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.baro_coeff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the barodiffusion coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in the liquid core</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and the light elements</p></li>
+<li><p><strong>T_av</strong> (<em>float</em>) – Average temperature to evaluate at</p></li>
+<li><p><strong>rho_av</strong> (<em>float</em>) – Average density to evaluate at</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for liquid for light elements</p></li>
+<li><p><strong>diffusivity_c</strong> (<em>array</em>) – Self diffusion coefficients for light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>barodiffusion coefficients for light elements</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.baro_coeff_fast">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">baro_coeff_fast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#baro_coeff_fast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.baro_coeff_fast" title="Permalink to this definition">¶</a></dt>
+<dd><p>Faster jit compiled version of baro_coeff</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in the liquid core</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and the light elements</p></li>
+<li><p><strong>T_av</strong> (<em>float</em>) – Average temperature to evaluate at</p></li>
+<li><p><strong>rho_av</strong> (<em>float</em>) – Average density to evaluate at</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for liquid for light elements</p></li>
+<li><p><strong>diffusivity_c</strong> (<em>array</em>) – Self diffusion coefficients for light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>barodiffusion coefficients for light elements</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.calibrate_temperature">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">calibrate_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#calibrate_temperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.calibrate_temperature" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the correct value for Tcen for a given inner core radius and melting curve</p>
+<p>Sets model.core.T_cmb, as well as the adiabat/adiabatic gradient profiles with correct temperature
+for given inner core radius</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>ThermalModel class</em>) – Main ThermalModel class being used for the calculation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.iron_melting">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">iron_melting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#iron_melting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.iron_melting" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple polynomial representation of iron melting temperature with pressure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>numpy.ndarray</em>) – Pressure values to evaluate at.</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy.ndarray</em>) – polynomial coefficients in increasing order.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Melting temperature of iron</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float, np.ndarray (same shape as P)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.iron_melting_gradient">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">iron_melting_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#iron_melting_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.iron_melting_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Melting temperature gradient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em><em> or </em><em>numpy array</em>) – Pressure value to evalulate gradient at</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy array</em>) – array containing coefficients of pressure polynomials for melting temperature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Melting temperature gradient evaluated at P.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or numpy array (same type as P)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.mass_conc2mole_frac">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">mass_conc2mole_frac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#mass_conc2mole_frac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.mass_conc2mole_frac" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from mass fraction to mole fraction for core alloying light elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conc</strong> (<em>array</em>) – mass fractions of light elements</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron followed by light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mole fractions of light elements (same size as conc)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.melt_pt_dep">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">melt_pt_dep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mf_sol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds_fe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#melt_pt_dep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.melt_pt_dep" title="Permalink to this definition">¶</a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in the liquid core</p></li>
+<li><p><strong>mf_sol</strong> (<em>array</em>) – mole fraction of light elements in the solid core</p></li>
+<li><p><strong>Tm</strong> (<em>float</em><em> or </em><em>array</em>) – Melting temperature</p></li>
+<li><p><strong>ds_fe</strong> (<em>float</em><em> or </em><em>array</em>) – entropy change of melting at Tm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Deflection of melting curve due to presence of light elements</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.melting_curve">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">melting_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#melting_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.melting_curve" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the melting curve and sets the mass fraction of light element in the solid iron core (conc_s) according to
+the relevant partitioning model.
+Different methods for the paramterisation of the melting curve can be set by the core_melting_params parameter.
+In this parameter (a List), the first element is a string, followed by the constants (floats) required for the
+parameterisation of conc_s and the melting curve. The accepted strings are currently:</p>
+<p>‘AL’: This method is also the default if no string is given. Uses the method of Alfe et al. (2002) to determine conc_s
+based on equal chemical potentials at the ICB and the depression of the iron melting point for the alloy. The iron melting temperature is calculated using
+polynomials in pressure, with the coefficients given after ‘AL’ in core_melting_params.
+E.g. = core_melting_params = [‘AL’, Tl0, Tl1, Tl2…..]</p>
+<p>‘SG’: Uses the Simon-Glatzel parameterisation of the melting curve with fractionation of elements given by fixed
+partitioning behaviour given by the partition_coeff parameter. After ‘SG’, the parameters required for the melting
+curve are the constants Tl0, beta1 and beta2 (see Knibbe and Van Westrenen (2018) for details).
+E.g. core_melting_params = [‘SG’, Tl0, beta1, beta2]</p>
+<p>‘WN’: Uses the Williams and Nimmo (2004) parameterisation (also used in Davies and Pommier (2018)) for the melting curve.
+Like ‘SG’, the partitioning is also described by fixed parition coefficients (=conc_s/conc_l) in the partition_coeff parameter.
+After ‘WN’, the constants Tl0 and the polynomial coefficients in pressure should be given. E.g. in Davies and Pommier (2018)
+this would be represented as core_melting_params = [‘WN’, Tl0, 1, Tl1, Tl2]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="thermal_history.html#thermal_history.model_classes.ThermalModel" title="thermal_history.model_classes.ThermalModel"><em>ThermalModel</em></a>) – ThermalModel class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of 3 arrays for the melting point of iron, melting point of the alloy, and derivative of the alloy melting point with pressure.
+Values are calculated on the same radial grid as all core profiles.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(numpy.ndarray, numpy.ndarray, numpy.ndarray)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If an unrecognised string in core_melting_params is given.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.mole_frac2mass_conc">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">mole_frac2mass_conc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#mole_frac2mass_conc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.mole_frac2mass_conc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from mole fraction to mass fraction for core alloying light elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf</strong> (<em>array</em>) – mole fractions of light elements</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron followed by light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mass fractions of light elements (same size as mf)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.simon_glatzel">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">simon_glatzel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#simon_glatzel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.simon_glatzel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Melting temperature of iron alloy parameterised with Simon-Glatzel’s equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em><em> or </em><em>numpy array</em>) – Pressure value to evalulate gradient at</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy array</em>) – array containing 3 values: the reference temperature, beta1 and beta2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The melting temperature at P</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.simon_glatzel_gradient">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">simon_glatzel_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#simon_glatzel_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.simon_glatzel_gradient" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gradient of the melting temperature of iron alloy parameterised with Simon-Glatzel’s equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em><em> or </em><em>numpy array</em>) – Pressure value to evalulate gradient at</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy array</em>) – array containing 3 values: the reference temperature, beta1 and beta2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The melting temperature gradient at P</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.solid_conc">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">solid_conc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds_fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#solid_conc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.solid_conc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the mole fraction of light element in the inner core from chemical equilibria</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in liquid core</p></li>
+<li><p><strong>T_m</strong> (<em>float</em>) – melting temperature of iron at ICB</p></li>
+<li><p><strong>ds_fe</strong> (<em>float</em>) – entropy of melting of iron at ICB</p></li>
+<li><p><strong>dmu</strong> (<em>array</em>) – change in chemical potentials between solid and liquid</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – corrections to chemical potentials in liquid</p></li>
+<li><p><strong>lambda_sol</strong> (<em>array</em>) – correctinos to chemical potentials in solid</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mole fractions in the inner core</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="energy-module">
+<h2>energy (module)<a class="headerlink" href="#energy-module" title="Permalink to this headline">¶</a></h2>
+<p>Functions related to energy and entropy terms</p>
+<span class="target" id="module-thermal_history.core_models.leeds.routines.energy"></span><dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.cond_entropy">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">cond_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#cond_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.cond_entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy of thermal conduction in adiabatic region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Ta</strong> (<em>array</em>) – Adiabatic temperature</p></li>
+<li><p><strong>Ta_grad</strong> (<em>array</em>) – Adiabatic temperature gradient</p></li>
+<li><p><strong>k</strong> (<em>array</em>) – Thermal conductivity</p></li>
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for rs (base of stable layer) in radial arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Entropy of thermal conduction</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.gravitational">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">gravitational</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_oc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcmb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#gravitational"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.gravitational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gravitational energy associated with growth of IC</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>psi</strong> (<em>array</em>) – gravitational potential</p></li>
+<li><p><strong>Cr</strong> (<em>float</em>) – Cr factor that normalises IC growth rate to cooling rate</p></li>
+<li><p><strong>Cc</strong> (<em>array</em>) – Cc factor that normalises enrichment of light element in OC to inner core growth</p></li>
+<li><p><strong>M_oc</strong> (<em>float</em>) – Mass of outer core over which light elements are distributed</p></li>
+<li><p><strong>alpha_c</strong> (<em>array</em>) – chemical expansivities for light elements</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for ICB in radial arrays</p></li>
+<li><p><strong>rs_idx</strong> (<em>int</em>) – Index for rs (base of stable layer) in radial arrays</p></li>
+<li><p><strong>Tcmb</strong> (<em>bool</em><em>, </em><em>optional</em>) – temperature of the CMB. If False, then the end of the Ta array is used, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normlised gravitational energy and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.gravitational_precip">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">gravitational_precip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#gravitational_precip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.gravitational_precip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gravitational energy associated with precipitation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>psi</strong> (<em>array</em>) – gravitational potential</p></li>
+<li><p><strong>Cm</strong> (<em>float</em>) – Factor that normlises precipitation to cooling rate</p></li>
+<li><p><strong>alpha_c</strong> (<em>float</em>) – chemical expansivity of precipitating element</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for ICB in radial arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normlised gravitational energy and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.heat_of_reaction">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">heat_of_reaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_oc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmu_dt_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_oc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#heat_of_reaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.heat_of_reaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy of heat of reaction at ICB (NOT TESTED IN A WHILE)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_oc</strong> (<em>array</em>) – Outer core density</p></li>
+<li><p><strong>dmu_dt_poly</strong> (<em>array</em>) – radial polynomials for change in chemical potential with temperature.</p></li>
+<li><p><strong>Cc</strong> (<em>array</em>) – Cc factor that normalises enrichment of light element in OC to inner core growth</p></li>
+<li><p><strong>Cr</strong> (<em>float</em>) – Cr factor that normalises IC growth rate to cooling rate</p></li>
+<li><p><strong>r_oc</strong> (<em>array</em>) – outer core radial grid points</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Entropy from heat of reaction</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.integrate">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depreciated in favour of thermal_history.utils.optimised_funcs.trapezoid</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.latent_heat">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">latent_heat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#latent_heat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.latent_heat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Latent heat of fusion during IC growth</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ri</strong> (<em>float</em>) – Inner core radius</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – Density</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – Adiabatic temperature</p></li>
+<li><p><strong>Cr</strong> (<em>float</em>) – Cr factor that normalises IC growth rate to cooling rate</p></li>
+<li><p><strong>L</strong> (<em>array</em>) – Latent heat</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for ICB in radial arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normlised latent heat and associated entropy.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.mass_diffusion">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">mass_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#mass_diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.mass_diffusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy from barodiffusion of light elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>i</strong> (<em>float</em><em> or </em><em>array</em>) – mass flux</p></li>
+<li><p><strong>alpha_D</strong> (<em>array</em>) – barodiffusion coefficient</p></li>
+<li><p><strong>T</strong> (<em>array</em>) – temperature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Total entropy of barodiffusion of light elements.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.mass_flux">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">mass_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#mass_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.mass_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mass flux from diffusion down chemical and pressure gradients</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em><em> or </em><em>array</em>) – density</p></li>
+<li><p><strong>alpha_c</strong> (<em>float</em>) – chemical expansivities for light element</p></li>
+<li><p><strong>alpha_D</strong> (<em>float</em>) – barodiffusion coefficients for light element</p></li>
+<li><p><strong>D</strong> (<em>float</em>) – Self diffusion coefficients for light element</p></li>
+<li><p><strong>c_grad</strong> (<em>float</em><em> or </em><em>array</em>) – chemical gradient</p></li>
+<li><p><strong>g</strong> (<em>float</em><em> or </em><em>array</em>) – gravity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mass flux</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.radiogenic_heating">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">radiogenic_heating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#radiogenic_heating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.radiogenic_heating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Heat from radiogenic heating (NOT TESTED)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – time (relative to present day)</p></li>
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>Mass</strong> (<em>float</em>) – mass of core</p></li>
+<li><p><strong>h0</strong> (<em>float</em>) – Present day heating rate per unit mass</p></li>
+<li><p><strong>decay_time</strong> (<em>float</em>) – Half life of radiogenic element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Radiogenic heating and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.secular_cool">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.energy.</span></span><span class="sig-name descname"><span class="pre">secular_cool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcmb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#secular_cool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.secular_cool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energy from change in sensible energy from secular cooling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>cp</strong> (<em>array</em>) – specific heat capacity</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for rs (base of stable layer) in radial arrays</p></li>
+<li><p><strong>Tcmb</strong> (<em>bool</em><em>, </em><em>optional</em>) – temperature of the CMB. If False, then the end of the Ta array is used, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Secular cooling energy and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="snow-module">
+<h2>snow (module)<a class="headerlink" href="#snow-module" title="Permalink to this headline">¶</a></h2>
+<p>Functions related to precipitation of iron snow</p>
+<span class="target" id="module-0"></span><dl class="py function">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">LE_frac_dep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm_fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ri_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_sol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ent_mel_poly</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#LE_frac_dep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id0" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the concentration of light elements in the solid inner core</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em>) – Pressure at the inner core boundary</p></li>
+<li><p><strong>Tm_fe</strong> (<em>float</em>) – Melting temperture of pure iron at the ICB</p></li>
+<li><p><strong>ri_idx</strong> (<em>int</em>) – index for ICB in radial arrays</p></li>
+<li><p><strong>conc_l</strong> (<em>array</em>) – mass fraction of light element in the liquid</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and the light elements</p></li>
+<li><p><strong>dmu</strong> (<em>array</em>) – change in chemical potential between solid/liquid</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for liquid</p></li>
+<li><p><strong>lambda_sol</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for solid</p></li>
+<li><p><strong>ent_mel_poly</strong> (<em>array</em>) – radial polynomials for entropy of melting</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mass fraction of light element in the solid</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">baro_coeff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#baro_coeff"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the barodiffusion coefficient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in the liquid core</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and the light elements</p></li>
+<li><p><strong>T_av</strong> (<em>float</em>) – Average temperature to evaluate at</p></li>
+<li><p><strong>rho_av</strong> (<em>float</em>) – Average density to evaluate at</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for liquid for light elements</p></li>
+<li><p><strong>diffusivity_c</strong> (<em>array</em>) – Self diffusion coefficients for light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>barodiffusion coefficients for light elements</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">baro_coeff_fast</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_av</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diffusivity_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#baro_coeff_fast"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id2" title="Permalink to this definition">¶</a></dt>
+<dd><p>Faster jit compiled version of baro_coeff</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in the liquid core</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and the light elements</p></li>
+<li><p><strong>T_av</strong> (<em>float</em>) – Average temperature to evaluate at</p></li>
+<li><p><strong>rho_av</strong> (<em>float</em>) – Average density to evaluate at</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – correction to chemical potentials from an ideal solution for liquid for light elements</p></li>
+<li><p><strong>diffusivity_c</strong> (<em>array</em>) – Self diffusion coefficients for light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>barodiffusion coefficients for light elements</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">calibrate_temperature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#calibrate_temperature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the correct value for Tcen for a given inner core radius and melting curve</p>
+<p>Sets model.core.T_cmb, as well as the adiabat/adiabatic gradient profiles with correct temperature
+for given inner core radius</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>ThermalModel class</em>) – Main ThermalModel class being used for the calculation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id4">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">iron_melting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#iron_melting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple polynomial representation of iron melting temperature with pressure</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>int</em><em>, </em><em>float</em><em>, </em><em>numpy.ndarray</em>) – Pressure values to evaluate at.</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy.ndarray</em>) – polynomial coefficients in increasing order.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Melting temperature of iron</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float, np.ndarray (same shape as P)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id5">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">iron_melting_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#iron_melting_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Melting temperature gradient</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em><em> or </em><em>numpy array</em>) – Pressure value to evalulate gradient at</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy array</em>) – array containing coefficients of pressure polynomials for melting temperature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Melting temperature gradient evaluated at P.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or numpy array (same type as P)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id6">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">mass_conc2mole_frac</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#mass_conc2mole_frac"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from mass fraction to mole fraction for core alloying light elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>conc</strong> (<em>array</em>) – mass fractions of light elements</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron followed by light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mole fractions of light elements (same size as conc)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id7">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">melt_pt_dep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mf_sol</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds_fe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#melt_pt_dep"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id7" title="Permalink to this definition">¶</a></dt>
+<dd><p>_summary_</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in the liquid core</p></li>
+<li><p><strong>mf_sol</strong> (<em>array</em>) – mole fraction of light elements in the solid core</p></li>
+<li><p><strong>Tm</strong> (<em>float</em><em> or </em><em>array</em>) – Melting temperature</p></li>
+<li><p><strong>ds_fe</strong> (<em>float</em><em> or </em><em>array</em>) – entropy change of melting at Tm</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Deflection of melting curve due to presence of light elements</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id8">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">melting_curve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#melting_curve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the melting curve and sets the mass fraction of light element in the solid iron core (conc_s) according to
+the relevant partitioning model.
+Different methods for the paramterisation of the melting curve can be set by the core_melting_params parameter.
+In this parameter (a List), the first element is a string, followed by the constants (floats) required for the
+parameterisation of conc_s and the melting curve. The accepted strings are currently:</p>
+<p>‘AL’: This method is also the default if no string is given. Uses the method of Alfe et al. (2002) to determine conc_s
+based on equal chemical potentials at the ICB and the depression of the iron melting point for the alloy. The iron melting temperature is calculated using
+polynomials in pressure, with the coefficients given after ‘AL’ in core_melting_params.
+E.g. = core_melting_params = [‘AL’, Tl0, Tl1, Tl2…..]</p>
+<p>‘SG’: Uses the Simon-Glatzel parameterisation of the melting curve with fractionation of elements given by fixed
+partitioning behaviour given by the partition_coeff parameter. After ‘SG’, the parameters required for the melting
+curve are the constants Tl0, beta1 and beta2 (see Knibbe and Van Westrenen (2018) for details).
+E.g. core_melting_params = [‘SG’, Tl0, beta1, beta2]</p>
+<p>‘WN’: Uses the Williams and Nimmo (2004) parameterisation (also used in Davies and Pommier (2018)) for the melting curve.
+Like ‘SG’, the partitioning is also described by fixed parition coefficients (=conc_s/conc_l) in the partition_coeff parameter.
+After ‘WN’, the constants Tl0 and the polynomial coefficients in pressure should be given. E.g. in Davies and Pommier (2018)
+this would be represented as core_melting_params = [‘WN’, Tl0, 1, Tl1, Tl2]</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="thermal_history.html#thermal_history.model_classes.ThermalModel" title="thermal_history.model_classes.ThermalModel"><em>ThermalModel</em></a>) – ThermalModel class</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Tuple of 3 arrays for the melting point of iron, melting point of the alloy, and derivative of the alloy melting point with pressure.
+Values are calculated on the same radial grid as all core profiles.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(numpy.ndarray, numpy.ndarray, numpy.ndarray)</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If an unrecognised string in core_melting_params is given.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id9">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">mole_frac2mass_conc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#mole_frac2mass_conc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts from mole fraction to mass fraction for core alloying light elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf</strong> (<em>array</em>) – mole fractions of light elements</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron followed by light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mass fractions of light elements (same size as mf)</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id10">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">simon_glatzel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#simon_glatzel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Melting temperature of iron alloy parameterised with Simon-Glatzel’s equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em><em> or </em><em>numpy array</em>) – Pressure value to evalulate gradient at</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy array</em>) – array containing 3 values: the reference temperature, beta1 and beta2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The melting temperature at P</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id11">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">simon_glatzel_gradient</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#simon_glatzel_gradient"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gradient of the melting temperature of iron alloy parameterised with Simon-Glatzel’s equation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>P</strong> (<em>float</em><em> or </em><em>numpy array</em>) – Pressure value to evalulate gradient at</p></li>
+<li><p><strong>melting_params</strong> (<em>numpy array</em>) – array containing 3 values: the reference temperature, beta1 and beta2.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>The melting temperature gradient at P</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or numpy array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="id12">
+<span class="sig-prename descclassname"><span class="pre">thermal_history.core_models.leeds.routines.chemistry.</span></span><span class="sig-name descname"><span class="pre">solid_conc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mf_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ds_fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmu</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_liq</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lambda_sol</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#solid_conc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#id12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates the mole fraction of light element in the inner core from chemical equilibria</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mf_liq</strong> (<em>array</em>) – mole fraction of light elements in liquid core</p></li>
+<li><p><strong>T_m</strong> (<em>float</em>) – melting temperature of iron at ICB</p></li>
+<li><p><strong>ds_fe</strong> (<em>float</em>) – entropy of melting of iron at ICB</p></li>
+<li><p><strong>dmu</strong> (<em>array</em>) – change in chemical potentials between solid and liquid</p></li>
+<li><p><strong>lambda_liq</strong> (<em>array</em>) – corrections to chemical potentials in liquid</p></li>
+<li><p><strong>lambda_sol</strong> (<em>array</em>) – correctinos to chemical potentials in solid</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mole fractions in the inner core</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>array</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="thermal_history.core_models.simple_test.html" class="btn btn-neutral float-right" title="simple_test (package)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="thermal_history.core_models.leeds.html" class="btn btn-neutral float-left" title="leeds (package)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
