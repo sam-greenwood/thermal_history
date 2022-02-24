@@ -374,7 +374,10 @@ def evolve(model):
     core.Qa_rs = core.profiles['Qa'][rs_idx]
 
     core.ADR = core.Q_cmb/core.profiles['Qa'][-1]
-    core.ADR_s = core.Q_rs/core.profiles['Qa'][rs_idx]
+    if core.profiles['Qa'][rs_idx] > 0: #Avoid division by 0
+        core.ADR_s = core.Q_rs/core.profiles['Qa'][rs_idx]
+    else:
+        core.ADR_s = 0
 
     core.Ql = Ql_tilda*dT_dt
     core.El = El
