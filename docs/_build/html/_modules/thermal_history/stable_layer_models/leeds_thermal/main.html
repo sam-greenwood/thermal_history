@@ -169,6 +169,13 @@
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span>
 
 <div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Setup the initial stable layer</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel</span>
+<span class="sd">        Main model class</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
     <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
@@ -208,6 +215,13 @@
 
 
 <div class="viewcode-block" id="evolve"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.evolve">[docs]</a><span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Evolve the stable layer</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel</span>
+<span class="sd">        Main model class</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
     <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
@@ -339,6 +353,13 @@
 
 
 <div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.update">[docs]</a><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Update function</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel</span>
+<span class="sd">        Main model class</span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
     <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
@@ -367,11 +388,9 @@
 <span class="c1">#Required parameters. &#39;Name&#39;: &#39;Description&#39;</span>
 <span class="n">required_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;core_liquid_density_params&#39;</span><span class="p">:</span> <span class="s1">&#39;Outer core density polynomials (radial). List(float)&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;r_cmb&#39;</span><span class="p">:</span> <span class="s1">&#39;CMB radius. Float&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;layer_thickness&#39;</span><span class="p">:</span> <span class="s1">&#39;Initial stable layer thickness. Float.&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;core_alpha_T_params&#39;</span><span class="p">:</span> <span class="s1">&#39;Core thermal expansivity pressure polynomial coefficients. List(Float)&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;core_cp_params&#39;</span><span class="p">:</span> <span class="s1">&#39;Core specific heat capacity pressure polynomial coefficients. List(Float)&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;core_conductivity_params&#39;</span><span class="p">:</span> <span class="s1">&#39;List, first element is a string followed by the core thermal conductivity polynomial coefficients. The string (either </span><span class="se">\&#39;</span><span class="s1">r</span><span class="se">\&#39;</span><span class="s1">/</span><span class="se">\&#39;</span><span class="s1">T</span><span class="se">\&#39;</span><span class="s1">/</span><span class="se">\&#39;</span><span class="s1">P</span><span class="se">\&#39;</span><span class="s1">) indicates if the polynomials are radial, temperature, or pressire coefficients. List(string, Float, Float...)&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;entrainment_T&#39;</span><span class="p">:</span> <span class="s1">&#39;Entrainment coefficient on thermal stratification (assumed 0). Float&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;P_cmb&#39;</span><span class="p">:</span> <span class="s1">&#39;CMB pressure. Float&#39;</span><span class="p">}</span>
 
 <span class="c1">#Optional parameters. &#39;Name&#39;: (&#39;Description&#39;, default_value)</span>
@@ -383,7 +402,8 @@
                    <span class="s1">&#39;init_size&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 5000) Size the stable layer should be initialised if conditions promote layer growth and a layer does not yet exist. Note this default value will be halved when considering chemically stable layers fot stability. Float&#39;</span><span class="p">,</span> <span class="mi">5000</span><span class="p">),</span>
                    <span class="s1">&#39;mix_layer&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: False) Boolean, if True, uses an experimental function to calculate the T/c profile of a layer that has the top portion mixed.&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
                    <span class="s1">&#39;thermal_stratification&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: True). Boolean, internal flag to tell the code that thermal stratification is being used&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">),</span>
-                   <span class="s1">&#39;chemical_stratification&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: False). Boolean, internal flag to tell the code that chemical stratification is not being used&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)}</span>
+                   <span class="s1">&#39;chemical_stratification&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: False). Boolean, internal flag to tell the code that chemical stratification is not being used&#39;</span><span class="p">,</span> <span class="kc">False</span><span class="p">),</span>
+                   <span class="s1">&#39;layer_thickness&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;(Default: 0). Float, Initial stable layer thickness.&#39;</span><span class="p">,</span><span class="mi">0</span><span class="p">),}</span>
 
 
 <div class="viewcode-block" id="progress"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.progress">[docs]</a><span class="k">def</span> <span class="nf">progress</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
@@ -402,9 +422,9 @@
 
     <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
 
-    <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">ADR</span><span class="p">)</span>
+    <span class="n">v</span> <span class="o">=</span> <span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">layer_thickness</span><span class="o">/</span><span class="mi">1000</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">Q_cmb</span><span class="o">/</span><span class="mf">1e12</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">ADR</span><span class="p">)</span>
 
-    <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;layer thickness: </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> km    ADR(rc): </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;    layer thickness: </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> km    Q_cmb: </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> TW    ADR(rc): </span><span class="si">{</span><span class="n">v</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1">&#39;</span>
 
     <span class="k">return</span> <span class="n">text</span></div>
 
@@ -412,6 +432,19 @@
 <span class="c1">#3 Methods for 3 different cases</span>
 
 <div class="viewcode-block" id="pure_thermal_method"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.html#thermal_history.stable_layer_models.leeds_thermal.main.pure_thermal_method">[docs]</a><span class="k">def</span> <span class="nf">pure_thermal_method</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Pure thermal stratification</span>
+
+<span class="sd">    Solves the thermal diffusion solution and updates the layer size during one time iteration.</span>
+<span class="sd">    For stability, it may step in smaller time increments until the total model timestep has been</span>
+<span class="sd">    reached.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel</span>
+<span class="sd">        Main model class</span>
+
+<span class="sd">    </span>
+<span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
     <span class="n">sl</span>  <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
@@ -570,7 +603,7 @@
         <span class="n">time_gone</span> <span class="o">+=</span> <span class="n">dt_small</span>
 
 
-    <span class="c1">#Save new profiles.</span>
+    <span class="c1">#Save new profiles. Keep original profiles until update() has been called.</span>
     <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">r</span>
     <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span>
 

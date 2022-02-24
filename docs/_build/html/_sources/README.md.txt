@@ -7,6 +7,9 @@ All regions are optional allowing flexible calculations based on the interests o
 published models, whilst the framework of the code makes it easy to add additional methods as they are developed for ultimate flexibility.
 
 ## Getting Started
+
+Open /docs/_build/html/index.html with a browser for full docmentation (coming to readthedocs soon).
+
 Requirements:
 1. Works with Linux/MacOS/Windows.
 2. conda package manager from either miniconda (see https://docs.conda.io/en/latest/miniconda.html) or a full anaconda installation.
@@ -15,11 +18,14 @@ Requirements:
 Simply clone this repo and install the anaconda environment by running from a unix terminal:
 
 ```
-git clone .....
+git clone git@github.com:sam-greenwood/thermal_history.git
 cd thermal_history
 conda env create -f environment.yml
 conda activate thermal_history
 ```
+
+To be able to import `thermal_history` from anywhere, you can append to the PYTHONPATH system variable by putting `export PYTHONPATH=$PYTHONPATH:"full/path/to/directory/containing_thermal_history"` into your `.bashrc` file (or `.zshrc` or equivalent depending on your shell). Now new terminals that open will allow python to always be aware of that location for imports (proper setup.py coming sometime soon!).
+
 
 ### 2. Running a simple example
 For a basic example we will solve for the thermal evolution of an isothermal iron core with radius $r_c$, constant density ($\rho$), and specific heat capacity ($C_p$):
