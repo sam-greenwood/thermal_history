@@ -83,6 +83,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../thermal_history.html">thermal_history API</a></li>
 </ul>
@@ -275,7 +276,7 @@
 
     <span class="k">else</span><span class="p">:</span>
 
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Incorrect string denoting which melting parameterisation to use. See this function (core_model.development.routines.chemisty.melting_curve) for valid options. Supplied core_melting_params=</span><span class="si">{</span><span class="n">melting_params</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Incorrect string denoting which melting parameterisation to use. See this function (core_models.leeds.routines.chemisty.melting_curve) for valid options. Supplied core_melting_params=</span><span class="si">{</span><span class="n">melting_params</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">Tm</span> <span class="o">=</span> <span class="n">Tm_fe</span> <span class="o">+</span> <span class="n">dTm</span>
 

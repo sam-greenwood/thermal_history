@@ -83,6 +83,7 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Advanced.html">Adding new methods</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../thermal_history.html">thermal_history API</a></li>
 </ul>
@@ -384,9 +385,9 @@
         <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
         <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1"> =   # </span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">72</span><span class="p">:</span> <span class="c1">#Try to cut down long lines across 2 lines.</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="mi">72</span>
-                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">72</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span> <span class="c1">#Try to cut down long lines across 2 lines.</span>
+                <span class="n">end</span> <span class="o">=</span> <span class="mi">100</span>
+                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
                     <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39; &#39;</span><span class="p">:</span>
                         <span class="n">end</span> <span class="o">=</span> <span class="n">c</span>
                         <span class="k">break</span>

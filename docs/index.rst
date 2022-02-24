@@ -7,6 +7,7 @@ Documentation for thermal_history
    :caption: Contents:
 
    README
+   simple_example
    Advanced
    thermal_history
 
