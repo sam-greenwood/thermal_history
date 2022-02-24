@@ -19,6 +19,13 @@ from scipy.optimize import bisect
 from scipy.integrate import trapz
 
 def setup(model):
+    '''Setup the initial stable layer
+
+    Parameters
+    ----------
+    model : ThermalModel
+        Main model class
+    '''
 
     prm = model.parameters
     sl = model.stable_layer
@@ -58,6 +65,13 @@ def setup(model):
 
 
 def evolve(model):
+    '''Evolve the stable layer
+
+    Parameters
+    ----------
+    model : ThermalModel
+        Main model class
+    '''
 
     sl = model.stable_layer
     core = model.core
@@ -189,6 +203,13 @@ def evolve(model):
 
 
 def update(model):
+    '''Update function
+
+    Parameters
+    ----------
+    model : ThermalModel
+        Main model class
+    '''
 
     sl = model.stable_layer
     prm = model.parameters
@@ -217,11 +238,9 @@ def update(model):
 #Required parameters. 'Name': 'Description'
 required_params = {'core_liquid_density_params': 'Outer core density polynomials (radial). List(float)',
                    'r_cmb': 'CMB radius. Float',
-                   'layer_thickness': 'Initial stable layer thickness. Float.',
                    'core_alpha_T_params': 'Core thermal expansivity pressure polynomial coefficients. List(Float)',
                    'core_cp_params': 'Core specific heat capacity pressure polynomial coefficients. List(Float)',
                    'core_conductivity_params': 'List, first element is a string followed by the core thermal conductivity polynomial coefficients. The string (either \'r\'/\'T\'/\'P\') indicates if the polynomials are radial, temperature, or pressire coefficients. List(string, Float, Float...)',
-                   'entrainment_T': 'Entrainment coefficient on thermal stratification (assumed 0). Float',
                    'P_cmb': 'CMB pressure. Float'}
 
 #Optional parameters. 'Name': ('Description', default_value)
@@ -233,7 +252,8 @@ optional_params = {'entrainment_T': ('(Default: 0) Float in the range 0 <= x < 1
                    'init_size': ('(Default: 5000) Size the stable layer should be initialised if conditions promote layer growth and a layer does not yet exist. Note this default value will be halved when considering chemically stable layers fot stability. Float', 5000),
                    'mix_layer': ('(Default: False) Boolean, if True, uses an experimental function to calculate the T/c profile of a layer that has the top portion mixed.', False),
                    'thermal_stratification': ('(Default: True). Boolean, internal flag to tell the code that thermal stratification is being used', True),
-                   'chemical_stratification': ('(Default: False). Boolean, internal flag to tell the code that chemical stratification is not being used', False)}
+                   'chemical_stratification': ('(Default: False). Boolean, internal flag to tell the code that chemical stratification is not being used', False),
+                   'layer_thickness': ('(Default: 0). Float, Initial stable layer thickness.',0),}
 
 
 def progress(model):
@@ -252,9 +272,9 @@ def progress(model):
 
     sl = model.stable_layer
 
-    v = (sl.layer_thickness/1000, sl.ADR)
+    v = (sl.layer_thickness/1000, sl.Q_cmb/1e12, sl.ADR)
 
-    text = f'layer thickness: {v[0]:.2f} km    ADR(rc): {v[1]:.2f}'
+    text = f'    layer thickness: {v[0]:.2f} km    Q_cmb: {v[1]:.2f} TW    ADR(rc): {v[2]:.2f}'
 
     return text
 
@@ -262,6 +282,19 @@ def progress(model):
 #3 Methods for 3 different cases
 
 def pure_thermal_method(model):
+    '''Pure thermal stratification
+
+    Solves the thermal diffusion solution and updates the layer size during one time iteration.
+    For stability, it may step in smaller time increments until the total model timestep has been
+    reached.
+
+    Parameters
+    ----------
+    model : ThermalModel
+        Main model class
+
+    
+    '''
 
     core = model.core
     sl  = model.stable_layer
@@ -420,7 +453,7 @@ def pure_thermal_method(model):
         time_gone += dt_small
 
 
-    #Save new profiles.
+    #Save new profiles. Keep original profiles until update() has been called.
     sl._next_profiles['r'] = r
     sl._next_profiles['T'] = T
 
