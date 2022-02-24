@@ -24,7 +24,7 @@ conda env create -f environment.yml
 conda activate thermal_history
 ```
 
-To be able to import `thermal_history` from anywhere, you can append to the PYTHONPATH system variable by putting `export PYTHONPATH=$PYTHONPATH:"full/path/to/directory/containing_thermal_history"` into your `.bashrc` file (or `.zshrc` or equivalent depending on your shell). Now new terminals that open will allow python to always be aware of that location for imports (proper setup.py coming sometime soon!).
+To be able to import `thermal_history` from anywhere, you can append to the PYTHONPATH system variable by putting `export PYTHONPATH=$PYTHONPATH:"full/path/to/directory/containing_thermal_history"` into your `~/.bashrc` file (or `~/.zshrc` or equivalent depending on your shell) and running `source ~/.bashrc`. The active terminal and new terminals will allow python to always be aware of that location for imports (proper setup.py coming sometime soon!).
 
 
 ### 2. Running a simple example
