@@ -125,7 +125,7 @@ def melting_curve(model):
 
     else:
 
-        raise ValueError(f'Incorrect string denoting which melting parameterisation to use. See this function (core_model.development.routines.chemisty.melting_curve) for valid options. Supplied core_melting_params={melting_params}')
+        raise ValueError(f'Incorrect string denoting which melting parameterisation to use. See this function (core_models.leeds.routines.chemisty.melting_curve) for valid options. Supplied core_melting_params={melting_params}')
 
     Tm = Tm_fe + dTm
 

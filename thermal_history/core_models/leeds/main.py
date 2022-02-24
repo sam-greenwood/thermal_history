@@ -64,7 +64,6 @@ def setup(model):
 
     #Save initial light element concentration (used by snow zone evolution).
     core.initial_conc_l = core.conc_l[0]
-    core.initial_conc_l = 0.106
 
     #Set initial radial profiles
     prof.basic_profiles(model, setup=True)

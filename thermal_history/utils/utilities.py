@@ -234,9 +234,9 @@ def create_parameters_file(fname,
         max_l = max([len(x) for x in optional_params[r].keys()])
         for key, value in optional_params[r].items():
             line = f'#{key:<{max_l}} =   # {value[0]}\n'
-            if len(line) > 72: #Try to cut down long lines across 2 lines.
-                end = 72
-                for c in range(72,40,-1):
+            if len(line) > 100: #Try to cut down long lines across 2 lines.
+                end = 100
+                for c in range(100,40,-1):
                     if line[c]==' ':
                         end = c
                         break
