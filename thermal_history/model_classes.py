@@ -434,6 +434,6 @@ class ThermalModel(BaseModel):
         with open(fname, 'wb') as f:
             pickle.dump(numpy_dict, f)
             f.close()
-            print('\nWrote {} to file'.format(fname))
+            print('\nWrote {} to disk'.format(fname))
 
 
