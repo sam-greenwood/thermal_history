@@ -36,4 +36,4 @@ On Windows, go to Control Panel / System / Advanced / Environment variable, and 
 
 ### Documentation
 
-Full documentation is included in the `docs/` folder, with a pre-built html page at `docs/_build/html/index.html`. Open this file in a web browser to see them (they will be hosted on readthedocs soon!).
+Full documentation is included in the `docs/` folder, with a pre-built html page at `docs/_build/html/README.html`. Open this file in a web browser to see them (they will be hosted on readthedocs soon!).

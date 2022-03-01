@@ -1,0 +1,461 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>energy &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="profiles" href="thermal_history.core_models.leeds.routines.profiles.html" />
+    <link rel="prev" title="chemistry" href="thermal_history.core_models.leeds.routines.chemistry.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simple_example.html">Running a simple example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API_index.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="thermal_history.html">thermal_history</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="thermal_history.core_models.html">core_models</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="thermal_history.core_models.leeds.html">leeds</a></li>
+<li class="toctree-l4"><a class="reference internal" href="thermal_history.core_models.simple_test.html">simple_test</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.mantle_models.html">mantle_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.stable_layer_models.html">stable_layer_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.model_classes.html">model_classes</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="API_index.html">API</a> &raquo;</li>
+        
+          <li><a href="thermal_history.html">thermal_history</a> &raquo;</li>
+        
+          <li><a href="thermal_history.core_models.html">core_models</a> &raquo;</li>
+        
+          <li><a href="thermal_history.core_models.leeds.html">leeds</a> &raquo;</li>
+        
+          <li><a href="thermal_history.core_models.leeds.routines.html">routines</a> &raquo;</li>
+        
+      <li>energy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/thermal_history.core_models.leeds.routines.energy.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section id="energy">
+<h1>energy<a class="headerlink" href="#energy" title="Permalink to this headline">¶</a></h1>
+<p>(thermal_history.core_models.leeds.routines.energy)</p>
+<span class="target" id="module-thermal_history.core_models.leeds.routines.energy"></span><dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.cond_entropy">
+<span class="sig-name descname"><span class="pre">cond_entropy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#cond_entropy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.cond_entropy" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy of thermal conduction in adiabatic region</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>Ta</strong> (<em>array</em>) – Adiabatic temperature</p></li>
+<li><p><strong>Ta_grad</strong> (<em>array</em>) – Adiabatic temperature gradient</p></li>
+<li><p><strong>k</strong> (<em>array</em>) – Thermal conductivity</p></li>
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for rs (base of stable layer) in radial arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Entropy of thermal conduction</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.gravitational">
+<span class="sig-name descname"><span class="pre">gravitational</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_oc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs_idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcmb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#gravitational"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.gravitational" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gravitational energy associated with growth of IC</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>psi</strong> (<em>array</em>) – gravitational potential</p></li>
+<li><p><strong>Cr</strong> (<em>float</em>) – Cr factor that normalises IC growth rate to cooling rate</p></li>
+<li><p><strong>Cc</strong> (<em>array</em>) – Cc factor that normalises enrichment of light element in OC to inner core growth</p></li>
+<li><p><strong>M_oc</strong> (<em>float</em>) – Mass of outer core over which light elements are distributed</p></li>
+<li><p><strong>alpha_c</strong> (<em>array</em>) – chemical expansivities for light elements</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for ICB in radial arrays</p></li>
+<li><p><strong>rs_idx</strong> (<em>int</em>) – Index for rs (base of stable layer) in radial arrays</p></li>
+<li><p><strong>Tcmb</strong> (<em>bool</em><em>, </em><em>optional</em>) – temperature of the CMB. If False, then the end of the Ta array is used, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normlised gravitational energy and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.gravitational_precip">
+<span class="sig-name descname"><span class="pre">gravitational_precip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cm</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#gravitational_precip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.gravitational_precip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gravitational energy associated with precipitation</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>psi</strong> (<em>array</em>) – gravitational potential</p></li>
+<li><p><strong>Cm</strong> (<em>float</em>) – Factor that normlises precipitation to cooling rate</p></li>
+<li><p><strong>alpha_c</strong> (<em>float</em>) – chemical expansivity of precipitating element</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for ICB in radial arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normlised gravitational energy and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.heat_of_reaction">
+<span class="sig-name descname"><span class="pre">heat_of_reaction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_oc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dmu_dt_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_oc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#heat_of_reaction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.heat_of_reaction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy of heat of reaction at ICB (NOT TESTED IN A WHILE)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho_oc</strong> (<em>array</em>) – Outer core density</p></li>
+<li><p><strong>dmu_dt_poly</strong> (<em>array</em>) – radial polynomials for change in chemical potential with temperature.</p></li>
+<li><p><strong>Cc</strong> (<em>array</em>) – Cc factor that normalises enrichment of light element in OC to inner core growth</p></li>
+<li><p><strong>Cr</strong> (<em>float</em>) – Cr factor that normalises IC growth rate to cooling rate</p></li>
+<li><p><strong>r_oc</strong> (<em>array</em>) – outer core radial grid points</p></li>
+<li><p><strong>mm</strong> (<em>array</em>) – molar masses of iron and light elements</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Entropy from heat of reaction</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.integrate">
+<span class="sig-name descname"><span class="pre">integrate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cumulative</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#integrate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.integrate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Depreciated in favour of thermal_history.utils.optimised_funcs.trapezoid</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.latent_heat">
+<span class="sig-name descname"><span class="pre">latent_heat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">L</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#latent_heat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.latent_heat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Latent heat of fusion during IC growth</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ri</strong> (<em>float</em>) – Inner core radius</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – Density</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – Adiabatic temperature</p></li>
+<li><p><strong>Cr</strong> (<em>float</em>) – Cr factor that normalises IC growth rate to cooling rate</p></li>
+<li><p><strong>L</strong> (<em>array</em>) – Latent heat</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for ICB in radial arrays</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Normlised latent heat and associated entropy.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.mass_diffusion">
+<span class="sig-name descname"><span class="pre">mass_diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#mass_diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.mass_diffusion" title="Permalink to this definition">¶</a></dt>
+<dd><p>Entropy from barodiffusion of light elements</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>i</strong> (<em>float</em><em> or </em><em>array</em>) – mass flux</p></li>
+<li><p><strong>alpha_D</strong> (<em>array</em>) – barodiffusion coefficient</p></li>
+<li><p><strong>T</strong> (<em>array</em>) – temperature</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Total entropy of barodiffusion of light elements.</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.mass_flux">
+<span class="sig-name descname"><span class="pre">mass_flux</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c_grad</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#mass_flux"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.mass_flux" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mass flux from diffusion down chemical and pressure gradients</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>rho</strong> (<em>float</em><em> or </em><em>array</em>) – density</p></li>
+<li><p><strong>alpha_c</strong> (<em>float</em>) – chemical expansivities for light element</p></li>
+<li><p><strong>alpha_D</strong> (<em>float</em>) – barodiffusion coefficients for light element</p></li>
+<li><p><strong>D</strong> (<em>float</em>) – Self diffusion coefficients for light element</p></li>
+<li><p><strong>c_grad</strong> (<em>float</em><em> or </em><em>array</em>) – chemical gradient</p></li>
+<li><p><strong>g</strong> (<em>float</em><em> or </em><em>array</em>) – gravity</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>mass flux</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>float or array</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.radiogenic_heating">
+<span class="sig-name descname"><span class="pre">radiogenic_heating</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">time</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Mass</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">decay_time</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#radiogenic_heating"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.radiogenic_heating" title="Permalink to this definition">¶</a></dt>
+<dd><p>Heat from radiogenic heating (NOT TESTED)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>time</strong> (<em>float</em>) – time (relative to present day)</p></li>
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>Mass</strong> (<em>float</em>) – mass of core</p></li>
+<li><p><strong>h0</strong> (<em>float</em>) – Present day heating rate per unit mass</p></li>
+<li><p><strong>decay_time</strong> (<em>float</em>) – Half life of radiogenic element</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Radiogenic heating and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.energy.secular_cool">
+<span class="sig-name descname"><span class="pre">secular_cool</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">idx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcmb</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/energy.html#secular_cool"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.energy.secular_cool" title="Permalink to this definition">¶</a></dt>
+<dd><p>Energy from change in sensible energy from secular cooling</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>rho</strong> (<em>array</em>) – density</p></li>
+<li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
+<li><p><strong>cp</strong> (<em>array</em>) – specific heat capacity</p></li>
+<li><p><strong>idx</strong> (<em>int</em>) – Index for rs (base of stable layer) in radial arrays</p></li>
+<li><p><strong>Tcmb</strong> (<em>bool</em><em>, </em><em>optional</em>) – temperature of the CMB. If False, then the end of the Ta array is used, by default False</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>Secular cooling energy and associated entropy</p>
+</dd>
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>(float, float)</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="thermal_history.core_models.leeds.routines.profiles.html" class="btn btn-neutral float-right" title="profiles" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="thermal_history.core_models.leeds.routines.chemistry.html" class="btn btn-neutral float-left" title="chemistry" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../API_index.html">API</a></li>
 </ul>
 
             
@@ -153,7 +153,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 
-<div class="viewcode-block" id="diffusion"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.diffusion">[docs]</a><span class="k">def</span> <span class="nf">diffusion</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dk_dx</span><span class="p">,</span> <span class="n">lower_bc</span><span class="p">,</span> <span class="n">upper_bc</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="s1">&#39;spherical&#39;</span><span class="p">):</span>
+<div class="viewcode-block" id="diffusion"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.diffusion">[docs]</a><span class="k">def</span> <span class="nf">diffusion</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dk_dx</span><span class="p">,</span> <span class="n">lower_bc</span><span class="p">,</span> <span class="n">upper_bc</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="s1">&#39;spherical&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Numerical diffusion solution</span>
 
 <span class="sd">    Parameters</span>
@@ -226,7 +226,7 @@
     <span class="k">return</span> <span class="n">y_new</span></div>
 
 
-<div class="viewcode-block" id="LHS"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.LHS">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="LHS"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.LHS">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">LHS</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dk_dx</span><span class="p">,</span> <span class="n">l_type</span><span class="p">,</span> <span class="n">u_type</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="s1">&#39;spherical&#39;</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Construct left hand side of linear equations</span>
 
@@ -299,7 +299,7 @@
     <span class="k">return</span> <span class="n">lower</span><span class="p">[</span><span class="mi">1</span><span class="p">:],</span> <span class="n">main</span><span class="p">,</span> <span class="n">upper</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="RHS"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.RHS">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="RHS"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.RHS">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">RHS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">dk_dx</span><span class="p">,</span> <span class="n">m</span><span class="p">,</span> <span class="n">lower_bc</span><span class="p">,</span> <span class="n">upper_bc</span><span class="p">,</span> <span class="n">coord</span><span class="o">=</span><span class="s1">&#39;spherical&#39;</span><span class="p">,</span> <span class="n">constant</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Construct right hand side of linear equations</span>
 
@@ -386,7 +386,7 @@
 
 
 
-<div class="viewcode-block" id="thomas_algorithm"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.thomas_algorithm">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="thomas_algorithm"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.html#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.thomas_algorithm">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">thomas_algorithm</span><span class="p">(</span><span class="n">RHS</span><span class="p">,</span> <span class="n">lower</span><span class="p">,</span> <span class="n">main</span><span class="p">,</span> <span class="n">upper</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Jit compiled implementation of the thomas algorithm for solving</span>
 <span class="sd">    linear equations.</span>

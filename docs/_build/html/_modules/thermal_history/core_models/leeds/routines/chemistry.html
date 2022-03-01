@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../API_index.html">API</a></li>
 </ul>
 
             
@@ -166,7 +166,7 @@
 
 
 
-<div class="viewcode-block" id="melting_curve"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.melting_curve">[docs]</a><span class="k">def</span> <span class="nf">melting_curve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="melting_curve"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.melting_curve">[docs]</a><span class="k">def</span> <span class="nf">melting_curve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Calculates the melting curve and sets the mass fraction of light element in the solid iron core (conc_s) according to</span>
 <span class="sd">    the relevant partitioning model.</span>
 <span class="sd">    Different methods for the paramterisation of the melting curve can be set by the core_melting_params parameter.</span>
@@ -282,7 +282,7 @@
 
     <span class="k">return</span> <span class="n">Tm_fe</span><span class="p">,</span> <span class="n">Tm</span><span class="p">,</span> <span class="n">dTm_dP</span></div>
 
-<div class="viewcode-block" id="iron_melting"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.iron_melting">[docs]</a><span class="k">def</span> <span class="nf">iron_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
+<div class="viewcode-block" id="iron_melting"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.iron_melting">[docs]</a><span class="k">def</span> <span class="nf">iron_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simple polynomial representation of iron melting temperature with pressure</span>
 
 <span class="sd">    Parameters</span>
@@ -299,7 +299,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">polyval</span><span class="p">(</span><span class="n">melting_params</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">P</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="iron_melting_gradient"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.iron_melting_gradient">[docs]</a><span class="k">def</span> <span class="nf">iron_melting_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
+<div class="viewcode-block" id="iron_melting_gradient"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.iron_melting_gradient">[docs]</a><span class="k">def</span> <span class="nf">iron_melting_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Melting temperature gradient</span>
 
 <span class="sd">    Parameters</span>
@@ -323,7 +323,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">P</span><span class="o">*</span><span class="mi">0</span></div>
 
-<div class="viewcode-block" id="simon_glatzel"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.simon_glatzel">[docs]</a><span class="k">def</span> <span class="nf">simon_glatzel</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
+<div class="viewcode-block" id="simon_glatzel"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.simon_glatzel">[docs]</a><span class="k">def</span> <span class="nf">simon_glatzel</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Melting temperature of iron alloy parameterised with Simon-Glatzel&#39;s equation.</span>
 
 <span class="sd">    Parameters</span>
@@ -342,7 +342,7 @@
     <span class="n">T0</span><span class="p">,</span> <span class="n">beta1</span><span class="p">,</span> <span class="n">beta2</span> <span class="o">=</span> <span class="n">melting_params</span>
     <span class="k">return</span> <span class="n">T0</span> <span class="o">*</span> <span class="p">(</span><span class="n">P</span><span class="o">/</span><span class="p">(</span><span class="mf">1e9</span><span class="o">*</span><span class="n">beta1</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span><span class="o">**</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">beta2</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="simon_glatzel_gradient"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.simon_glatzel_gradient">[docs]</a><span class="k">def</span> <span class="nf">simon_glatzel_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
+<div class="viewcode-block" id="simon_glatzel_gradient"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.simon_glatzel_gradient">[docs]</a><span class="k">def</span> <span class="nf">simon_glatzel_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Gradient of the melting temperature of iron alloy parameterised with Simon-Glatzel&#39;s equation.</span>
 
 <span class="sd">    Parameters</span>
@@ -363,7 +363,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1">#Convert mole fraction to mass concentration by equations in Labrosse (2014)</span>
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="mole_frac2mass_conc"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.mole_frac2mass_conc">[docs]</a><span class="k">def</span> <span class="nf">mole_frac2mass_conc</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">mm</span><span class="p">):</span>
+<div class="viewcode-block" id="mole_frac2mass_conc"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.mole_frac2mass_conc">[docs]</a><span class="k">def</span> <span class="nf">mole_frac2mass_conc</span><span class="p">(</span><span class="n">mf</span><span class="p">,</span> <span class="n">mm</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Converts from mole fraction to mass fraction for core alloying light elements</span>
 
 <span class="sd">    Parameters</span>
@@ -390,7 +390,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1">#Convert mass concentration to mole fraction by equations in Labrosse (2014)</span>
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="mass_conc2mole_frac"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.mass_conc2mole_frac">[docs]</a><span class="k">def</span> <span class="nf">mass_conc2mole_frac</span><span class="p">(</span><span class="n">conc</span><span class="p">,</span> <span class="n">mm</span><span class="p">):</span>
+<div class="viewcode-block" id="mass_conc2mole_frac"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.mass_conc2mole_frac">[docs]</a><span class="k">def</span> <span class="nf">mass_conc2mole_frac</span><span class="p">(</span><span class="n">conc</span><span class="p">,</span> <span class="n">mm</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Converts from mass fraction to mole fraction for core alloying light elements</span>
 
 <span class="sd">    Parameters</span>
@@ -417,7 +417,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1">#Calculate the mole fraction of light element species in the solid</span>
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="solid_conc"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.solid_conc">[docs]</a><span class="k">def</span> <span class="nf">solid_conc</span><span class="p">(</span><span class="n">mf_liq</span><span class="p">,</span> <span class="n">T_m</span><span class="p">,</span> <span class="n">ds_fe</span><span class="p">,</span> <span class="n">dmu</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">lambda_sol</span><span class="p">):</span>
+<div class="viewcode-block" id="solid_conc"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.solid_conc">[docs]</a><span class="k">def</span> <span class="nf">solid_conc</span><span class="p">(</span><span class="n">mf_liq</span><span class="p">,</span> <span class="n">T_m</span><span class="p">,</span> <span class="n">ds_fe</span><span class="p">,</span> <span class="n">dmu</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">lambda_sol</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Calculates the mole fraction of light element in the inner core from chemical equilibria</span>
 
 <span class="sd">    Parameters</span>
@@ -468,8 +468,8 @@
 <span class="c1">#Calculate the melting temperature including the depression due to light elements</span>
 <span class="c1">#Equation 12 from Alfe et al.(2002)</span>
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="melt_pt_dep"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.melt_pt_dep">[docs]</a><span class="k">def</span> <span class="nf">melt_pt_dep</span><span class="p">(</span><span class="n">mf_liq</span><span class="p">,</span> <span class="n">mf_sol</span><span class="p">,</span> <span class="n">Tm</span><span class="p">,</span> <span class="n">ds_fe</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;_summary_</span>
+<div class="viewcode-block" id="melt_pt_dep"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.melt_pt_dep">[docs]</a><span class="k">def</span> <span class="nf">melt_pt_dep</span><span class="p">(</span><span class="n">mf_liq</span><span class="p">,</span> <span class="n">mf_sol</span><span class="p">,</span> <span class="n">Tm</span><span class="p">,</span> <span class="n">ds_fe</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Calculates the melting point depression by Alfe et al. (2002)</span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -496,7 +496,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1">#Calculate the melting temperature depression and fractionation of light elements.</span>
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="LE_frac_dep"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.LE_frac_dep">[docs]</a><span class="k">def</span> <span class="nf">LE_frac_dep</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Tm_fe</span><span class="p">,</span> <span class="n">ri_idx</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">dmu</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">lambda_sol</span><span class="p">,</span> <span class="n">ent_mel_poly</span><span class="p">):</span>
+<div class="viewcode-block" id="LE_frac_dep"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.LE_frac_dep">[docs]</a><span class="k">def</span> <span class="nf">LE_frac_dep</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Tm_fe</span><span class="p">,</span> <span class="n">ri_idx</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">dmu</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">lambda_sol</span><span class="p">,</span> <span class="n">ent_mel_poly</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Calculates the concentration of light elements in the solid inner core</span>
 
 <span class="sd">    Parameters</span>
@@ -540,7 +540,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1">#Calculate barodiffusion coefficient as defined in Gubbins et al. (2004)</span>
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="baro_coeff"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.baro_coeff">[docs]</a><span class="k">def</span> <span class="nf">baro_coeff</span><span class="p">(</span><span class="n">mf_l</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">T_av</span><span class="p">,</span> <span class="n">rho_av</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">diffusivity_c</span><span class="p">):</span>
+<div class="viewcode-block" id="baro_coeff"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.baro_coeff">[docs]</a><span class="k">def</span> <span class="nf">baro_coeff</span><span class="p">(</span><span class="n">mf_l</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">T_av</span><span class="p">,</span> <span class="n">rho_av</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">diffusivity_c</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Calculates the barodiffusion coefficient</span>
 
 <span class="sd">    Parameters</span>
@@ -569,7 +569,7 @@
 
     <span class="k">return</span> <span class="n">baro_coeff_fast</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mf_l</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;f8&#39;</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">mm</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;f8&#39;</span><span class="p">),</span> <span class="n">T_av</span><span class="p">,</span> <span class="n">rho_av</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">diffusivity_c</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="baro_coeff_fast"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.baro_coeff_fast">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="baro_coeff_fast"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.baro_coeff_fast">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">baro_coeff_fast</span><span class="p">(</span><span class="n">mf_l</span><span class="p">,</span> <span class="n">mm</span><span class="p">,</span> <span class="n">T_av</span><span class="p">,</span> <span class="n">rho_av</span><span class="p">,</span> <span class="n">lambda_liq</span><span class="p">,</span> <span class="n">diffusivity_c</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Faster jit compiled version of baro_coeff</span>
 
@@ -613,7 +613,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1">#Set Ta(r=0) for the specified inner core size from the model_class.state()</span>
 <span class="c1">###############################################################################</span>
-<div class="viewcode-block" id="calibrate_temperature"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.chemistry.calibrate_temperature">[docs]</a><span class="k">def</span> <span class="nf">calibrate_temperature</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="calibrate_temperature"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.calibrate_temperature">[docs]</a><span class="k">def</span> <span class="nf">calibrate_temperature</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Calculates the correct value for Tcen for a given inner core radius and melting curve</span>
 
 <span class="sd">    Sets model.core.T_cmb, as well as the adiabat/adiabatic gradient profiles with correct temperature</span>

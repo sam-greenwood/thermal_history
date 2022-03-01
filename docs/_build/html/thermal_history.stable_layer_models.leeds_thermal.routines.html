@@ -9,7 +9,7 @@
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>routines (package) &mdash; thermal_history  documentation</title>
+  <title>routines &mdash; thermal_history  documentation</title>
   
 
   
@@ -38,8 +38,8 @@
   <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="utils (package)" href="thermal_history.utils.html" />
-    <link rel="prev" title="leeds_thermal (package)" href="thermal_history.stable_layer_models.leeds_thermal.html" /> 
+    <link rel="next" title="diffusion" href="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.html" />
+    <link rel="prev" title="leeds_thermal" href="thermal_history.stable_layer_models.leeds_thermal.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -88,20 +88,19 @@
 <li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1 current"><a class="reference internal" href="thermal_history.html">thermal_history API</a><ul class="current">
-<li class="toctree-l2 current"><a class="reference internal" href="thermal_history.html#subpackages">Subpackages</a><ul class="current">
-<li class="toctree-l3"><a class="reference internal" href="thermal_history.core_models.html">core_models (package)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="thermal_history.mantle_models.html">mantle_models (package)</a></li>
-<li class="toctree-l3 current"><a class="reference internal" href="thermal_history.stable_layer_models.html">stable_layer_models (package)</a><ul class="current">
-<li class="toctree-l4 current"><a class="reference internal" href="thermal_history.stable_layer_models.html#subpackages">Subpackages</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="API_index.html">API</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="thermal_history.html">thermal_history</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.core_models.html">core_models</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.mantle_models.html">mantle_models</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="thermal_history.stable_layer_models.html">stable_layer_models</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="thermal_history.stable_layer_models.leeds_thermal.html">leeds_thermal</a></li>
 </ul>
 </li>
-<li class="toctree-l3"><a class="reference internal" href="thermal_history.utils.html">utils (package)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.utils.html">utils</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.model.html">model</a></li>
+<li class="toctree-l3"><a class="reference internal" href="thermal_history.model_classes.html">model_classes</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="thermal_history.html#submodules">Submodules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermal_history.html#module-thermal_history.model">model (module)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="thermal_history.html#module-thermal_history.model_classes">model_classes (module)</a></li>
 </ul>
 </li>
 </ul>
@@ -149,13 +148,15 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-          <li><a href="thermal_history.html">thermal_history API</a> &raquo;</li>
+          <li><a href="API_index.html">API</a> &raquo;</li>
         
-          <li><a href="thermal_history.stable_layer_models.html">stable_layer_models (package)</a> &raquo;</li>
+          <li><a href="thermal_history.html">thermal_history</a> &raquo;</li>
         
-          <li><a href="thermal_history.stable_layer_models.leeds_thermal.html">leeds_thermal (package)</a> &raquo;</li>
+          <li><a href="thermal_history.stable_layer_models.html">stable_layer_models</a> &raquo;</li>
         
-      <li>routines (package)</li>
+          <li><a href="thermal_history.stable_layer_models.leeds_thermal.html">leeds_thermal</a> &raquo;</li>
+        
+      <li>routines</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -174,294 +175,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <section id="routines-package">
-<h1>routines (package)<a class="headerlink" href="#routines-package" title="Permalink to this headline">¶</a></h1>
-<p>Functions frequently called by the main module.</p>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
-</section>
-<section id="diffusion-module">
-<h2>diffusion (module)<a class="headerlink" href="#diffusion-module" title="Permalink to this headline">¶</a></h2>
-<p>Functions related to numerically solving the diffusion equation.</p>
-<span class="target" id="module-thermal_history.stable_layer_models.leeds_thermal.routines.diffusion"></span><dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.LHS">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.</span></span><span class="sig-name descname"><span class="pre">LHS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dk_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spherical'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/diffusion.html#LHS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.LHS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct left hand side of linear equations</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>array</em>) – position array</p></li>
-<li><p><strong>m</strong> (<em>array</em>) – m constant defined in diffusion()</p></li>
-<li><p><strong>D</strong> (<em>array</em>) – diffusivity</p></li>
-<li><p><strong>k</strong> (<em>array</em>) – conductivity</p></li>
-<li><p><strong>dk_dx</strong> (<em>array</em>) – spatial derivative of conductivity</p></li>
-<li><p><strong>l_type</strong> (<em>int</em>) – Lower boundary condition type (0: dirichlet, 1: neumann)</p></li>
-<li><p><strong>u_type</strong> (<em>int</em>) – Upper boundary condition type (0: dirichlet, 1: neumann)</p></li>
-<li><p><strong>coord</strong> (<em>str</em><em>, </em><em>optional</em>) – either ‘cart’ to denote cartesian coordinate system of ‘spherical’ for spherical coordinates, by default ‘spherical’</p></li>
+  <section id="routines">
+<h1>routines<a class="headerlink" href="#routines" title="Permalink to this headline">¶</a></h1>
+<p>(thermal_history.stable_layer_models.leeds_thermal.routines)</p>
+<span class="target" id="module-thermal_history.stable_layer_models.leeds_thermal.routines"></span><p>Modules:</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.html">diffusion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermal_history.stable_layer_models.leeds_thermal.routines.functions.html">functions</a></li>
 </ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>lower, central, upper diagonals for left hand side in linear equations (A matrix in Ax=b)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>(array , array, array)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.RHS">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.</span></span><span class="sig-name descname"><span class="pre">RHS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dk_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spherical'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/diffusion.html#RHS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.RHS" title="Permalink to this definition">¶</a></dt>
-<dd><p>Construct right hand side of linear equations</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>y</strong> (<em>array</em>) – Values to diffuse</p></li>
-<li><p><strong>x</strong> (<em>array</em>) – position array</p></li>
-<li><p><strong>D</strong> (<em>array</em>) – diffusivity</p></li>
-<li><p><strong>k</strong> (<em>array</em>) – conductivity</p></li>
-<li><p><strong>dk_dx</strong> (<em>array</em>) – spatial derivative of conductivity</p></li>
-<li><p><strong>m</strong> (<em>array</em>) – m constant defined in diffusion()</p></li>
-<li><p><strong>lower_bc</strong> (<em>float</em>) – Lower boundary condition value</p></li>
-<li><p><strong>upper_bc</strong> (<em>float</em>) – Upper boundary condition value</p></li>
-<li><p><strong>coord</strong> (<em>str</em><em>, </em><em>optional</em>) – either ‘cart’ to denote cartesian coordinate system of ‘spherical’ for spherical coordinates, by default ‘spherical’</p></li>
-<li><p><strong>constant</strong> (<em>float</em><em> or </em><em>array</em><em>, </em><em>optional</em>) – Constant in the partial differential eqution, by default 0</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Right hand side in linear equations (b vector in Ax=b)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.diffusion">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.</span></span><span class="sig-name descname"><span class="pre">diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dk_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spherical'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/diffusion.html#diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.diffusion" title="Permalink to this definition">¶</a></dt>
-<dd><p>Numerical diffusion solution</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>y</strong> (<em>array</em>) – Values to diffuse</p></li>
-<li><p><strong>x</strong> (<em>array</em>) – position grid</p></li>
-<li><p><strong>dt</strong> (<em>float</em>) – time step</p></li>
-<li><p><strong>D</strong> (<em>float</em><em> or </em><em>array</em>) – diffusivity</p></li>
-<li><p><strong>k</strong> (<em>float</em><em> or </em><em>array</em>) – thermal conductivity</p></li>
-<li><p><strong>dk_dx</strong> (<em>float</em><em> or </em><em>array</em>) – spatial derivative of conductivity</p></li>
-<li><p><strong>lower_bc</strong> (<em>tuple</em>) – tuple of 2 values to denote lower boundary condition. First value must be 0 or 1 to denote
-condition on the 0th or 1st spatial derivative of the solution. (dirichlet or nuemann type).
-Second value is the value of the boundary condition</p></li>
-<li><p><strong>upper_bc</strong> (<em>tuple</em>) – tuple of 2 values to denote upper boundary condition. First value must be 0 or 1 to denote
-condition on the 0th or 1st spatial derivative of the solution. (dirichlet or nuemann type).
-Second value is the value of the boundary condition</p></li>
-<li><p><strong>constant</strong> (<em>float</em><em> or </em><em>array</em><em>, </em><em>optional</em>) – Constant in the partial differential eqution, by default 0</p></li>
-<li><p><strong>coord</strong> (<em>str</em><em>, </em><em>optional</em>) – either ‘cart’ to denote cartesian coordinate system of ‘spherical’ for spherical coordinates, by default ‘spherical’</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Diffused values after timestep dt.</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>array</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.thomas_algorithm">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.</span></span><span class="sig-name descname"><span class="pre">thomas_algorithm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">RHS</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">main</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/diffusion.html#thomas_algorithm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.thomas_algorithm" title="Permalink to this definition">¶</a></dt>
-<dd><p>Jit compiled implementation of the thomas algorithm for solving
-linear equations.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>RHS</strong> (<em>array</em>) – B vector in Ax=B</p></li>
-<li><p><strong>lower</strong> (<em>array</em>) – lower diagonal values in A matrix</p></li>
-<li><p><strong>main</strong> (<em>array</em>) – central diagonal values in A matrix</p></li>
-<li><p><strong>upper</strong> (<em>array</em>) – upper diagonal values in A matrix</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Diffused values</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>array</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="functions-module">
-<h2>functions (module)<a class="headerlink" href="#functions-module" title="Permalink to this headline">¶</a></h2>
-<p>Assorted functions used by main.</p>
-<span class="target" id="module-thermal_history.stable_layer_models.leeds_thermal.routines.functions"></span><dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.buffett_seagle_10_growth">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">buffett_seagle_10_growth</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_dr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#buffett_seagle_10_growth"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.buffett_seagle_10_growth" title="Permalink to this definition">¶</a></dt>
-<dd><p>Calculate the layer interface movement using the method of Buffett and Seagle (2010)
-and regrid the solution.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>r</strong> – radial grid</p></li>
-<li><p><strong>c</strong> – Light element mass fraction on grid</p></li>
-<li><p><strong>conc_l</strong> – Mass fraction of isentropic region</p></li>
-<li><p><strong>dc_dr</strong> – Mass fraction gradient at interface in the layer</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Regridded solutions (radius, temperature, mass fraction)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>r,T,c</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.change_domain_size">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">change_domain_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X_rel</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">s_new</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#change_domain_size"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.change_domain_size" title="Permalink to this definition">¶</a></dt>
-<dd><p>Change the domain size with linear interpolation</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>X_rel</strong> – Property (array) or properties (tuple of arrays) to be regridded</p></li>
-<li><p><strong>r</strong> – radial grid of property/properties</p></li>
-<li><p><strong>s_new</strong> – new radius of the layer interface</p></li>
-<li><p><strong>resolution</strong> – tuple of resolution parameters (number of grid points/meter, minimum number of points, maximum number of points)</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>New radial grid and tuple of arrays with regridded properties</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>r_new, a</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.cubic_fit">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">cubic_fit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x2</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x1_prime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f_x2_prime</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#cubic_fit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.cubic_fit" title="Permalink to this definition">¶</a></dt>
-<dd><p>Fit a cubic equation f(x) = m1*x^3 + m2*x^2 + m3*x + m4
-Defined conditions are f(x1), f(x2) and f’(x1), f’(x2)</p>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.determine_strat_type">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">determine_strat_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ub_type_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ub_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ADR</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">E_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#determine_strat_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.determine_strat_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>AI algorithms (lots of ‘if’ statements) to determine the dominant type of stratification: thermal or chemical</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>ub_type_T</strong> – Type of upper boundary condition type for the thermal solution. Either 0 (fixed value) or 1 (fixed gradient)</p></li>
-<li><p><strong>ub_T</strong> – Value for the upper boundary condition for temperature</p></li>
-<li><p><strong>ub_type_c</strong> – Type of upper boundary condition type for the chemical solution. Either 0 (fixed value) or 1 (fixed gradient)</p></li>
-<li><p><strong>ub_c</strong> – Value for the upper boundary condition for composition</p></li>
-<li><p><strong>ADR</strong> – Adiabatic ratio, the ratio of CMB heat flux to the adiabatic heat flux</p></li>
-<li><p><strong>T</strong> – Temperature values on radial grid</p></li>
-<li><p><strong>Ta</strong> – Adiabatic temperature values on radial grid</p></li>
-<li><p><strong>conc_l</strong> – Mass fraction of light element in isentropic region</p></li>
-<li><p><strong>E_T</strong> – Entrainent parameters for thermal solution</p></li>
-<li><p><strong>prm</strong> – parameter class</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>String containing the type of dominant stratification (‘thermal’, ‘chemical’ or ‘none’)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>strat</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.eval_dT_dr_cmb">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">eval_dT_dr_cmb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#eval_dT_dr_cmb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.eval_dT_dr_cmb" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.mix_profile">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">mix_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">I_prime</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_in</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#mix_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.mix_profile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.primordial_layer_init">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">primordial_layer_init</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">conc_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dc_dr_s</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#primordial_layer_init"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.primordial_layer_init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initial compositional profile within a primordial layer</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>conc_l</strong> – Mass fraction of light element in isentropic region</p></li>
-<li><p><strong>dc</strong> – Change in mass fraction of light element across layer</p></li>
-<li><p><strong>dc_dr_s</strong> – gradient in mass fraction at the base of the layer to satisfy</p></li>
-<li><p><strong>r</strong> – radial grid within layer to calculate mass fraction on</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Array with mass fraction values on the radial grid</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>c</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.pure_chemical_check">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">pure_chemical_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#pure_chemical_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.pure_chemical_check" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.pure_thermal_check">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">pure_thermal_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#pure_thermal_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.pure_thermal_check" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.retreat_layer">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">retreat_layer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adiabat_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">resolution</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_grad_limit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#retreat_layer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.retreat_layer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Regrid the solution back to the radius that satisfies the stability conditions</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>r</strong> – radial grid</p></li>
-<li><p><strong>T</strong> – Temperature on grid</p></li>
-<li><p><strong>c</strong> – Light element mass fraction on grid</p></li>
-<li><p><strong>Tcen</strong> – Temperature at r=0</p></li>
-<li><p><strong>conc_l</strong> – Mass fraction of isentropic region</p></li>
-<li><p><strong>adiabat_poly</strong> – Radial polynomials for adiabatic temperature</p></li>
-<li><p><strong>resolution</strong> – tuple of resolution parameters (number of grid points/meter, minimum number of points, maximum number of points)</p></li>
-<li><p><strong>alpha_T</strong> – Thermal expansivity</p></li>
-<li><p><strong>alpha_c</strong> – Chemical expansivity</p></li>
-<li><p><strong>density_grad_limit</strong> – Upper limit on the potential density gradient required for stability</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns</dt>
-<dd class="field-even"><p>Regridded solutions (radius, temperature, mass fraction)</p>
-</dd>
-<dt class="field-odd">Return type</dt>
-<dd class="field-odd"><p>r_new,T_new,c_new</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.setup_chemical_profile">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">setup_chemical_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#setup_chemical_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.setup_chemical_profile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.setup_thermal_profile">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">setup_thermal_profile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#setup_thermal_profile"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.setup_thermal_profile" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.functions.thermo_chemical_check">
-<span class="sig-prename descclassname"><span class="pre">thermal_history.stable_layer_models.leeds_thermal.routines.functions.</span></span><span class="sig-name descname"><span class="pre">thermo_chemical_check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/functions.html#thermo_chemical_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.functions.thermo_chemical_check" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-</section>
+</div>
 </section>
 
 
@@ -472,10 +195,10 @@ Defined conditions are f(x1), f(x2) and f’(x1), f’(x2)</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="thermal_history.utils.html" class="btn btn-neutral float-right" title="utils (package)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.html" class="btn btn-neutral float-right" title="diffusion" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
       
-        <a href="thermal_history.stable_layer_models.leeds_thermal.html" class="btn btn-neutral float-left" title="leeds_thermal (package)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+        <a href="thermal_history.stable_layer_models.leeds_thermal.html" class="btn btn-neutral float-left" title="leeds_thermal" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

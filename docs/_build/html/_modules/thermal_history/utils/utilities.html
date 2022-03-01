@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../API_index.html">API</a></li>
 </ul>
 
             
@@ -158,10 +158,10 @@
 
 <span class="c1">#Custom filter to get logger only paths within the package thermal_history rather than absolute paths</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<div class="viewcode-block" id="PackagePathFilter"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.utilities.PackagePathFilter">[docs]</a><span class="k">class</span> <span class="nc">PackagePathFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
+<div class="viewcode-block" id="PackagePathFilter"><a class="viewcode-back" href="../../../thermal_history.utils.utilities.html#thermal_history.utils.utilities.PackagePathFilter">[docs]</a><span class="k">class</span> <span class="nc">PackagePathFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Custom filter to extract just the pathname within the thermal_history package</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-<div class="viewcode-block" id="PackagePathFilter.filter"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.utilities.PackagePathFilter.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
+<div class="viewcode-block" id="PackagePathFilter.filter"><a class="viewcode-back" href="../../../thermal_history.utils.utilities.html#thermal_history.utils.utilities.PackagePathFilter.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
         <span class="n">pathname</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">pathname</span>
 
         <span class="n">split</span> <span class="o">=</span> <span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
@@ -175,7 +175,7 @@
 
         
 
-<div class="viewcode-block" id="check_parameters"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.utilities.check_parameters">[docs]</a><span class="k">def</span> <span class="nf">check_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">method_names</span><span class="p">,</span> <span class="n">required_params</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">check_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">method_names</span><span class="p">,</span> <span class="n">required_params</span><span class="p">):</span>
 
     <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
 
@@ -242,10 +242,10 @@
     <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="n">n2</span> <span class="o">+</span> <span class="n">result</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="n">n2</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Parameters missing/inconsistent with declared methods (see above parameter check message)&#39;</span><span class="p">)</span></div>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Parameters missing/inconsistent with declared methods (see above parameter check message)&#39;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="create_parameters_file"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.utilities.create_parameters_file">[docs]</a><span class="k">def</span> <span class="nf">create_parameters_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span>
+<div class="viewcode-block" id="create_parameters_file"><a class="viewcode-back" href="../../../thermal_history.utils.utilities.html#thermal_history.utils.utilities.create_parameters_file">[docs]</a><span class="k">def</span> <span class="nf">create_parameters_file</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span>
                            <span class="n">core_method</span> <span class="o">=</span>         <span class="kc">None</span><span class="p">,</span>
                            <span class="n">stable_layer_method</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                            <span class="n">mantle_method</span> <span class="o">=</span>       <span class="kc">None</span><span class="p">):</span>

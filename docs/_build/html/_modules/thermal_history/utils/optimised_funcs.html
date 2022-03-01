@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../API_index.html">API</a></li>
 </ul>
 
             
@@ -152,7 +152,7 @@
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
  
-<div class="viewcode-block" id="linspace"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.optimised_funcs.linspace">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="linspace"><a class="viewcode-back" href="../../../thermal_history.utils.optimised_funcs.html#thermal_history.utils.optimised_funcs.linspace">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">linspace</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">n</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Jit compiled version of numpy.linspace().</span>
@@ -164,7 +164,7 @@
         <span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="n">i</span><span class="o">*</span><span class="p">(</span><span class="n">x2</span><span class="o">-</span><span class="n">x1</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span></div>
 
-<div class="viewcode-block" id="trapezoid"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.optimised_funcs.trapezoid">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="trapezoid"><a class="viewcode-back" href="../../../thermal_history.utils.optimised_funcs.html#thermal_history.utils.optimised_funcs.trapezoid">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">trapezoid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Jit compiled version of scipy.integrate.cumulative_trapezoid().</span>
@@ -178,7 +178,7 @@
 
     <span class="k">return</span> <span class="n">integrand</span></div>
 
-<div class="viewcode-block" id="jit_polyval"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.optimised_funcs.jit_polyval">[docs]</a><span class="nd">@njit</span>
+<div class="viewcode-block" id="jit_polyval"><a class="viewcode-back" href="../../../thermal_history.utils.optimised_funcs.html#thermal_history.utils.optimised_funcs.jit_polyval">[docs]</a><span class="nd">@njit</span>
 <span class="k">def</span> <span class="nf">jit_polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Jit compiled version of np.polyval().</span>
@@ -194,13 +194,13 @@
 
     <span class="k">return</span> <span class="n">y</span></div>
 
-<div class="viewcode-block" id="polyval"><a class="viewcode-back" href="../../../thermal_history.utils.html#thermal_history.utils.optimised_funcs.polyval">[docs]</a><span class="k">def</span> <span class="nf">polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span><span class="n">x</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="s1">&#39;__iter__&#39;</span><span class="p">):</span>
         <span class="n">y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">jit_polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="p">])))</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">y</span> <span class="o">=</span> <span class="n">jit_polyval</span><span class="p">(</span><span class="n">poly</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">y</span></div>
+    <span class="k">return</span> <span class="n">y</span>
 </pre></div>
 
            </div>

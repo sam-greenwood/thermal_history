@@ -13,9 +13,18 @@ import thermal_history.utils as utils
 class BaseModel:
     '''Base class from which each class associated with regions of the planet (core, stable layer, mantle etc)
     inherits from.
+
+    Attributes
+    ----------
+    model_type : string
+        String denoting the model type for internal checking
+    ys : float
+        Number of seconds in a year, commonly used constant.
+    parameters: None
+        Placeholder for parameters class, unless the region is not modelled in which
+        case it is left as None.
     '''
 
-    it = 1                #iteration counter
     ys = 60*60*24*365     #seconds in a year
 
     model_type = 'base'  #Type of model class
@@ -69,7 +78,12 @@ class BaseModel:
         return {key: self.__dict__[key] for key in keys}
 
 class StableLayer(BaseModel):
-    '''Stable layer model class
+    '''Stable layer model class which inherits the BaseModel class.
+
+    Attributes
+    ----------
+    model_type : string
+        String denoting the model type for internal checking
     '''
 
     model_type = 'stable_layer'
@@ -79,6 +93,11 @@ class StableLayer(BaseModel):
 class Mantle(BaseModel):
     '''
     Mantle model class which inherits the BaseModel class.
+
+    Attributes
+    ----------
+    model_type : string
+        String denoting the model type for internal checking
     '''
 
     model_type = 'mantle'
@@ -92,6 +111,11 @@ class Core(BaseModel):
 
     '''
     Core model class which inherits the BaseModel class.
+
+    Attributes
+    ----------
+    model_type : string
+        String denoting the model type for internal checking
     '''
 
     model_type='core'
@@ -109,10 +133,13 @@ class ThermalModel(BaseModel):
 
     time: float
         Current time of the model. Initialised at zero by default and incrimented by the time step whenever evolve() is called.
+    it : int
+        Iteration number (starts at 1)
     '''
 
     model_type = 'thermal'
     time = 0
+    it = 1
 
     def __init__(self, parameters, methods, verbose=True, log_file='out.log', log_level=30):
         '''Setup the model based on given parameters and methods
@@ -250,6 +277,7 @@ class ThermalModel(BaseModel):
             if r in self.regions:
                 region = getattr(self, r)
                 region.time = self.time
+                region.it   = self.it
                 region.evolve(self)
 
         #Set up save_dict if not already setup

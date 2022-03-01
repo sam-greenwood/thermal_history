@@ -1,0 +1,8 @@
+{{- ["API"] | join(" ") | e | heading }}
+
+.. toctree::
+   :maxdepth: {{ 6 }}
+{% for docname in docnames %}
+   {{ docname }}
+{%- endfor %}
+

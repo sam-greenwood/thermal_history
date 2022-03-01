@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../API_index.html">API</a></li>
 </ul>
 
             
@@ -165,7 +165,7 @@
 <span class="kn">import</span> <span class="nn">pdb</span>
 
 
-<div class="viewcode-block" id="primordial_layer_init"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.primordial_layer_init">[docs]</a><span class="k">def</span> <span class="nf">primordial_layer_init</span><span class="p">(</span><span class="n">conc_l</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="n">dc_dr_s</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
+<div class="viewcode-block" id="primordial_layer_init"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.functions.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.primordial_layer_init">[docs]</a><span class="k">def</span> <span class="nf">primordial_layer_init</span><span class="p">(</span><span class="n">conc_l</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="n">dc_dr_s</span><span class="p">,</span> <span class="n">r</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Initial compositional profile within a primordial layer</span>
 
@@ -194,7 +194,7 @@
 
     <span class="k">return</span> <span class="n">c</span></div>
 
-<div class="viewcode-block" id="determine_strat_type"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.determine_strat_type">[docs]</a><span class="k">def</span> <span class="nf">determine_strat_type</span><span class="p">(</span><span class="n">ub_type_c</span><span class="p">,</span> <span class="n">ub_c</span><span class="p">,</span> <span class="n">ADR</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">E_T</span><span class="p">,</span> <span class="n">prm</span><span class="p">):</span>
+<div class="viewcode-block" id="determine_strat_type"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.functions.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.determine_strat_type">[docs]</a><span class="k">def</span> <span class="nf">determine_strat_type</span><span class="p">(</span><span class="n">ub_type_c</span><span class="p">,</span> <span class="n">ub_c</span><span class="p">,</span> <span class="n">ADR</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">E_T</span><span class="p">,</span> <span class="n">prm</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    AI algorithms (lots of &#39;if&#39; statements) to determine the dominant type of stratification: thermal or chemical</span>
 
@@ -279,7 +279,7 @@
 
 
 <span class="c1">#Stable layer functions</span>
-<div class="viewcode-block" id="buffett_seagle_10_growth"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.buffett_seagle_10_growth">[docs]</a><span class="k">def</span> <span class="nf">buffett_seagle_10_growth</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">conc_l</span><span class="p">,</span><span class="n">dc_dr</span><span class="p">):</span>
+<div class="viewcode-block" id="buffett_seagle_10_growth"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.functions.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.buffett_seagle_10_growth">[docs]</a><span class="k">def</span> <span class="nf">buffett_seagle_10_growth</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">c</span><span class="p">,</span><span class="n">conc_l</span><span class="p">,</span><span class="n">dc_dr</span><span class="p">):</span>
 
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Calculate the layer interface movement using the method of Buffett and Seagle (2010)</span>
@@ -324,7 +324,7 @@
 
 
 
-<div class="viewcode-block" id="mix_profile"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.mix_profile">[docs]</a><span class="k">def</span> <span class="nf">mix_profile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">I_prime</span><span class="p">,</span> <span class="n">y_in</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">mix_profile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">I_prime</span><span class="p">,</span> <span class="n">y_in</span><span class="p">):</span>
 
     <span class="n">dx</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
@@ -359,11 +359,11 @@
 
             <span class="n">y</span> <span class="o">=</span> <span class="n">mix_profile</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">I_prime</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">y</span></div>
+    <span class="k">return</span> <span class="n">y</span>
 
 
 
-<div class="viewcode-block" id="retreat_layer"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.retreat_layer">[docs]</a><span class="k">def</span> <span class="nf">retreat_layer</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">adiabat_poly</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">alpha_T</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">,</span> <span class="n">density_grad_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+<div class="viewcode-block" id="retreat_layer"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.functions.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.retreat_layer">[docs]</a><span class="k">def</span> <span class="nf">retreat_layer</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">adiabat_poly</span><span class="p">,</span> <span class="n">resolution</span><span class="p">,</span> <span class="n">alpha_T</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">,</span> <span class="n">density_grad_limit</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Regrid the solution back to the radius that satisfies the stability conditions</span>
 
@@ -426,7 +426,7 @@
     <span class="k">return</span> <span class="n">s_new</span></div>
 
 
-<div class="viewcode-block" id="change_domain_size"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.change_domain_size">[docs]</a><span class="k">def</span> <span class="nf">change_domain_size</span><span class="p">(</span><span class="n">X_rel</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">s_new</span><span class="p">,</span><span class="n">resolution</span><span class="p">):</span>
+<div class="viewcode-block" id="change_domain_size"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.functions.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.change_domain_size">[docs]</a><span class="k">def</span> <span class="nf">change_domain_size</span><span class="p">(</span><span class="n">X_rel</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">s_new</span><span class="p">,</span><span class="n">resolution</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Change the domain size with linear interpolation</span>
 
@@ -511,7 +511,7 @@
 <span class="c1">#################################################################################</span>
 <span class="c1">#################################################################################</span>
 
-<div class="viewcode-block" id="cubic_fit"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.cubic_fit">[docs]</a><span class="k">def</span> <span class="nf">cubic_fit</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">f_x1</span><span class="p">,</span><span class="n">f_x2</span><span class="p">,</span><span class="n">f_x1_prime</span><span class="p">,</span><span class="n">f_x2_prime</span><span class="p">):</span>
+<div class="viewcode-block" id="cubic_fit"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.functions.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.cubic_fit">[docs]</a><span class="k">def</span> <span class="nf">cubic_fit</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span><span class="n">x2</span><span class="p">,</span><span class="n">f_x1</span><span class="p">,</span><span class="n">f_x2</span><span class="p">,</span><span class="n">f_x1_prime</span><span class="p">,</span><span class="n">f_x2_prime</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Fit a cubic equation f(x) = m1*x^3 + m2*x^2 + m3*x + m4</span>
 <span class="sd">    Defined conditions are f(x1), f(x2) and f&#39;(x1), f&#39;(x2)</span>
@@ -535,7 +535,7 @@
 
 
 
-<div class="viewcode-block" id="pure_thermal_check"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.pure_thermal_check">[docs]</a><span class="k">def</span> <span class="nf">pure_thermal_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">pure_thermal_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="n">sl</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span>
 
@@ -551,10 +551,10 @@
         <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span><span class="p">,</span> <span class="n">sl</span><span class="o">.</span><span class="n">c_grad_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">return</span> <span class="kc">True</span></div>
+    <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="pure_chemical_check"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.pure_chemical_check">[docs]</a><span class="k">def</span> <span class="nf">pure_chemical_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">pure_chemical_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="n">prm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span>
 
@@ -565,21 +565,21 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">T_grad_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">c_grad_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
         <span class="k">return</span> <span class="kc">False</span>
 
-    <span class="k">return</span> <span class="kc">True</span></div>
+    <span class="k">return</span> <span class="kc">True</span>
 
 
-<div class="viewcode-block" id="thermo_chemical_check"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.thermo_chemical_check">[docs]</a><span class="k">def</span> <span class="nf">thermo_chemical_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">thermo_chemical_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="k">if</span> <span class="n">pure_chemical_check</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="ow">or</span> <span class="n">pure_thermal_check</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">T_grad_s</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">c_grad_s</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
-        <span class="k">return</span> <span class="kc">False</span></div>
+        <span class="k">return</span> <span class="kc">False</span>
 
 
 
 
-<div class="viewcode-block" id="eval_dT_dr_cmb"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.eval_dT_dr_cmb">[docs]</a><span class="k">def</span> <span class="nf">eval_dT_dr_cmb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">eval_dT_dr_cmb</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="n">Q_cmb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mantle</span><span class="o">.</span><span class="n">Q_cmb</span>
     <span class="n">k_cmb</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">][</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -587,10 +587,10 @@
 
     <span class="n">T_grad_cmb</span> <span class="o">=</span> <span class="n">Q_cmb</span> <span class="o">/</span> <span class="p">(</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r_cmb</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="o">-</span><span class="n">k_cmb</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">T_grad_cmb</span></div>
+    <span class="k">return</span> <span class="n">T_grad_cmb</span>
 
 
-<div class="viewcode-block" id="setup_thermal_profile"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.setup_thermal_profile">[docs]</a><span class="k">def</span> <span class="nf">setup_thermal_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">setup_thermal_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="n">prm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span>
 
@@ -598,10 +598,10 @@
     <span class="n">Tcen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Tcen</span>
 
     <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat</span><span class="p">)</span></div>
+    <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="setup_chemical_profile"><a class="viewcode-back" href="../../../../../thermal_history.stable_layer_models.leeds_thermal.routines.html#thermal_history.stable_layer_models.leeds_thermal.routines.functions.setup_chemical_profile">[docs]</a><span class="k">def</span> <span class="nf">setup_chemical_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">setup_chemical_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
 
     <span class="n">prm</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span>
 
@@ -621,7 +621,7 @@
         <span class="n">dc_dr_s</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">core_alpha_T</span><span class="o">/</span><span class="n">prm</span><span class="o">.</span><span class="n">alpha_c</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="n">T_grad_cmb</span><span class="o">-</span><span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="bp">self</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span><span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat</span><span class="p">))</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;c&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span><span class="o">.</span><span class="n">primordial_layer_init</span><span class="p">(</span><span class="n">conc_l</span><span class="p">,</span> <span class="n">dc</span><span class="p">,</span> <span class="n">dc_dr_s</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">c_grad_s</span> <span class="o">=</span> <span class="n">dc_dr_s</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">c_grad_s</span> <span class="o">=</span> <span class="n">dc_dr_s</span>
 
         <span class="c1"># Ts = prof.adiabat(r[0], self.core.Tcen, prm.core_adiabat)</span>
 

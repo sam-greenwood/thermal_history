@@ -1,3 +1,6 @@
+'''Test docstring for thermal_history
+'''
+
 import thermal_history.model_classes
 import thermal_history.utils
 import thermal_history.model

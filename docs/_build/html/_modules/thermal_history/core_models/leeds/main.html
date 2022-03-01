@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../API_index.html">API</a></li>
 </ul>
 
             
@@ -172,7 +172,7 @@
 
 <span class="c1">#Required functions: setup(), evolution(), update()</span>
 
-<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.html#thermal_history.core_models.leeds.main.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="setup"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.main.html#thermal_history.core_models.leeds.main.setup">[docs]</a><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Sets initial conditions from the input parameters and performs any other housekeeping (e.g. ensuring correct temperature for a given ri)</span>
 
@@ -245,7 +245,7 @@
     <span class="n">core</span><span class="o">.</span><span class="n">T_upper</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">][</span><span class="n">core</span><span class="o">.</span><span class="n">_rs_idx</span><span class="p">]</span></div>
 
 
-<div class="viewcode-block" id="evolve"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.html#thermal_history.core_models.leeds.main.evolve">[docs]</a><span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="evolve"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.main.html#thermal_history.core_models.leeds.main.evolve">[docs]</a><span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Main evolution fuction for development method. Calculates rates of change for all aspects of core evolution.</span>
 
@@ -597,7 +597,7 @@
 
 
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.html#thermal_history.core_models.leeds.main.update">[docs]</a><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.main.html#thermal_history.core_models.leeds.main.update">[docs]</a><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates parameters based on rates of change calculatied in main fuction.</span>
 
@@ -695,7 +695,7 @@
 <span class="p">}</span>
 
 
-<div class="viewcode-block" id="progress"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.html#thermal_history.core_models.leeds.main.progress">[docs]</a><span class="k">def</span> <span class="nf">progress</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="progress"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.main.html#thermal_history.core_models.leeds.main.progress">[docs]</a><span class="k">def</span> <span class="nf">progress</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Return text for this class when progress at each iteration is printed to STDOUT</span>
 
@@ -722,7 +722,7 @@
 <span class="c1">#Extra functions used by the main functions &#39;setup&#39;, &#39;evolve&#39;, and &#39;update&#39;.</span>
 
 
-<div class="viewcode-block" id="set_Q_rs"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.html#thermal_history.core_models.leeds.main.set_Q_rs">[docs]</a><span class="k">def</span> <span class="nf">set_Q_rs</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="set_Q_rs"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.main.html#thermal_history.core_models.leeds.main.set_Q_rs">[docs]</a><span class="k">def</span> <span class="nf">set_Q_rs</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Sets the heat flow at the top of the convecting region (rs)</span>
 
@@ -755,7 +755,7 @@
 
     <span class="k">return</span> <span class="n">Q_rs</span></div>
 
-<div class="viewcode-block" id="snow_evolution"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.html#thermal_history.core_models.leeds.main.snow_evolution">[docs]</a><span class="k">def</span> <span class="nf">snow_evolution</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+<div class="viewcode-block" id="snow_evolution"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.main.html#thermal_history.core_models.leeds.main.snow_evolution">[docs]</a><span class="k">def</span> <span class="nf">snow_evolution</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Sub-evolution fuction specifically for an iron snow-zone based on Davies and Pommier (2018). Called from evolution() if required (prm.iron_snow=True)</span>
 

@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../API_index.html">API</a></li>
 </ul>
 
             
@@ -161,12 +161,21 @@
 <span class="c1">#Defined here are the classes for the 3 different regions that can be modelled, plus the main class that the user will interact with (which will contain the other 3)</span>
 
 
-<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">:</span>
+<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">:</span>
     <span class="sd">&#39;&#39;&#39;Base class from which each class associated with regions of the planet (core, stable layer, mantle etc)</span>
 <span class="sd">    inherits from.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_type : string</span>
+<span class="sd">        String denoting the model type for internal checking</span>
+<span class="sd">    ys : float</span>
+<span class="sd">        Number of seconds in a year, commonly used constant.</span>
+<span class="sd">    parameters: None</span>
+<span class="sd">        Placeholder for parameters class, unless the region is not modelled in which</span>
+<span class="sd">        case it is left as None.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
-    <span class="n">it</span> <span class="o">=</span> <span class="mi">1</span>                <span class="c1">#iteration counter</span>
     <span class="n">ys</span> <span class="o">=</span> <span class="mi">60</span><span class="o">*</span><span class="mi">60</span><span class="o">*</span><span class="mi">24</span><span class="o">*</span><span class="mi">365</span>     <span class="c1">#seconds in a year</span>
 
     <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;base&#39;</span>  <span class="c1">#Type of model class</span>
@@ -185,23 +194,23 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span> <span class="o">=</span> <span class="n">method_module</span>
 
 
-<div class="viewcode-block" id="BaseModel.setup"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseModel.setup"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Defines setup() based on the specific method in __init__().</span>
 <span class="sd">        &#39;&#39;&#39;</span>        
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseModel.evolve"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseModel.evolve"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Defines evolve() based on the specific method in __init__().</span>
 <span class="sd">        &#39;&#39;&#39;</span>   
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="BaseModel.update"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseModel.update"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Defines update() based on the specific method in __init__().</span>
 <span class="sd">        &#39;&#39;&#39;</span>   
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="BaseModel.state"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.BaseModel.state">[docs]</a>    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseModel.state"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel.state">[docs]</a>    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39; Creates dictionary with all attributes.</span>
 <span class="sd">        The current &#39;state&#39; of the model. This retrieves all attributes of the model class,</span>
 <span class="sd">        with exceptions listed in the &#39;ignore_list&#39; variable, and returns them in a</span>
@@ -219,17 +228,27 @@
 
         <span class="k">return</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">}</span></div></div>
 
-<div class="viewcode-block" id="StableLayer"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.StableLayer">[docs]</a><span class="k">class</span> <span class="nc">StableLayer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Stable layer model class</span>
+<div class="viewcode-block" id="StableLayer"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.StableLayer">[docs]</a><span class="k">class</span> <span class="nc">StableLayer</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Stable layer model class which inherits the BaseModel class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_type : string</span>
+<span class="sd">        String denoting the model type for internal checking</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;stable_layer&#39;</span></div>
 
     <span class="c1">##################</span>
 
-<div class="viewcode-block" id="Mantle"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.Mantle">[docs]</a><span class="k">class</span> <span class="nc">Mantle</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Mantle"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.Mantle">[docs]</a><span class="k">class</span> <span class="nc">Mantle</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Mantle model class which inherits the BaseModel class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_type : string</span>
+<span class="sd">        String denoting the model type for internal checking</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;mantle&#39;</span>
@@ -239,17 +258,22 @@
 
     <span class="c1">##################</span>
 
-<div class="viewcode-block" id="Core"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.Core">[docs]</a><span class="k">class</span> <span class="nc">Core</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Core"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.Core">[docs]</a><span class="k">class</span> <span class="nc">Core</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
 
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Core model class which inherits the BaseModel class.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model_type : string</span>
+<span class="sd">        String denoting the model type for internal checking</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">model_type</span><span class="o">=</span><span class="s1">&#39;core&#39;</span></div>
 
     <span class="c1">##################</span>
 
-<div class="viewcode-block" id="ThermalModel"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel">[docs]</a><span class="k">class</span> <span class="nc">ThermalModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel">[docs]</a><span class="k">class</span> <span class="nc">ThermalModel</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Main thermal history model class. Contains the primary methods for calculating the evolution of the planet. This is the main class the user interacts with.</span>
 
@@ -260,10 +284,13 @@
 
 <span class="sd">    time: float</span>
 <span class="sd">        Current time of the model. Initialised at zero by default and incrimented by the time step whenever evolve() is called.</span>
+<span class="sd">    it : int</span>
+<span class="sd">        Iteration number (starts at 1)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;thermal&#39;</span>
     <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">it</span> <span class="o">=</span> <span class="mi">1</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="s1">&#39;out.log&#39;</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Setup the model based on given parameters and methods</span>
@@ -351,7 +378,7 @@
                         <span class="nb">format</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%(asctime)s</span><span class="s1"> [</span><span class="si">%(packagepath)s</span><span class="s1">:</span><span class="si">%(lineno)d</span><span class="s1">] </span><span class="si">%(levelname)s</span><span class="s1">: </span><span class="si">%(message)s</span><span class="s1">&#39;</span><span class="p">,</span> <span class="n">datefmt</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">-%b-%y %H:%M:%S&#39;</span><span class="p">,</span>
                         <span class="n">handlers</span><span class="o">=</span><span class="p">[</span><span class="n">handler</span><span class="p">])</span>
 
-<div class="viewcode-block" id="ThermalModel.state"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.state">[docs]</a>    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.state"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.state">[docs]</a>    <span class="k">def</span> <span class="nf">state</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Create dictionary of current variables in the model.</span>
 
 <span class="sd">        This retrieves all attributes of all model classes</span>
@@ -372,7 +399,7 @@
 
         <span class="k">return</span> <span class="n">full_state</span></div>
 
-<div class="viewcode-block" id="ThermalModel.evolve"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.evolve"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Evolve the model one timestep.</span>
 
 <span class="sd">        When this is called, the evolve method for each region is called, results are appended to the save_dict and the update method for each region is called.</span>
@@ -401,6 +428,7 @@
             <span class="k">if</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">:</span>
                 <span class="n">region</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span>
                 <span class="n">region</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">time</span>
+                <span class="n">region</span><span class="o">.</span><span class="n">it</span>   <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">it</span>
                 <span class="n">region</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
         <span class="c1">#Set up save_dict if not already setup</span>
@@ -415,7 +443,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">it</span><span class="o">%</span><span class="n">print_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ThermalModel.update"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      
+<div class="viewcode-block" id="ThermalModel.update"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Calls update methods for each region and save to model classes</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -428,7 +456,7 @@
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">regions</span><span class="p">[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ThermalModel.setup_save_dict"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.setup_save_dict">[docs]</a>    <span class="k">def</span> <span class="nf">setup_save_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.setup_save_dict"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.setup_save_dict">[docs]</a>    <span class="k">def</span> <span class="nf">setup_save_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Setup the dictionary that holds all data to be saved, stored as the save_dict attribute.</span>
 
 <span class="sd">        Notes</span>
@@ -479,7 +507,7 @@
 
         <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span> <span class="o">=</span> <span class="n">save_dict</span></div>
 
-<div class="viewcode-block" id="ThermalModel.append_to_save_dict"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.append_to_save_dict">[docs]</a>    <span class="k">def</span> <span class="nf">append_to_save_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.append_to_save_dict"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.append_to_save_dict">[docs]</a>    <span class="k">def</span> <span class="nf">append_to_save_dict</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Append latest model data to the save_dict</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1">#Append latest results to the save_dict</span>
@@ -504,7 +532,7 @@
 <span class="s2">                            Check this variable is created on the first iteration of the model and is included when ThermalModel.setup_save_dict() is called.&quot;</span><span class="p">)</span>
                     <span class="k">pass</span></div>
 
-<div class="viewcode-block" id="ThermalModel.print_progress"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.print_progress">[docs]</a>    <span class="k">def</span> <span class="nf">print_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.print_progress"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.print_progress">[docs]</a>    <span class="k">def</span> <span class="nf">print_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Print progress to STDOUT</span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="c1">#Print Progress</span>
@@ -516,7 +544,7 @@
 
         <span class="nb">print</span><span class="p">(</span><span class="n">text</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="ThermalModel.save_dict_to_numpy_array"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.save_dict_to_numpy_array">[docs]</a>    <span class="k">def</span> <span class="nf">save_dict_to_numpy_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.save_dict_to_numpy_array"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.save_dict_to_numpy_array">[docs]</a>    <span class="k">def</span> <span class="nf">save_dict_to_numpy_array</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Convert the lists in save_dict to numpy arrays</span>
 
 <span class="sd">        Returns</span>
@@ -537,7 +565,7 @@
 
         <span class="k">return</span> <span class="n">x</span></div>
 
-<div class="viewcode-block" id="ThermalModel.write_data"><a class="viewcode-back" href="../../thermal_history.html#thermal_history.model_classes.ThermalModel.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.write_data"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Writes the model data to a binary file.</span>
 <span class="sd">        </span>
 <span class="sd">        The parameters and final profiles will be added to the save_dict which is then written to</span>

@@ -7,23 +7,23 @@ logger = logging.getLogger(__name__)
 
 @njit
 def snow_radius(r,T,Tm):
-    '''
-    Finds the snow zone radius by intersection of the temperature with the melting curve.
+    '''Finds the snow zone radius by intersection of the temperature with the melting curve.
 
     Parameters
     ----------
-    r
-        Radius (array)
-    T
-        Temperature (array)
-    Tm
-        Melting temperature (array)
+    r : array
+        Radius
+    T : array
+        Temperature
+    Tm : array
+        Melting temperature
 
     Returns
     -------
-    r_snow
+    float
         Snow zone radius
     '''
+    
 
     #Snow hasn't started yet
     if np.min(T-Tm) > 0:
@@ -59,20 +59,20 @@ def snow_composition(Ta,Tm_fe,initial_conc,snow_index):
     parameterisation for the melting curve is assumed:
     Tm = Tm_fe*(1-conc_l+initial_conc)
 
-    Inputs
-    ------
-    Ta
+    Parameters
+    ----------
+    Ta : array
         Adiabatic temperature (array)
-    Tm_fe
+    Tm_fe : array
         Melting temperature of pure iron (array)
-    intial_conc
+    intial_conc : float
         Initial concentration of liquid
-    snow_index
+    snow_index : int
         Index from which snow zone starts in arrays
 
     Returns
     -------
-    conc_l_snow
+    array
         Radial concentration profile in snow zone
     '''
 
@@ -87,10 +87,30 @@ def snow_composition(Ta,Tm_fe,initial_conc,snow_index):
 
 @njit
 def Cl_calc(phi,L,T,conc_l,dmu_dc,snow_index):
-    '''
-    Returns the Cl factor which normalises changes in slurry mass fraction
+    '''Returns the Cl factor which normalises changes in slurry mass fraction
     to changes in temperature.
+
+    Parameters
+    ----------
+    phi : array
+        solid fraction
+    L : array
+        Latent heat
+    T : array
+        Temperature
+    conc_l : array
+        mass fraction of alloying light element
+    dmu_dc : arraty
+        change in chemical potential with mass fraction
+    snow_index : int
+        Index from which snow zone starts in arrays
+
+    Returns
+    -------
+    array
+        Cl factor
     '''
+
 
     n = snow_index
     Cl = np.zeros(phi.size)
@@ -106,24 +126,24 @@ def latent_snow(r, rho, L, Cl, conc_l_profile, Ta, snow_index):
 
     Parameters
     ----------
-    r
-        Radius (array)
-    rho
-        Density (array)
-    L
-        Latent heat (array)
-    Cl
-        Cl factor relating slurry mass fraction changes to temperature (array)
-    conc_l_profile
-        Light element concentration profile (array)
-    Ta
-        Adiabatic temperature (array)
-    snow_index
+    r : array
+        Radius
+    rho : array
+        Density
+    L : array
+        Latent heat
+    Cl : array
+        Cl factor relating slurry mass fraction changes to temperature
+    conc_l_profile : array
+        Light element concentration profile
+    Ta : array
+        Adiabatic temperature
+    snow_index : int
         Index from which snow zone starts in arrays
 
     Returns
     -------
-    Ql_tilde, El_tilde
+    (float, float)
         Normalised energy and entropy release
     '''
 
@@ -144,22 +164,22 @@ def Cp_factor(r, rho, Cl, Ta, M_liquid, snow_index):
 
     Parameters
     ----------
-    r
-        Radius (array)
-    rho
-        Density (array)
-    Cl
-        Cl factor relating slurry mass fraction changes to temperature (array)
-    Ta
-        Adiabatic temperature (array)
-    M_liquid
+    r : array
+        Radius
+    rho : array
+        Density
+    Cl : array
+        Cl factor relating slurry mass fraction changes to temperature
+    Ta : array
+        Adiabatic temperature
+    M_liquid : float
         Mass of the liquid region
-    snow_index
+    snow_index : int
         Index from which snow zone starts in arrays
 
     Returns
     -------
-    Cp
+    float
         Cp factor
     '''
 
@@ -175,24 +195,24 @@ def gravitational_freezing(r, rho, psi, alpha_c, Cl, Ta, snow_index):
 
     Parameters
     ----------
-    r
-        Radius (array)
-    rho
-        Density (array)
-    psi
-        Gravitational potential (array)
-    alpha_c
+    r : array
+        Radius
+    rho : array
+        Density
+    psi : array
+        Gravitational potential
+    alpha_c : float
         Chemical expansivity
-    Cl
-        Cl factor relating slurry mass fraction changes to temperature (array)
-    Ta
-        Adiabatic temperature (array)
-    snow_index
+    Cl : array
+        Cl factor relating slurry mass fraction changes to temperature
+    Ta : array
+        Adiabatic temperature
+    snow_index : int
         Index from which snow zone starts in arrays
 
     Returns
     -------
-    Qg_tilde, Eg_tilde
+    (float, float)
         Normalised energy/entropy
     '''
 
@@ -210,28 +230,28 @@ def gravitational_melting(r, rho, psi, alpha_c, Cp, Cc, Cr, Tcmb, snow_index):
 
     Parameters
     ----------
-    r
-        Radius (array)
-    rho
-        Density (array)
-    psi
-        Gravitational potential (array)
-    alpha_c
+    r : array
+        Radius
+    rho : array
+        Density
+    psi : array
+        Gravitational potential
+    alpha_c : float
         Chemical expansivity
-    Cp
+    Cp : float
         Cp factor relating changes in mass fraction of the liquid region to those of the slurry
-    Cc
+    Cc : float
         Cc factor relating changes in snow zone radius to changes in mass fraction of the liquid
-    Cr
+    Cr : float
         Cr factor relating changes in snow zone radius to changes in temperature
-    Ta
-        Adiabatic temperature (array)
-    snow_index
+    Ta : array
+        Adiabatic temperature
+    snow_index : int
         Index from which snow zone starts in arrays
 
     Returns
     -------
-    Qg_tilde, Eg_tilde
+    (float, float)
         Normalised energy/entropy
     '''
 

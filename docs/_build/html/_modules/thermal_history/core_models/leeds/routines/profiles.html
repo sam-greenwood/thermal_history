@@ -85,7 +85,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../../../../thermal_history.html">thermal_history API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../API_index.html">API</a></li>
 </ul>
 
             
@@ -160,7 +160,7 @@
 
 <span class="n">G</span> <span class="o">=</span> <span class="mf">6.67e-11</span> <span class="c1">#Gravitational constant</span>
 
-<div class="viewcode-block" id="basic_profiles"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.basic_profiles">[docs]</a><span class="k">def</span> <span class="nf">basic_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="basic_profiles"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.basic_profiles">[docs]</a><span class="k">def</span> <span class="nf">basic_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Main function setting radial profiles for core properties.</span>
 
 <span class="sd">    Sets radius, rho, g, P, cp, alpha_T, psi, Ta, dTa_dr profiles.</span>
@@ -302,7 +302,7 @@
     <span class="n">core</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="n">profiles</span></div>
 
 
-<div class="viewcode-block" id="temp_dependent_profiles"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.temp_dependent_profiles">[docs]</a><span class="k">def</span> <span class="nf">temp_dependent_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+<div class="viewcode-block" id="temp_dependent_profiles"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.temp_dependent_profiles">[docs]</a><span class="k">def</span> <span class="nf">temp_dependent_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">setup</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Set the temperature dependent profiles.</span>
 
 <span class="sd">    Sets the k, Qa, T profiles.</span>
@@ -353,7 +353,7 @@
 
 
 <span class="c1"># @njit</span>
-<div class="viewcode-block" id="radial_grid"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.radial_grid">[docs]</a><span class="k">def</span> <span class="nf">radial_grid</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">n_points</span><span class="p">):</span>
+<div class="viewcode-block" id="radial_grid"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.radial_grid">[docs]</a><span class="k">def</span> <span class="nf">radial_grid</span><span class="p">(</span><span class="n">radii</span><span class="p">,</span> <span class="n">n_points</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Create the radial grid across the core.</span>
 
 <span class="sd">    Creates the adaptive radial grid that ensures 2 radii at each interface to allow</span>
@@ -417,7 +417,7 @@
     <span class="k">return</span> <span class="n">r</span></div>
 
 
-<div class="viewcode-block" id="density"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.density">[docs]</a><span class="k">def</span> <span class="nf">density</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
+<div class="viewcode-block" id="density"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.density">[docs]</a><span class="k">def</span> <span class="nf">density</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Density in the core</span>
 
 <span class="sd">    Parameters</span>
@@ -438,7 +438,7 @@
     <span class="k">return</span> <span class="n">rho</span></div>
 
 
-<div class="viewcode-block" id="gravity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.gravity">[docs]</a><span class="k">def</span> <span class="nf">gravity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
+<div class="viewcode-block" id="gravity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.gravity">[docs]</a><span class="k">def</span> <span class="nf">gravity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Gravity in the core</span>
 
 <span class="sd">    Parameters</span>
@@ -463,7 +463,7 @@
     <span class="k">return</span> <span class="n">g</span></div>
 
 
-<div class="viewcode-block" id="grav_potential"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.grav_potential">[docs]</a><span class="k">def</span> <span class="nf">grav_potential</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
+<div class="viewcode-block" id="grav_potential"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.grav_potential">[docs]</a><span class="k">def</span> <span class="nf">grav_potential</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">density_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Gravitational potential in the core</span>
 
 <span class="sd">    Parameters</span>
@@ -492,7 +492,7 @@
     <span class="k">return</span> <span class="n">psi</span></div>
 
 
-<div class="viewcode-block" id="specific_heat"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.specific_heat">[docs]</a><span class="k">def</span> <span class="nf">specific_heat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">cp_params</span><span class="p">):</span>
+<div class="viewcode-block" id="specific_heat"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.specific_heat">[docs]</a><span class="k">def</span> <span class="nf">specific_heat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">cp_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Specific heat capacity as a function of Pressure.</span>
 
 <span class="sd">    Parameters</span>
@@ -524,7 +524,7 @@
     <span class="k">return</span> <span class="n">cp</span></div>
 
 
-<div class="viewcode-block" id="thermal_expansivity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.thermal_expansivity">[docs]</a><span class="k">def</span> <span class="nf">thermal_expansivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span>  <span class="n">alpha_params</span><span class="p">):</span>
+<div class="viewcode-block" id="thermal_expansivity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.thermal_expansivity">[docs]</a><span class="k">def</span> <span class="nf">thermal_expansivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span>  <span class="n">alpha_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Thermal expansivity as a function of Pressure.</span>
 
 <span class="sd">    Parameterisation of thermal expansivity given in Knibbe and Van Westrenen (2018).</span>
@@ -559,7 +559,7 @@
     <span class="k">return</span> <span class="n">alpha</span></div>
 
 
-<div class="viewcode-block" id="fit_adiabat_polynomials"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.fit_adiabat_polynomials">[docs]</a><span class="k">def</span> <span class="nf">fit_adiabat_polynomials</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
+<div class="viewcode-block" id="fit_adiabat_polynomials"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.fit_adiabat_polynomials">[docs]</a><span class="k">def</span> <span class="nf">fit_adiabat_polynomials</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">cp</span><span class="p">,</span> <span class="n">alpha</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Calculate radial polynomial coefficients for adiabatic temperature</span>
 
 <span class="sd">    Numerically integrates the adiabatic gradient to get the temperature based on</span>
@@ -614,7 +614,7 @@
     <span class="k">return</span> <span class="n">poly</span></div>
 
 
-<div class="viewcode-block" id="adiabat"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.adiabat">[docs]</a><span class="k">def</span> <span class="nf">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">adiabat_params</span><span class="p">):</span>
+<div class="viewcode-block" id="adiabat"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.adiabat">[docs]</a><span class="k">def</span> <span class="nf">adiabat</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">adiabat_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Adiabatic temperature</span>
 
 <span class="sd">    Parameters</span>
@@ -637,7 +637,7 @@
     <span class="k">return</span> <span class="n">Ta</span></div>
 
 
-<div class="viewcode-block" id="adiabat_grad"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.adiabat_grad">[docs]</a><span class="k">def</span> <span class="nf">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">adiabat_params</span><span class="p">):</span>
+<div class="viewcode-block" id="adiabat_grad"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.adiabat_grad">[docs]</a><span class="k">def</span> <span class="nf">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Tcen</span><span class="p">,</span> <span class="n">adiabat_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Adiabatic temperature gradient</span>
 
 <span class="sd">    Parameters</span>
@@ -664,7 +664,7 @@
     <span class="k">return</span> <span class="n">Ta</span></div>
 
 
-<div class="viewcode-block" id="conductivity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.conductivity">[docs]</a><span class="k">def</span> <span class="nf">conductivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">conductivity_params</span><span class="p">):</span>
+<div class="viewcode-block" id="conductivity"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.conductivity">[docs]</a><span class="k">def</span> <span class="nf">conductivity</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">conductivity_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Thermal conductivity</span>
 
 <span class="sd">    Calculates the thermal conductivity that, depending on the supplied parameters,</span>
@@ -713,7 +713,7 @@
     <span class="k">return</span> <span class="n">k</span></div>
 
 
-<div class="viewcode-block" id="adiabatic_heat_flow"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.adiabatic_heat_flow">[docs]</a><span class="k">def</span> <span class="nf">adiabatic_heat_flow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">Tcen</span><span class="p">,</span><span class="n">adiabat_poly</span><span class="p">):</span>
+<div class="viewcode-block" id="adiabatic_heat_flow"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.adiabatic_heat_flow">[docs]</a><span class="k">def</span> <span class="nf">adiabatic_heat_flow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">Tcen</span><span class="p">,</span><span class="n">adiabat_poly</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Adiabatic heat flow</span>
 
 <span class="sd">    Parameters</span>
@@ -738,7 +738,7 @@
     <span class="k">return</span> <span class="n">Qa</span></div>
 
 
-<div class="viewcode-block" id="entropy_melting"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.entropy_melting">[docs]</a><span class="k">def</span> <span class="nf">entropy_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">ent_melt_params</span><span class="p">):</span>
+<div class="viewcode-block" id="entropy_melting"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.entropy_melting">[docs]</a><span class="k">def</span> <span class="nf">entropy_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">ent_melt_params</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Change in entropy on fusion</span>
 
 <span class="sd">    Parameters</span>
@@ -759,7 +759,7 @@
     <span class="k">return</span> <span class="n">ds_fe</span></div>
 
 
-<div class="viewcode-block" id="mass"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.mass">[docs]</a><span class="k">def</span> <span class="nf">mass</span><span class="p">(</span><span class="n">rho_ic_poly</span><span class="p">,</span> <span class="n">rho_oc_poly</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">):</span>
+<div class="viewcode-block" id="mass"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.mass">[docs]</a><span class="k">def</span> <span class="nf">mass</span><span class="p">(</span><span class="n">rho_ic_poly</span><span class="p">,</span> <span class="n">rho_oc_poly</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">rs</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;mass of regions within the core</span>
 
 <span class="sd">    Parameters</span>
@@ -801,7 +801,7 @@
     <span class="k">return</span> <span class="n">M_ic</span><span class="p">,</span> <span class="n">M_conv</span><span class="p">,</span> <span class="n">Ms</span><span class="p">,</span> <span class="n">M</span></div>
 
 
-<div class="viewcode-block" id="mass_correct"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.mass_correct">[docs]</a><span class="k">def</span> <span class="nf">mass_correct</span><span class="p">(</span><span class="n">solid_params</span><span class="p">,</span> <span class="n">liquid_params</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">):</span>
+<div class="viewcode-block" id="mass_correct"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.mass_correct">[docs]</a><span class="k">def</span> <span class="nf">mass_correct</span><span class="p">(</span><span class="n">solid_params</span><span class="p">,</span> <span class="n">liquid_params</span><span class="p">,</span> <span class="n">ri</span><span class="p">,</span> <span class="n">M</span><span class="p">,</span> <span class="n">r_cmb</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Correct outer core density polynomials to account for changing LE concentration.</span>
 
 <span class="sd">    Parameters</span>
@@ -844,7 +844,7 @@
 <span class="c1">###############################################################################</span>
 <span class="c1"># import matplotlib.pyplot as plt</span>
 <span class="c1">#@jit</span>
-<div class="viewcode-block" id="ic_radius"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.html#thermal_history.core_models.leeds.routines.profiles.ic_radius">[docs]</a><span class="k">def</span> <span class="nf">ic_radius</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">Ta</span><span class="p">,</span><span class="n">Tm</span><span class="p">):</span>
+<div class="viewcode-block" id="ic_radius"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.profiles.html#thermal_history.core_models.leeds.routines.profiles.ic_radius">[docs]</a><span class="k">def</span> <span class="nf">ic_radius</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">Ta</span><span class="p">,</span><span class="n">Tm</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Find the inner core radius by intersection of melting curve</span>
 
 <span class="sd">    Parameters</span>

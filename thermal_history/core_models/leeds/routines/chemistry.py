@@ -318,7 +318,7 @@ def solid_conc(mf_liq, T_m, ds_fe, dmu, lambda_liq, lambda_sol):
 #Equation 12 from Alfe et al.(2002)
 ###############################################################################
 def melt_pt_dep(mf_liq, mf_sol, Tm, ds_fe):
-    '''_summary_
+    '''Calculates the melting point depression by Alfe et al. (2002)
 
     Parameters
     ----------
