@@ -31,8 +31,12 @@ Use the anaconda navigator app to install a new environment, importing the `envi
 #### Importing thermal_history in your script
 To be able to import `thermal_history` from anywhere, you can append to the PYTHONPATH system variable by putting `export PYTHONPATH=$PYTHONPATH:"full/path/to/directory/containing_thermal_history"` into your `~/.bashrc` file (or `~/.zshrc` or equivalent depending on your shell) and running `source ~/.bashrc`. The active terminal and new terminals will allow python to always be aware of that location for imports (proper setup.py coming sometime soon!).
 
-On Windows, go to Control Panel / System / Advanced / Environment variable, and in the "User variables" sections, check if you already have PYTHONPATH. If yes, select it and click "Edit", if not, click "New" to add it. Paths in PYTHONPATH should be separated with ";". (Credit to stackoverflow user tiho for that).
-
+Otherwise you'l need to add to the system path with
+```python
+import sys
+sys.path.append('/full/path/to/directory/containg_thermal_history')
+```
+before thermal_history is imported. Windows users beware, you'll need to escape each backslash and watch out for special unicode characters if copy and pasting from the file browser, you may need to type it out manually.
 
 
 ### Documentation
