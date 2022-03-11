@@ -5,6 +5,7 @@ import datetime
 import pickle
 from copy import deepcopy
 import logging
+logger = logging.getLogger(__name__)
 import thermal_history.utils as utils
 
 #Defined here are the classes for the 3 different regions that can be modelled, plus the main class that the user will interact with (which will contain the other 3)
@@ -375,9 +376,9 @@ class ThermalModel(BaseModel):
                     self.save_dict[r][key].append(deepcopy(value))
 
                 except:
-                    self.logger.error(f'Could not append {r}.{key} to save_dict')
+                    logger.error(f'Could not append {r}.{key} to save_dict')
                     if not key in self.save_dict[r].keys():
-                        self.logger.error(f"{key} not pre-exisiting in save_dict['{r}'].\
+                        logger.error(f"{key} not pre-exisiting in save_dict['{r}'].\
                             Check this variable is created on the first iteration of the model and is included when ThermalModel.setup_save_dict() is called.")
                     pass
 
