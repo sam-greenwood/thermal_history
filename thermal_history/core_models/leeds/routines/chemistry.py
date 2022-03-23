@@ -117,7 +117,10 @@ def melting_curve(model):
         if not 'conc_l' in core.profiles.keys():
             core.profiles['conc_l'] = np.full(prm.n_profiles, core.initial_conc_l, dtype=float)
 
-        Tm_fe = Tl0*(1+core.initial_conc_l)*polyval(params[1:][::-1], P)
+        if len(params)>1:
+            Tm_fe = Tl0*(1+core.initial_conc_l)*polyval(params[1:][::-1], P)
+        else: #If Tm has no dependence on P
+            Tm_fe = np.full(P.size, Tl0*(1+core.initial_conc_l))
 
         dTm   = -Tm_fe*core.profiles['conc_l']/(1+core.initial_conc_l)
 

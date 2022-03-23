@@ -1,4 +1,3 @@
-from stat import filemode
 import numpy as np
 import os
 import datetime
@@ -38,7 +37,7 @@ class BaseModel:
         ----------
         method_module : module, optional
             Imported module for given method, by default None
-        '''        
+        '''
 
         #Set setup, evolution, and update functions
         self._method_module = method_module
@@ -46,17 +45,17 @@ class BaseModel:
 
     def setup(self, *args, **kwargs):
         '''Defines setup() based on the specific method in __init__().
-        '''        
+        '''
         return self._method_module.setup(*args,*kwargs)
 
     def evolve(self, *args, **kwargs):
         '''Defines evolve() based on the specific method in __init__().
-        '''   
+        '''
         return self._method_module.evolve(*args,*kwargs)
 
     def update(self, *args, **kwargs):
         '''Defines update() based on the specific method in __init__().
-        '''   
+        '''
         return self._method_module.update(*args,*kwargs)
 
 
@@ -147,20 +146,20 @@ class ThermalModel(BaseModel):
 
         Parameters
         ----------
-        parameters : Parameters class  
+        parameters : Parameters class
             Class containing all the parameters
         methods : Dict
             Dictionary containting the imported method modules for each region (core/stable_layer/mantle)
         verbose : bool, optional
             Print progress to STDOUT, by default True
         log_file : String, optional
-            Name of the log file
+            Name of the log file, by default 'out.log'
         log_level : int, optional
             Numerical code for setting the logging level (10: DEBUG, 20: INFO, 30: WARNING, 40: ERROR, 50: CRITICAL), by default 30.
-        '''        
+        '''
 
 
-        self.parameters = parameters
+        self.parameters = deepcopy(parameters)
         if hasattr(parameters, 'time'):
             self.time = self.parameters.time
 
@@ -239,7 +238,7 @@ class ThermalModel(BaseModel):
         -------
         Dict
             Dictionary containing all attributes for all regions being modelled
-        '''        
+        '''
 
         full_state = {}
 
@@ -265,7 +264,7 @@ class ThermalModel(BaseModel):
         ------
         ValueError
             If a negative step time is used when a stable layer is being solved for. Diffusion requires dt>0.
-        '''        
+        '''
 
 
         if self.parameters.stable_layer and dt<0:
@@ -293,7 +292,7 @@ class ThermalModel(BaseModel):
         if self.verbose and self.it%print_freq == 0:
             self.print_progress()
 
-    def update(self):      
+    def update(self):
         '''
         Calls update methods for each region and save to model classes
         '''
@@ -401,7 +400,7 @@ class ThermalModel(BaseModel):
         -------
         Dict
             Copy of save_dict except that all values are converted to numpy arrays.
-        '''        
+        '''
 
         x = {}
         for key1 in self.save_dict.keys():
@@ -415,9 +414,9 @@ class ThermalModel(BaseModel):
 
         return x
 
-    def write_data(self, fname):
+    def write_data(self, fname, overwrite=False):
         '''Writes the model data to a binary file.
-        
+
         The parameters and final profiles will be added to the save_dict which is then written to
         a binary file using pickle. The time at which this function is called is also added to the
         parameters. The save_dict is also passed through save_dict_to_numpy_array() to convert all
@@ -427,6 +426,8 @@ class ThermalModel(BaseModel):
         ----------
         fname : Str
             Name of the output file (.pik will be appended if not already included)
+        overwrite : Bool, optional
+            If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.
 
         Raises
         ------
@@ -434,11 +435,15 @@ class ThermalModel(BaseModel):
             If a file with the same name already exists.
         '''
 
-        if not '.pik' in fname and fname[-4:] == '.pik':
+        if len(fname)<4 or not fname[-4:] == '.pik':
             fname += '.pik'
 
-        if os.path.isfile(fname) :
-            raise ValueError(f'{fname} already exists!')
+        if os.path.isfile(fname):
+            if overwrite:
+                print(f'{fname} already exists, overwriting')
+            else:
+                logger.error(f'{fname} already exists')
+                raise ValueError(f'{fname} already exists')
 
         #Convert to numpy array
         numpy_dict = self.save_dict_to_numpy_array()
@@ -459,10 +464,8 @@ class ThermalModel(BaseModel):
         for r in ['core', 'stable_layer', 'mantle']:
             if hasattr(getattr(self, r), 'profiles'):
                 numpy_dict[r]['profiles'] = getattr(self, r).profiles
-     
+
         with open(fname, 'wb') as f:
             pickle.dump(numpy_dict, f)
             f.close()
-            print('\nWrote {} to disk'.format(fname))
-
-
+            print(f'\nWrote {fname} to disk')

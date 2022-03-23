@@ -4,7 +4,6 @@ sys.path.append('../')
 from thermal_history.model import Parameters, setup_model
 
 prm = Parameters('simple_test_params.py')
-prm.T = 1
 model = setup_model(prm, core_method='simple_test')
 
 dt = 1e6*prm.ys   #1 Myr time step
