@@ -298,7 +298,7 @@ def evolve(model):
     core.alpha_D = alpha_D
 
     if core.rs == 0: #No convecting region
-        dT_dt = 0
+        dT_dt = core.dT_dt #core.dT_dt is required to be set in stable layer method when layer covers entire core.
     else:
         dT_dt = (core.Q_rs-Qr)/(Qs_tilda+Ql_tilda+Qg_tilda+Qg_mgo_tilda+Q_snow_tilde)
 
@@ -481,7 +481,9 @@ def update(model):
         
     #New snow/ICB radius
     if prm.iron_snow:
+
         core.r_snow = snow.snow_radius(profiles['r'], profiles['T'], profiles['Tm'])
+
         if core.r_snow == 0:
             logger.critical(f'it: {model.it}. Snow zone has covered entire core!! Not defined how to procede')
     else:

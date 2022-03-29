@@ -144,6 +144,10 @@ def evolve(model):
 
             r1, T2, T1 = r_new, T_new, T_initial
 
+	    #Set cooling rate at r=0 if no convecting region exists.
+            if r_initial[0] == 0:
+               core.dT_dt = (T2[0]-T1[0])/model.dt
+
         elif r_new[0] > r_initial[0]:  #Layer has shrunk
 
             #Need to append on adiabatic values onto new temperature
