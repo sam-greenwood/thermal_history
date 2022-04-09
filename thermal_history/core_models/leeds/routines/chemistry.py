@@ -5,6 +5,7 @@ from numba import njit
 from thermal_history.utils.optimised_funcs import polyval
 
 from . import profiles as prof
+from . import rivoldini_eos as riv
 
 import numpy as np
 from scipy.optimize import bisect
@@ -36,6 +37,9 @@ def melting_curve(model):
     Like 'SG', the partitioning is also described by fixed parition coefficients (=conc_s/conc_l) in the partition_coeff parameter.
     After 'WN', the constants Tl0 and the polynomial coefficients in pressure should be given. E.g. in Davies and Pommier (2018)
     this would be represented as core_melting_params = ['WN', Tl0, 1, Tl1, Tl2]
+
+    'RI': Uses a polynomial fit to Rivoldini's EOS model. Polynomial coefficients are for both Pressure and Compositional dependence
+    and are calculated in the included stand-alone script riv_pre_compute_poly.py. 
 
     Parameters
     ----------
@@ -126,6 +130,25 @@ def melting_curve(model):
 
         dTm_dP = Tl0*(1+core.initial_conc_l-core.profiles['conc_l'])*iron_melting_gradient(P, params[1:])
 
+
+    elif melting_params[0] == 'RI':
+        #Melting temperature based on fitting Rivoldini's EOS model to represent
+        #Tm with polynomials in both pressure and composition. Polynomials are pre-computed
+        #using the riv_pre_compute_poly.py script in the routines sub-package. Output coefficients
+        #are saved into optimal_solution.txt and must be included into the parameters file.
+
+        #Simple partitioning
+        core.conc_s = core.conc_l * prm.partition_coeff
+
+        params = melting_params[1:].astype('float64') #Don't use first string
+
+        #melting points of iron and alloy
+        Tm_fe = riv_Tm(P, 0, params)
+        Tm = riv_Tm(P, core.conc_l[0], params)
+        dTm = Tm-Tm_fe
+
+        dTm_dP = riv_dTm_dP(P, core.conc_l[0], params)
+
     else:
 
         raise ValueError(f'Incorrect string denoting which melting parameterisation to use. See this function (core_models.leeds.routines.chemisty.melting_curve) for valid options. Supplied core_melting_params={melting_params}')
@@ -133,6 +156,63 @@ def melting_curve(model):
     Tm = Tm_fe + dTm
 
     return Tm_fe, Tm, dTm_dP
+
+def riv_Tm(P, S, melting_params):
+    '''
+    Calculate melting temperature given polynomial coefficients (to degree N) for pressure and composition.
+
+    Tm0 = melting_params[0] + melting_params[1]*S + melting_params[2]*S**2 + .... 
+    Tm1 = melting_params[N+1] + ...
+    TmN = ....
+
+    Tm = Tm0 + Tm1*P + ... TmN*P**N
+
+    '''
+
+    N = int(np.sqrt(len(melting_params))) - 1
+
+    if not type(P) == np.ndarray:
+        P = np.array(P)
+
+    Tm = np.zeros(P.size)
+    c = 0
+    for i in range(N+1):
+
+        temp = np.zeros(P.size)
+
+        for j in range(0,N+1):
+            temp += np.dot(melting_params[c+j], S**j)
+
+        Tm += temp*P**i
+        c += N+1
+
+    return Tm
+
+
+def riv_dTm_dP(P,S,melting_params):
+    '''
+    Calculate melting temperature gradient with pressure for given polynomial coefficients (to degree N) for pressure and composition.
+    '''
+
+    N = int(np.sqrt(len(melting_params))) - 1
+
+    if not type(P) == np.ndarray:
+        P = np.array(P)
+
+    dTm_dP = np.zeros(P.size)
+    c = N+1
+    for i in range(1,N+1):
+
+        temp = np.zeros(P.size)
+
+        for j in range(0,N+1):
+            temp += np.dot(melting_params[c+j], S**j)
+
+        dTm_dP += i*temp*P**(i-1)
+        c += N+1
+
+    return dTm_dP
+
 
 def iron_melting(P, melting_params):
     """Simple polynomial representation of iron melting temperature with pressure
