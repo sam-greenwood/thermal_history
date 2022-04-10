@@ -207,6 +207,16 @@ class liquidusFeS:
 # Initialize the EoS 
 fccFe=eosAndersonGrueneisen(M0=param["MFe"],p0=1.e-5,T0=298,V0=6.82,alpha0=7.e-5,KT0=163.4,KTP0=5.38,deltaT=5.5,kappa=1.4,GibbsE=(lambda T: 16300.921-395355.43/T-2476.28*np.sqrt(T)+ 381.47162*T+0.000177578*T**2-52.2754*T*np.log(T)))        
 liquidFe=eosAndersonGrueneisen(M0=param['MFe'],p0=1E-5,T0=298,V0=6.88,alpha0=9E-5,KT0=148,KTP0=5.8,deltaT=5.1,kappa=0.56,GibbsE=(lambda T: 300-9007.3402+290.29866*T-46*T*np.log(T)))             
+liquidFeS=eosAndersonGrueneisen(M0=param['MFeS'],p0=1E-5,T0=1650,V0=22.96,alpha0=11.9e-5, KT0=17.019,KTP0=5.922, deltaT=5.922,kappa=1.4,gamma0=1.3,q=0)
+
+def VexFeFeS(chi,p,T):
+    W11=-9.91275
+    W12=0.731385
+    W21=-1.32521
+    W22=1.72716
+    return (1-chi[1])*chi[1]*np.array([chi[1]*(W11+W12*np.log(1.5+p))+chi[0]*(W21+W22*np.log(1.5+p)),chi[1]*W12/(1.5+p)+chi[0]*W22/(1.5+p),0])
+                                  
+liquidCore=solution(liquidFe,liquidFeS,VexFeFeS) #Class to calculate properties from
 
 def deltaMu(chi,p,T): # chemical potentals are equal at melting, assume no S in solid Fe
     y=chi/(1-chi) # mol fraction of Fe-S pseudo compound

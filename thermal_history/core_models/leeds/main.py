@@ -48,10 +48,10 @@ def setup(model):
     core.T_cmb = copy.deepcopy(prm.T_cmb) #CMB temperature
 
     #Set core mass/mole fractions of light elements.
-    core.conc_l = copy.deepcopy(prm.conc_l).astype('float')
+    core.conc_l = copy.deepcopy(np.array(prm.conc_l)).astype('float')
     if not prm.mf_l is None:
         logger.warning(' mf_l has been specified in parameters, this will overrule conc_l')
-        core.mf_l = copy.deepcopy(prm.mf_l).astype('float')
+        core.mf_l = copy.deepcopy(np.array(prm.mf_l)).astype('float')
         core.conc_l = chem.mole_frac2mass_conc(core.mf_l, prm.mm)
     else:
         core.mf_l = chem.mass_conc2mole_frac(core.conc_l, prm.mm)
@@ -359,8 +359,11 @@ def evolve(model):
     #New mass entering the core from the mantle
     core.dM += mantle.cmb_mass_flux
 
-    o_rho = prof.mass_correct(rho_s, rho_l, core.ri, core.M0+core.dM, prm.r_cmb)
-    core.o_rho_0 = o_rho[0]
+    if core.ri<prm.r_cmb:
+        o_rho = prof.mass_correct(rho_s, rho_l, core.ri, core.M0+core.dM, prm.r_cmb)
+        core.o_rho_0 = o_rho[0]
+    else:
+        core.o_rho_0 = rho_l[0]
 
 
     #Save current value of Ej if prm.Ej_fixed_pre_ic=True
@@ -491,6 +494,9 @@ def update(model):
                                 prof.adiabat(profiles['r'], core.Tcen, prm.core_adiabat_params),
                                 profiles['Tm'])
 
+        if core.ri == prm.r_cmb:
+            logger.critical(f'it: {model.it}. Inner core has covered entire core!! Not defined how to procede')
+
     #Update profiles on new grid
     prof.basic_profiles(model)
     prof.temp_dependent_profiles(model)
@@ -510,8 +516,8 @@ required_params = {'T_cmb': 'Initial temperature of the CMB. Can specify Tcen (t
                    'r_cmb': 'CMB radius. Float',
                    'core_alpha_T_params': 'Core thermal expansivity pressure polynomial coefficients. List(Float)',
                    'core_cp_params': 'Core specific heat capacity pressure polynomial coefficients. List(Float)',
-                   'core_conductivity_params': 'List, first element is a string followed by the core thermal conductivity polynomial coefficients. The string (either \'r\'/\'T\'/\'P\') indicates if the polynomials are radial, temperature, or pressire coefficients. List(string, Float, Float...)',
-                   'core_melting_params': 'List, first element is a string followed by the constants used for the melting temperature parameterisation. The string element indicates the parameterisation to be used, if no string is given, \'AL\' (method of Alfe et al. 2002) is assumed. See melting_curve() in ./routines/chemistry.py for possible options.',
+                   'core_conductivity_params': 'List, first element is a string followed by the core thermal conductivity polynomial coefficients. The string (either \'r\'/\'T\'/\'P\') indicates if the polynomials are radial, temperature, or pressure coefficients. Can instead provide a single number which will be taken as the constant conductivity value. List(string, Float, Float...) or List(Float).',
+                   'core_melting_params': 'List, first element is a string followed by the constants used for the melting temperature parameterisation. The string element indicates the parameterisation to be used, if no string is given, \'AL\' (method of Alfe et al. 2002) is assumed. See melting_curve() in core_models/leeds/routines/chemistry.py for possible options.',
                    'entropy_melting_params': 'Change of entropy on freezing pressure polynomial coefficients. List(Float).',
                    'mm': 'Molar masses (g/mol) of Iron followed by alloying light elements. List(float)',
                    'alpha_c': 'Chemical expansivity of alloying light elements. List(float)',
@@ -561,7 +567,7 @@ def progress(model):
 
     v = (core.Tcen, core.Q_rs/1e12, core.ADR_s)
 
-    text = f'    Tcen: {v[0]:.2f} ˚K    Q(rs): {v[1]:.2f} TW    ADR(rs): {v[2]:.2f}'
+    text = f'    Tcen: {float(v[0]):.2f} ˚K    Q(rs): {float(v[1]):.2f} TW    ADR(rs): {float(v[2]):.2f}'
 
     if model.parameters.iron_snow:
         text += f'    snow depth: {(prm.r_cmb-core.r_snow)/1000:.2f} km'
@@ -680,7 +686,11 @@ def snow_evolution(model):
         dTm_dr = -rho[snow_idx]*g[snow_idx]*dTm_dP[snow_idx]
         # dTm_dr = (Tm[snow_idx-2]-Tm[snow_idx-1])/(r[snow_idx-2]-r[snow_idx-1])
         dT_dr  = (T[snow_idx-2]-T[snow_idx-1])/  (r[snow_idx-2]-r[snow_idx-1])
+
         dTm_dc = -Tm_fe[snow_idx]/(1+core.initial_conc_l) #Assumes WN melting curve
+        if prm.core_melting_params[0] == 'RI': #Use Rivoldini data
+            dTm_dc = chem.riv_dTm_dc(P[snow_idx], core.conc_l[0], prm.core_melting_params[1:].astype('float64'))
+
 
         if prm.use_new_Cr:
             Cr_snow = (1/(dTm_dr + dT_dr + dTm_dc*Cc_snow))*(T[snow_idx]/core.Tcen)  #dTm_dc terms needs to be tested properly.

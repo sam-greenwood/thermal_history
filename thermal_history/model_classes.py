@@ -414,7 +414,7 @@ class ThermalModel(BaseModel):
 
         return x
 
-    def write_data(self, fname, overwrite=False):
+    def write_data(self, fname, overwrite=False, verbose=True):
         '''Writes the model data to a binary file.
 
         The parameters and final profiles will be added to the save_dict which is then written to
@@ -428,6 +428,8 @@ class ThermalModel(BaseModel):
             Name of the output file (.pik will be appended if not already included)
         overwrite : Bool, optional
             If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.
+        verbose : Bool, optional
+            If True will print to screen a confirmation of the name of the file that has been saved, by default True.
 
         Raises
         ------
@@ -440,7 +442,8 @@ class ThermalModel(BaseModel):
 
         if os.path.isfile(fname):
             if overwrite:
-                print(f'{fname} already exists, overwriting')
+                if verbose:
+                    print(f'{fname} already exists, overwriting')
             else:
                 logger.error(f'{fname} already exists')
                 raise ValueError(f'{fname} already exists')
@@ -468,4 +471,65 @@ class ThermalModel(BaseModel):
         with open(fname, 'wb') as f:
             pickle.dump(numpy_dict, f)
             f.close()
-            print(f'\nWrote {fname} to disk')
+            if verbose:
+                print(f'\nWrote {fname} to disk')
+
+    def write_profiles(self, fname, overwrite=False, verbose=True):
+        '''Writes the radial profiles from the current timestep to a binary file.
+
+        The parameters will be added to the dictionary containing the profiles which is then written to
+        a binary file using pickle. The time at which this function is called is also added to the
+        parameters.
+
+        Parameters
+        ----------
+        fname : Str
+            Name of the output file (.pik will be appended if not already included)
+        overwrite : Bool, optional
+            If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.
+        verbose : Bool, optional
+            If True will print to screen a confirmation of the name of the file that has been saved, by default True.
+
+        Raises
+        ------
+        ValueError
+            If a file with the same name already exists.
+        '''
+
+        if len(fname)<4 or not fname[-4:] == '.pik':
+            fname += '.pik'
+
+        if os.path.isfile(fname):
+            if overwrite:
+                if verbose:
+                    print(f'{fname} already exists, overwriting')
+            else:
+                logger.error(f'{fname} already exists')
+                raise ValueError(f'{fname} already exists')
+
+        
+        data = {}
+        #Add profiles from any regions
+        for r in ['core', 'stable_layer', 'mantle']:
+            if hasattr(getattr(self, r), 'profiles'):
+                data[r] = {}
+                data[r]['profiles'] = getattr(self, r).profiles
+
+        #Get current time for metadata
+        save_time = str(datetime.datetime.now())
+
+        #Get all relevant attributes from parameters to add to data
+        keys = [key for key in dir(self.parameters) if '__' not in key] #Ignore hidden attributes
+        keys = [key for key in keys if not hasattr(getattr(self.parameters,key), '__call__')] #Ignore anything that has a __call__ attribute like functions/modules.
+
+        #Add dictionary containing parameters
+        data['parameters'] = {'save_time': save_time}
+        for key in keys:
+            data['parameters'][key] = getattr(self.parameters,key)
+
+        #Write profiles to disk
+        with open(fname, 'wb') as f:
+            pickle.dump(data, f)
+            f.close()
+            if verbose:
+                print(f'\nWrote {fname} to disk')

@@ -1,5 +1,6 @@
 #Core chemistry functions
 import pdb
+from re import I
 from numba import njit
 
 from thermal_history.utils.optimised_funcs import polyval
@@ -212,6 +213,30 @@ def riv_dTm_dP(P,S,melting_params):
         c += N+1
 
     return dTm_dP
+
+def riv_dTm_dc(P,S,melting_params):
+    '''
+    Calculate melting temperature gradient with composition for given polynomial coefficients (to degree N) for pressure and composition.
+    '''
+
+    N = int(np.sqrt(len(melting_params))) - 1
+
+    if not type(P) == np.ndarray:
+        P = np.array(P)
+
+    dTm_dc = np.zeros(P.size)
+    c = 0
+    for i in range(0,N+1):
+
+        temp = np.zeros(P.size)
+
+        for j in range(1,N+1):
+            temp += np.dot(j*melting_params[c+j], S**(j-1))
+
+        dTm_dc += temp*P**i
+        c += N+1
+
+    return dTm_dc
 
 
 def iron_melting(P, melting_params):
