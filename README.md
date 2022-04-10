@@ -38,6 +38,8 @@ sys.path.append('/full/path/to/directory/containg_thermal_history')
 ```
 before thermal_history is imported. Windows users beware, you'll need to escape each backslash and watch out for special unicode characters if copy and pasting from the file browser, you may need to type it out manually.
 
+#### ARM on macOS
+The latest Apple computers have switched to ARM processors. At the time of writing, the version of numpy and numba conda defaults to installing are incompatible due to the latest numba package not yet compiled on ARM. Follow instructions for installing the compatible version of numpy for numba after trying to first run the code. (`conda install numpy=X.X.X`)
 
 ### Documentation
 
