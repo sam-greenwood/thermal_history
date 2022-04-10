@@ -1,3 +1,4 @@
+from builtins import breakpoint
 import importlib
 import os
 
@@ -7,8 +8,10 @@ import os
 
 #Custom filter to get logger only paths within the package thermal_history rather than absolute paths
 import logging
+logger = logging.getLogger(__name__)
+
 class PackagePathFilter(logging.Filter):
-    '''Custom filter to extract just the pathname within the thermal_history package
+    '''Custom filter to extract just the pathname realtive to the thermal_history package top level.
     '''
     def filter(record):
         pathname = record.pathname
@@ -22,7 +25,7 @@ class PackagePathFilter(logging.Filter):
 
         return True
 
-        
+
 
 def check_parameters(parameters, method_names, required_params):
 
@@ -127,7 +130,8 @@ def create_parameters_file(fname,
                        'stable_layer': 'True/False. Include stable layer in solution',
                        'mantle': 'True/False. Include mantle in solution'}
 
-    Physical_constants = ['#Constants',
+    Physical_constants = ['#Physical Constants.',
+                          '#These are also hard coded so you cannot change their values but may be useful for defining parameters below. ',
                           'ys = 60*60*24*365     #Seconds in a year',
                           'ev = 1.602e-19        #Electron volt',
                           'kb = 1.3806485e-23    #Boltzmanns constant',
@@ -153,7 +157,7 @@ def create_parameters_file(fname,
     f.write('\n')
 
     #Write out toggles to control which regions are included.
-    max_l = max([len(x) for x in regions])
+    max_l = max([len(x) for x in methods.keys()])
     for key, value in required_params.items():
         if key in regions:
             f.write(f'{key:<{max_l}}'+ f' = True  #{value}\n')
@@ -161,91 +165,143 @@ def create_parameters_file(fname,
             f.write(f'{key:<{max_l}}'+ f' = False #{value}\n')
     f.write('\n')
 
-    required_params = {}
     method_modules = {}
+    required_params = {}
+    optional_params = {}
 
-    #Check each region and import the relevant python module and add to methods dict.
+    #Check each region and import the relevant python module and add to methods_modules dictionary.
     for i in range(len(regions)):
         r = regions[i]
         required_params[r] = {}
+        optional_params[r] = {}
         method_modules[r] = {}
 
         #Header for method
         f.write(f'#{r}: {methods[r]} parameters\n\n')
 
-        #Try to import required_params from methods.
+        #Try to import main.py from given methods and get the required/optional parameters
         try:
             method_modules[r] = importlib.import_module(f'thermal_history.{r}_models.{methods[r]}.main')
         except Exception as e:
             raise ValueError(f'\n\nCannot import thermal_history.{r}_models.{methods[r]}.main\n\n{e}')
 
-        required_params[r].update(method_modules[r].required_params)
+        try:
+            required_params[r].update(method_modules[r].required_params)
+        except:
+            logger.warning(f'No \'required_params\' dictionary from main.py of method {methods[r]} exists.\nSkipping...')
+            pass
+        try:
+            optional_params[r].update(method_modules[r].optional_params)
+        except:
+            logger.warning(f'No \'optional_params\' dictionary from main.py of method {methods[r]} exists.\nSkipping...')
+            pass
 
-        #Track maximum lenght of parameter name to neatly format
-        max_l = max([len(x) for x in required_params[r].keys()])
+    
+        #Write required parameters
 
-        #Write out parameter and track any repeated parameters, sometimes multiple methods require the same one.
-        repeated=[]
-        for key, value in required_params[r].items():
-            repeat=False
-            if i>0:
-                for j in range(i):
-                    if key in required_params[regions[j]].keys():
-                        repeat=True
-            if repeat:
-                repeated.append(key)
-            else:
-                line = f'{key:<{max_l}}'+f' =   # {value}\n'
-                if len(line) > 72: #Try to cut down long lines across 2 lines.
-                    end = 72
-                    for c in range(72,50,-1):
-                        if line[c]==' ':
-                            end = c
-                            break
+        if len(required_params.keys())>0:
 
-                    space = ' '
-                    f.write(line[:end]+'\n')
-                    f.write(f'{space:<{max_l}}'+f'     # {line[end:]}')
+            #Track maximum length of parameter names to neatly format
+            max_l = max([len(x) for x in required_params[r].keys()])
+
+            #Write out parameters
+            repeated=[]
+            for key, value in required_params[r].items():
+
+                #Track any repeated parameters, sometimes multiple methods require the same one.
+                repeat=False
+                if i>0:
+                    for j in range(i):
+                        if key in required_params[regions[j]].keys():
+                            repeat=True
+
+                if repeat:
+                    repeated.append(key)
                 else:
-                    f.write(line)
+                    #write parameter
+                    write_line(f, key, value, max_l)
+                    f.write('\n')
 
-        if len(repeated)>0:
-            f.write('\n#Following are required but are already defined above:\n')
-            for x in repeated:
-                f.write(f'# {x}\n')
+            #Write out any repeated parameters commented out.
+            if len(repeated)>0:
+                f.write('\n#Following are required but are already defined above:\n')
+                for x in repeated:
+                    f.write(f'# {x}\n')
+
+        else:
+
+            f.write(f'No required parameters are specified in main.py for {methods[r]}')
 
         f.write('\n\n')
 
-    #Write any optional parameters to file but all commented out.
-    optional_params = {}
-    f.write('#Optional parameters that if not specified take their default values\n\n')
-
-    for r in regions:
-        try:
-            optional_params[r] = {}
-            optional_params[r].update(method_modules[r].optional_params) #Get optional_params if there are any
-        except:
-            pass
+        #Write any optional parameters to file but all commented out.
+        f.write('#Optional parameters that if not specified take their default values\n\n')
 
 
         #Header for method
         f.write(f'#{r}: {methods[r]} optional parameters\n\n')
 
+        #Max length of strings for neat formatting
         max_l = max([len(x) for x in optional_params[r].keys()])
-        for key, value in optional_params[r].items():
-            line = f'#{key:<{max_l}} =   # {value[0]}\n'
-            if len(line) > 100: #Try to cut down long lines across 2 lines.
-                end = 100
-                for c in range(100,40,-1):
-                    if line[c]==' ':
-                        end = c
-                        break
-                space = ' '
-                f.write(line[:end]+'\n')
-                f.write(f'{space:<{max_l}}'+f'      #{line[end:]}')
-            else:
-                f.write(line)
 
-        f.write('\n\n')
+        for key, value in optional_params[r].items():
+
+            #Write parameter
+            write_line(f, key, value[0], max_l, comment_out=True)
+            f.write('\n')
 
     f.close()
+
+
+
+def write_line(f, key, description, max_l, comment_out=False):
+    '''Write parameter to file in a formatted manner.
+    
+    Used by create_parameters_file().
+
+    Parameters
+    ----------
+    f : _io.TextIOWrapper
+        File handle for parameters 
+    key : string
+        name of parameter
+    description : string
+        description of parameter
+    max_l : int
+        Number of characters before '=' sign for neat formatting.
+    comment_out : bool, optional
+        prefix line with a comment ('#'), by default False
+    '''
+
+    n_char = 100
+
+    variable_text = f'{key:<{max_l}} =   '
+    if comment_out:
+        variable_text='#'+variable_text
+
+    f.write(variable_text)
+
+    remaining_text = description
+
+    start = True
+    while len(remaining_text) > 0:
+
+        if len(remaining_text) > n_char:
+            end = min([n_char, len(remaining_text)])
+            for c in range(100,0,-1):
+                if remaining_text[c]==' ':
+                    end = c+1
+                    break
+        else:
+            end = len(remaining_text)
+
+        text = '# '+remaining_text[:end]
+        if start:
+            start = False
+        else:
+            space = ' '
+            text = f'{space:<{max_l+5}}'+text
+
+
+        f.write(text+'\n')
+        remaining_text = remaining_text[end:]
