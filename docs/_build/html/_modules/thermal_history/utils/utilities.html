@@ -149,7 +149,8 @@
            <div itemprop="articleBody">
             
   <h1>Source code for thermal_history.utils.utilities</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">importlib</span>
+<span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">breakpoint</span>
+<span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
 
 <span class="c1"># #Set numba logger to warning only</span>
@@ -158,8 +159,10 @@
 
 <span class="c1">#Custom filter to get logger only paths within the package thermal_history rather than absolute paths</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
 <div class="viewcode-block" id="PackagePathFilter"><a class="viewcode-back" href="../../../thermal_history.utils.utilities.html#thermal_history.utils.utilities.PackagePathFilter">[docs]</a><span class="k">class</span> <span class="nc">PackagePathFilter</span><span class="p">(</span><span class="n">logging</span><span class="o">.</span><span class="n">Filter</span><span class="p">):</span>
-    <span class="sd">&#39;&#39;&#39;Custom filter to extract just the pathname within the thermal_history package</span>
+    <span class="sd">&#39;&#39;&#39;Custom filter to extract just the pathname realtive to the thermal_history package top level.</span>
 <span class="sd">    &#39;&#39;&#39;</span>
 <div class="viewcode-block" id="PackagePathFilter.filter"><a class="viewcode-back" href="../../../thermal_history.utils.utilities.html#thermal_history.utils.utilities.PackagePathFilter.filter">[docs]</a>    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="n">record</span><span class="p">):</span>
         <span class="n">pathname</span> <span class="o">=</span> <span class="n">record</span><span class="o">.</span><span class="n">pathname</span>
@@ -173,7 +176,7 @@
 
         <span class="k">return</span> <span class="kc">True</span></div></div>
 
-        
+
 
 <span class="k">def</span> <span class="nf">check_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">method_names</span><span class="p">,</span> <span class="n">required_params</span><span class="p">):</span>
 
@@ -278,7 +281,8 @@
                        <span class="s1">&#39;stable_layer&#39;</span><span class="p">:</span> <span class="s1">&#39;True/False. Include stable layer in solution&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;mantle&#39;</span><span class="p">:</span> <span class="s1">&#39;True/False. Include mantle in solution&#39;</span><span class="p">}</span>
 
-    <span class="n">Physical_constants</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#Constants&#39;</span><span class="p">,</span>
+    <span class="n">Physical_constants</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;#Physical Constants.&#39;</span><span class="p">,</span>
+                          <span class="s1">&#39;#These are also hard coded so you cannot change their values but may be useful for defining parameters below. &#39;</span><span class="p">,</span>
                           <span class="s1">&#39;ys = 60*60*24*365     #Seconds in a year&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;ev = 1.602e-19        #Electron volt&#39;</span><span class="p">,</span>
                           <span class="s1">&#39;kb = 1.3806485e-23    #Boltzmanns constant&#39;</span><span class="p">,</span>
@@ -304,7 +308,7 @@
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1">#Write out toggles to control which regions are included.</span>
-    <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">])</span>
+    <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">methods</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">required_params</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1">&#39;</span><span class="o">+</span> <span class="sa">f</span><span class="s1">&#39; = True  #</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
@@ -312,94 +316,146 @@
             <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1">&#39;</span><span class="o">+</span> <span class="sa">f</span><span class="s1">&#39; = False #</span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="n">required_params</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">method_modules</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">required_params</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">optional_params</span> <span class="o">=</span> <span class="p">{}</span>
 
-    <span class="c1">#Check each region and import the relevant python module and add to methods dict.</span>
+    <span class="c1">#Check each region and import the relevant python module and add to methods_modules dictionary.</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">regions</span><span class="p">)):</span>
         <span class="n">r</span> <span class="o">=</span> <span class="n">regions</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
         <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="n">method_modules</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1">#Header for method</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1"> parameters</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1">#Try to import required_params from methods.</span>
+        <span class="c1">#Try to import main.py from given methods and get the required/optional parameters</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">method_modules</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">import_module</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;thermal_history.</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">_models.</span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1">.main&#39;</span><span class="p">)</span>
         <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Cannot import thermal_history.</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">_models.</span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1">.main</span><span class="se">\n\n</span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">method_modules</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">required_params</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">method_modules</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">required_params</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No </span><span class="se">\&#39;</span><span class="s1">required_params</span><span class="se">\&#39;</span><span class="s1"> dictionary from main.py of method </span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1"> exists.</span><span class="se">\n</span><span class="s1">Skipping...&#39;</span><span class="p">)</span>
+            <span class="k">pass</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">method_modules</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">optional_params</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No </span><span class="se">\&#39;</span><span class="s1">optional_params</span><span class="se">\&#39;</span><span class="s1"> dictionary from main.py of method </span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1"> exists.</span><span class="se">\n</span><span class="s1">Skipping...&#39;</span><span class="p">)</span>
+            <span class="k">pass</span>
 
-        <span class="c1">#Track maximum lenght of parameter name to neatly format</span>
-        <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+    
+        <span class="c1">#Write required parameters</span>
 
-        <span class="c1">#Write out parameter and track any repeated parameters, sometimes multiple methods require the same one.</span>
-        <span class="n">repeated</span><span class="o">=</span><span class="p">[]</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">repeat</span><span class="o">=</span><span class="kc">False</span>
-            <span class="k">if</span> <span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">regions</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                        <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span>
-            <span class="k">if</span> <span class="n">repeat</span><span class="p">:</span>
-                <span class="n">repeated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1">&#39;</span><span class="o">+</span><span class="sa">f</span><span class="s1">&#39; =   # </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">72</span><span class="p">:</span> <span class="c1">#Try to cut down long lines across 2 lines.</span>
-                    <span class="n">end</span> <span class="o">=</span> <span class="mi">72</span>
-                    <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">72</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-                        <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39; &#39;</span><span class="p">:</span>
-                            <span class="n">end</span> <span class="o">=</span> <span class="n">c</span>
-                            <span class="k">break</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">required_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 
-                    <span class="n">space</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">[:</span><span class="n">end</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">space</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1">&#39;</span><span class="o">+</span><span class="sa">f</span><span class="s1">&#39;     # </span><span class="si">{</span><span class="n">line</span><span class="p">[</span><span class="n">end</span><span class="p">:]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1">#Track maximum length of parameter names to neatly format</span>
+            <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+
+            <span class="c1">#Write out parameters</span>
+            <span class="n">repeated</span><span class="o">=</span><span class="p">[]</span>
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+                <span class="c1">#Track any repeated parameters, sometimes multiple methods require the same one.</span>
+                <span class="n">repeat</span><span class="o">=</span><span class="kc">False</span>
+                <span class="k">if</span> <span class="n">i</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">i</span><span class="p">):</span>
+                        <span class="k">if</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">regions</span><span class="p">[</span><span class="n">j</span><span class="p">]]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+                            <span class="n">repeat</span><span class="o">=</span><span class="kc">True</span>
+
+                <span class="k">if</span> <span class="n">repeat</span><span class="p">:</span>
+                    <span class="n">repeated</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+                    <span class="c1">#write parameter</span>
+                    <span class="n">write_line</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">max_l</span><span class="p">)</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">repeated</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">#Following are required but are already defined above:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">repeated</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;# </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1">#Write out any repeated parameters commented out.</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">repeated</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">#Following are required but are already defined above:</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">repeated</span><span class="p">:</span>
+                    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;# </span><span class="si">{</span><span class="n">x</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+
+        <span class="k">else</span><span class="p">:</span>
+
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;No required parameters are specified in main.py for </span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-    <span class="c1">#Write any optional parameters to file but all commented out.</span>
-    <span class="n">optional_params</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#Optional parameters that if not specified take their default values</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">regions</span><span class="p">:</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">method_modules</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">optional_params</span><span class="p">)</span> <span class="c1">#Get optional_params if there are any</span>
-        <span class="k">except</span><span class="p">:</span>
-            <span class="k">pass</span>
+        <span class="c1">#Write any optional parameters to file but all commented out.</span>
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#Optional parameters that if not specified take their default values</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
         <span class="c1">#Header for method</span>
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1"> optional parameters</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
+        <span class="c1">#Max length of strings for neat formatting</span>
         <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1"> =   # </span><span class="si">{</span><span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="se">\n</span><span class="s1">&#39;</span>
-            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">100</span><span class="p">:</span> <span class="c1">#Try to cut down long lines across 2 lines.</span>
-                <span class="n">end</span> <span class="o">=</span> <span class="mi">100</span>
-                <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">40</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
-                    <span class="k">if</span> <span class="n">line</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39; &#39;</span><span class="p">:</span>
-                        <span class="n">end</span> <span class="o">=</span> <span class="n">c</span>
-                        <span class="k">break</span>
-                <span class="n">space</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">[:</span><span class="n">end</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">space</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1">&#39;</span><span class="o">+</span><span class="sa">f</span><span class="s1">&#39;      #</span><span class="si">{</span><span class="n">line</span><span class="p">[</span><span class="n">end</span><span class="p">:]</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
 
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+
+            <span class="c1">#Write parameter</span>
+            <span class="n">write_line</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_l</span><span class="p">,</span> <span class="n">comment_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="write_line"><a class="viewcode-back" href="../../../thermal_history.utils.utilities.html#thermal_history.utils.utilities.write_line">[docs]</a><span class="k">def</span> <span class="nf">write_line</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">description</span><span class="p">,</span> <span class="n">max_l</span><span class="p">,</span> <span class="n">comment_out</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Write parameter to file in a formatted manner.</span>
+<span class="sd">    </span>
+<span class="sd">    Used by create_parameters_file().</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    f : _io.TextIOWrapper</span>
+<span class="sd">        File handle for parameters </span>
+<span class="sd">    key : string</span>
+<span class="sd">        name of parameter</span>
+<span class="sd">    description : string</span>
+<span class="sd">        description of parameter</span>
+<span class="sd">    max_l : int</span>
+<span class="sd">        Number of characters before &#39;=&#39; sign for neat formatting.</span>
+<span class="sd">    comment_out : bool, optional</span>
+<span class="sd">        prefix line with a comment (&#39;#&#39;), by default False</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">n_char</span> <span class="o">=</span> <span class="mi">100</span>
+
+    <span class="n">variable_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="si">}}</span><span class="s1"> =   &#39;</span>
+    <span class="k">if</span> <span class="n">comment_out</span><span class="p">:</span>
+        <span class="n">variable_text</span><span class="o">=</span><span class="s1">&#39;#&#39;</span><span class="o">+</span><span class="n">variable_text</span>
+
+    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">variable_text</span><span class="p">)</span>
+
+    <span class="n">remaining_text</span> <span class="o">=</span> <span class="n">description</span>
+
+    <span class="n">start</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="n">remaining_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">remaining_text</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">n_char</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">min</span><span class="p">([</span><span class="n">n_char</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">remaining_text</span><span class="p">)])</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">remaining_text</span><span class="p">[</span><span class="n">c</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39; &#39;</span><span class="p">:</span>
+                    <span class="n">end</span> <span class="o">=</span> <span class="n">c</span><span class="o">+</span><span class="mi">1</span>
+                    <span class="k">break</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">end</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">remaining_text</span><span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;# &#39;</span><span class="o">+</span><span class="n">remaining_text</span><span class="p">[:</span><span class="n">end</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">start</span><span class="p">:</span>
+            <span class="n">start</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">space</span> <span class="o">=</span> <span class="s1">&#39; &#39;</span>
+            <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">space</span><span class="si">:</span><span class="s1">&lt;</span><span class="si">{</span><span class="n">max_l</span><span class="o">+</span><span class="mi">5</span><span class="si">}}</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">text</span>
+
+
+        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">text</span><span class="o">+</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">remaining_text</span> <span class="o">=</span> <span class="n">remaining_text</span><span class="p">[</span><span class="n">end</span><span class="p">:]</span></div>
 </pre></div>
 
            </div>

@@ -181,7 +181,7 @@
 <dt class="sig sig-object py" id="thermal_history.utils.utilities.PackagePathFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PackagePathFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/utils/utilities.html#PackagePathFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.utils.utilities.PackagePathFilter" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Filter</span></code></p>
-<p>Custom filter to extract just the pathname within the thermal_history package</p>
+<p>Custom filter to extract just the pathname realtive to the thermal_history package top level.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="thermal_history.utils.utilities.PackagePathFilter.filter">
 <span class="sig-name descname"><span class="pre">filter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/utils/utilities.html#PackagePathFilter.filter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.utils.utilities.PackagePathFilter.filter" title="Permalink to this definition">¶</a></dt>
@@ -205,6 +205,24 @@ If deemed appropriate, the record may be modified in-place.</p>
 <li><p><strong>core_method</strong> (<em>(</em><em>None</em><em>) </em><em>String of core method name</em>) – </p></li>
 <li><p><strong>stable_layer_method</strong> (<em>(</em><em>None</em><em>) </em><em>String of stable layer method name</em>) – </p></li>
 <li><p><strong>mantle_method</strong> (<em>(</em><em>None</em><em>) </em><em>String of mantle method name</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.utils.utilities.write_line">
+<span class="sig-name descname"><span class="pre">write_line</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">comment_out</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/utils/utilities.html#write_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.utils.utilities.write_line" title="Permalink to this definition">¶</a></dt>
+<dd><p>Write parameter to file in a formatted manner.</p>
+<p>Used by create_parameters_file().</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>f</strong> (<em>_io.TextIOWrapper</em>) – File handle for parameters</p></li>
+<li><p><strong>key</strong> (<em>string</em>) – name of parameter</p></li>
+<li><p><strong>description</strong> (<em>string</em>) – description of parameter</p></li>
+<li><p><strong>max_l</strong> (<em>int</em>) – Number of characters before ‘=’ sign for neat formatting.</p></li>
+<li><p><strong>comment_out</strong> (<em>bool</em><em>, </em><em>optional</em>) – prefix line with a comment (‘#’), by default False</p></li>
 </ul>
 </dd>
 </dl>

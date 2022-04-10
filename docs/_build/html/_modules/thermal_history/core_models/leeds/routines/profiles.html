@@ -599,7 +599,7 @@
         <span class="k">try</span><span class="p">:</span>
             <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dr</span><span class="o">*</span><span class="n">g</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">alpha</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">cp</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
         <span class="k">except</span><span class="p">:</span>
-            <span class="n">breakpoint</span><span class="p">()</span>
+            <span class="nb">breakpoint</span><span class="p">()</span>
 
     <span class="c1">#We require zero adiabatic gradient at r=0, so fit radial polynomials</span>
     <span class="c1">#such that poly = [1,0,x1,x2]</span>

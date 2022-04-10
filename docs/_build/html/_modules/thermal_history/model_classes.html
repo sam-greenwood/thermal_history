@@ -149,13 +149,13 @@
            <div itemprop="articleBody">
             
   <h1>Source code for thermal_history.model_classes</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">stat</span> <span class="kn">import</span> <span class="n">filemode</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 <span class="kn">import</span> <span class="nn">thermal_history.utils</span> <span class="k">as</span> <span class="nn">utils</span>
 
 <span class="c1">#Defined here are the classes for the 3 different regions that can be modelled, plus the main class that the user will interact with (which will contain the other 3)</span>
@@ -188,7 +188,7 @@
 <span class="sd">        ----------</span>
 <span class="sd">        method_module : module, optional</span>
 <span class="sd">            Imported module for given method, by default None</span>
-<span class="sd">        &#39;&#39;&#39;</span>        
+<span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="c1">#Set setup, evolution, and update functions</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span> <span class="o">=</span> <span class="n">method_module</span>
@@ -196,17 +196,17 @@
 
 <div class="viewcode-block" id="BaseModel.setup"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel.setup">[docs]</a>    <span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Defines setup() based on the specific method in __init__().</span>
-<span class="sd">        &#39;&#39;&#39;</span>        
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">setup</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseModel.evolve"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Defines evolve() based on the specific method in __init__().</span>
-<span class="sd">        &#39;&#39;&#39;</span>   
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">evolve</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="BaseModel.update"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.BaseModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Defines update() based on the specific method in __init__().</span>
-<span class="sd">        &#39;&#39;&#39;</span>   
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_method_module</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span><span class="o">*</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
@@ -297,20 +297,20 @@
 
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
-<span class="sd">        parameters : Parameters class  </span>
+<span class="sd">        parameters : Parameters class</span>
 <span class="sd">            Class containing all the parameters</span>
 <span class="sd">        methods : Dict</span>
 <span class="sd">            Dictionary containting the imported method modules for each region (core/stable_layer/mantle)</span>
 <span class="sd">        verbose : bool, optional</span>
 <span class="sd">            Print progress to STDOUT, by default True</span>
 <span class="sd">        log_file : String, optional</span>
-<span class="sd">            Name of the log file</span>
+<span class="sd">            Name of the log file, by default &#39;out.log&#39;</span>
 <span class="sd">        log_level : int, optional</span>
 <span class="sd">            Numerical code for setting the logging level (10: DEBUG, 20: INFO, 30: WARNING, 40: ERROR, 50: CRITICAL), by default 30.</span>
-<span class="sd">        &#39;&#39;&#39;</span>        
+<span class="sd">        &#39;&#39;&#39;</span>
 
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">time</span>
 
@@ -389,7 +389,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        Dict</span>
 <span class="sd">            Dictionary containing all attributes for all regions being modelled</span>
-<span class="sd">        &#39;&#39;&#39;</span>        
+<span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="n">full_state</span> <span class="o">=</span> <span class="p">{}</span>
 
@@ -415,7 +415,7 @@
 <span class="sd">        ------</span>
 <span class="sd">        ValueError</span>
 <span class="sd">            If a negative step time is used when a stable layer is being solved for. Diffusion requires dt&gt;0.</span>
-<span class="sd">        &#39;&#39;&#39;</span>        
+<span class="sd">        &#39;&#39;&#39;</span>
 
 
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">stable_layer</span> <span class="ow">and</span> <span class="n">dt</span><span class="o">&lt;</span><span class="mi">0</span><span class="p">:</span>
@@ -443,7 +443,7 @@
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">it</span><span class="o">%</span><span class="n">print_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">()</span></div>
 
-<div class="viewcode-block" id="ThermalModel.update"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>      
+<div class="viewcode-block" id="ThermalModel.update"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        Calls update methods for each region and save to model classes</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -526,9 +526,9 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
 
                 <span class="k">except</span><span class="p">:</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not append </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> to save_dict&#39;</span><span class="p">)</span>
+                    <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not append </span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">.</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> to save_dict&#39;</span><span class="p">)</span>
                     <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> not pre-exisiting in save_dict[&#39;</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&#39;].</span><span class="se">\</span>
+                        <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2"> not pre-exisiting in save_dict[&#39;</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s2">&#39;].</span><span class="se">\</span>
 <span class="s2">                            Check this variable is created on the first iteration of the model and is included when ThermalModel.setup_save_dict() is called.&quot;</span><span class="p">)</span>
                     <span class="k">pass</span></div>
 
@@ -551,7 +551,7 @@
 <span class="sd">        -------</span>
 <span class="sd">        Dict</span>
 <span class="sd">            Copy of save_dict except that all values are converted to numpy arrays.</span>
-<span class="sd">        &#39;&#39;&#39;</span>        
+<span class="sd">        &#39;&#39;&#39;</span>
 
         <span class="n">x</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="k">for</span> <span class="n">key1</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_dict</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -565,9 +565,9 @@
 
         <span class="k">return</span> <span class="n">x</span></div>
 
-<div class="viewcode-block" id="ThermalModel.write_data"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.write_data"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.write_data">[docs]</a>    <span class="k">def</span> <span class="nf">write_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Writes the model data to a binary file.</span>
-<span class="sd">        </span>
+
 <span class="sd">        The parameters and final profiles will be added to the save_dict which is then written to</span>
 <span class="sd">        a binary file using pickle. The time at which this function is called is also added to the</span>
 <span class="sd">        parameters. The save_dict is also passed through save_dict_to_numpy_array() to convert all</span>
@@ -577,6 +577,10 @@
 <span class="sd">        ----------</span>
 <span class="sd">        fname : Str</span>
 <span class="sd">            Name of the output file (.pik will be appended if not already included)</span>
+<span class="sd">        overwrite : Bool, optional</span>
+<span class="sd">            If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.</span>
+<span class="sd">        verbose : Bool, optional</span>
+<span class="sd">            If True will print to screen a confirmation of the name of the file that has been saved, by default True.</span>
 
 <span class="sd">        Raises</span>
 <span class="sd">        ------</span>
@@ -584,11 +588,16 @@
 <span class="sd">            If a file with the same name already exists.</span>
 <span class="sd">        &#39;&#39;&#39;</span>
 
-        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;.pik&#39;</span> <span class="ow">in</span> <span class="n">fname</span> <span class="ow">and</span> <span class="n">fname</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.pik&#39;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">4</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">fname</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.pik&#39;</span><span class="p">:</span>
             <span class="n">fname</span> <span class="o">+=</span> <span class="s1">&#39;.pik&#39;</span>
 
-        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists!&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists, overwriting&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists&#39;</span><span class="p">)</span>
 
         <span class="c1">#Convert to numpy array</span>
         <span class="n">numpy_dict</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">save_dict_to_numpy_array</span><span class="p">()</span>
@@ -609,13 +618,72 @@
         <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="s1">&#39;stable_layer&#39;</span><span class="p">,</span> <span class="s1">&#39;mantle&#39;</span><span class="p">]:</span>
             <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="s1">&#39;profiles&#39;</span><span class="p">):</span>
                 <span class="n">numpy_dict</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;profiles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">profiles</span>
-     
+
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
             <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">numpy_dict</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
             <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Wrote </span><span class="si">{}</span><span class="s1"> to disk&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span></div></div>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Wrote </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> to disk&#39;</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="ThermalModel.write_profiles"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.write_profiles">[docs]</a>    <span class="k">def</span> <span class="nf">write_profiles</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;Writes the radial profiles from the current timestep to a binary file.</span>
 
+<span class="sd">        The parameters will be added to the dictionary containing the profiles which is then written to</span>
+<span class="sd">        a binary file using pickle. The time at which this function is called is also added to the</span>
+<span class="sd">        parameters.</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        fname : Str</span>
+<span class="sd">            Name of the output file (.pik will be appended if not already included)</span>
+<span class="sd">        overwrite : Bool, optional</span>
+<span class="sd">            If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.</span>
+<span class="sd">        verbose : Bool, optional</span>
+<span class="sd">            If True will print to screen a confirmation of the name of the file that has been saved, by default True.</span>
+
+<span class="sd">        Raises</span>
+<span class="sd">        ------</span>
+<span class="sd">        ValueError</span>
+<span class="sd">            If a file with the same name already exists.</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span><span class="o">&lt;</span><span class="mi">4</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">fname</span><span class="p">[</span><span class="o">-</span><span class="mi">4</span><span class="p">:]</span> <span class="o">==</span> <span class="s1">&#39;.pik&#39;</span><span class="p">:</span>
+            <span class="n">fname</span> <span class="o">+=</span> <span class="s1">&#39;.pik&#39;</span>
+
+        <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">overwrite</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists, overwriting&#39;</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logger</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists&#39;</span><span class="p">)</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> already exists&#39;</span><span class="p">)</span>
+
+        
+        <span class="n">data</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1">#Add profiles from any regions</span>
+        <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="s1">&#39;stable_layer&#39;</span><span class="p">,</span> <span class="s1">&#39;mantle&#39;</span><span class="p">]:</span>
+            <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">),</span> <span class="s1">&#39;profiles&#39;</span><span class="p">):</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">r</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+                <span class="n">data</span><span class="p">[</span><span class="n">r</span><span class="p">][</span><span class="s1">&#39;profiles&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">)</span><span class="o">.</span><span class="n">profiles</span>
+
+        <span class="c1">#Get current time for metadata</span>
+        <span class="n">save_time</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())</span>
+
+        <span class="c1">#Get all relevant attributes from parameters to add to data</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">dir</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">)</span> <span class="k">if</span> <span class="s1">&#39;__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span><span class="p">]</span> <span class="c1">#Ignore hidden attributes</span>
+        <span class="n">keys</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span><span class="n">key</span><span class="p">),</span> <span class="s1">&#39;__call__&#39;</span><span class="p">)]</span> <span class="c1">#Ignore anything that has a __call__ attribute like functions/modules.</span>
+
+        <span class="c1">#Add dictionary containing parameters</span>
+        <span class="n">data</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;save_time&#39;</span><span class="p">:</span> <span class="n">save_time</span><span class="p">}</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+            <span class="n">data</span><span class="p">[</span><span class="s1">&#39;parameters&#39;</span><span class="p">][</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="p">,</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="c1">#Write profiles to disk</span>
+        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fname</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+            <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">f</span><span class="p">)</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">Wrote </span><span class="si">{</span><span class="n">fname</span><span class="si">}</span><span class="s1"> to disk&#39;</span><span class="p">)</span></div></div>
 </pre></div>
 
            </div>

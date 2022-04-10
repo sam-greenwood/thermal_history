@@ -91,6 +91,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#from-the-command-line-recommended">From the command line (recommended)</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#installing-with-the-anaconda-navigator-gui">Installing with the anaconda navigator GUI</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#importing-thermal-history-in-your-script">Importing thermal_history in your script</a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#documentation">Documentation</a></li>
@@ -198,6 +199,9 @@ published models, whilst the framework of the code makes it easy to add addition
 <h4>Installing with the anaconda navigator GUI<a class="headerlink" href="#installing-with-the-anaconda-navigator-gui" title="Permalink to this headline">¶</a></h4>
 <p>Download the code by clicking the green code button, then either download the zip file (then extract the files) or download with the github desktop app.
 Use the anaconda navigator app to install a new environment, importing the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file.</p>
+</section>
+<section id="importing-thermal-history-in-your-script">
+<h4>Importing thermal_history in your script<a class="headerlink" href="#importing-thermal-history-in-your-script" title="Permalink to this headline">¶</a></h4>
 <p>To be able to import <code class="docutils literal notranslate"><span class="pre">thermal_history</span></code> from anywhere, you can append to the PYTHONPATH system variable by putting <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">PYTHONPATH=$PYTHONPATH:&quot;full/path/to/directory/containing_thermal_history&quot;</span></code> into your <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> file (or <code class="docutils literal notranslate"><span class="pre">~/.zshrc</span></code> or equivalent depending on your shell) and running <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">~/.bashrc</span></code>. The active terminal and new terminals will allow python to always be aware of that location for imports (proper setup.py coming sometime soon!).</p>
 <p>On Windows, go to Control Panel / System / Advanced / Environment variable, and in the “User variables” sections, check if you already have PYTHONPATH. If yes, select it and click “Edit”, if not, click “New” to add it. Paths in PYTHONPATH should be separated with “;”. (Credit to stackoverflow user tiho for that).</p>
 </section>

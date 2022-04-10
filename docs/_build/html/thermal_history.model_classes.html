@@ -418,7 +418,7 @@ in a dictionary.</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="thermal_history.model_classes.ThermalModel.write_data">
-<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#ThermalModel.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.ThermalModel.write_data" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">write_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#ThermalModel.write_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.ThermalModel.write_data" title="Permalink to this definition">¶</a></dt>
 <dd><p>Writes the model data to a binary file.</p>
 <p>The parameters and final profiles will be added to the save_dict which is then written to
 a binary file using pickle. The time at which this function is called is also added to the
@@ -426,7 +426,32 @@ parameters. The save_dict is also passed through save_dict_to_numpy_array() to c
 values to numpy arrays first.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>fname</strong> (<em>Str</em>) – Name of the output file (.pik will be appended if not already included)</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>Str</em>) – Name of the output file (.pik will be appended if not already included)</p></li>
+<li><p><strong>overwrite</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.</p></li>
+<li><p><strong>verbose</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will print to screen a confirmation of the name of the file that has been saved, by default True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If a file with the same name already exists.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="thermal_history.model_classes.ThermalModel.write_profiles">
+<span class="sig-name descname"><span class="pre">write_profiles</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overwrite</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#ThermalModel.write_profiles"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.ThermalModel.write_profiles" title="Permalink to this definition">¶</a></dt>
+<dd><p>Writes the radial profiles from the current timestep to a binary file.</p>
+<p>The parameters will be added to the dictionary containing the profiles which is then written to
+a binary file using pickle. The time at which this function is called is also added to the
+parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>fname</strong> (<em>Str</em>) – Name of the output file (.pik will be appended if not already included)</p></li>
+<li><p><strong>overwrite</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.</p></li>
+<li><p><strong>verbose</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will print to screen a confirmation of the name of the file that has been saved, by default True.</p></li>
+</ul>
 </dd>
 <dt class="field-even">Raises</dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If a file with the same name already exists.</p>

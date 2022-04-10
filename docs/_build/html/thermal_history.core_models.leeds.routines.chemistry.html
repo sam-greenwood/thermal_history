@@ -371,6 +371,8 @@ E.g. core_melting_params = [‘SG’, Tl0, beta1, beta2]</p>
 Like ‘SG’, the partitioning is also described by fixed parition coefficients (=conc_s/conc_l) in the partition_coeff parameter.
 After ‘WN’, the constants Tl0 and the polynomial coefficients in pressure should be given. E.g. in Davies and Pommier (2018)
 this would be represented as core_melting_params = [‘WN’, Tl0, 1, Tl1, Tl2]</p>
+<p>‘RI’: Uses a polynomial fit to Rivoldini’s EOS model. Polynomial coefficients are for both Pressure and Compositional dependence
+and are calculated in the included stand-alone script riv_pre_compute_poly.py.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><p><strong>model</strong> (<a class="reference internal" href="thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel" title="thermal_history.model_classes.ThermalModel"><em>ThermalModel</em></a>) – ThermalModel class</p>
@@ -406,6 +408,28 @@ Values are calculated on the same radial grid as all core profiles.</p>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.riv_Tm">
+<span class="sig-name descname"><span class="pre">riv_Tm</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#riv_Tm"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.riv_Tm" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate melting temperature given polynomial coefficients (to degree N) for pressure and composition.</p>
+<p>Tm0 = melting_params[0] + melting_params[1]*S + melting_params[2]*S**2 + ….
+Tm1 = melting_params[N+1] + …
+TmN = ….</p>
+<p>Tm = Tm0 + Tm1*P + … TmN*P**N</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.riv_dTm_dP">
+<span class="sig-name descname"><span class="pre">riv_dTm_dP</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#riv_dTm_dP"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.riv_dTm_dP" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate melting temperature gradient with pressure for given polynomial coefficients (to degree N) for pressure and composition.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.chemistry.riv_dTm_dc">
+<span class="sig-name descname"><span class="pre">riv_dTm_dc</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">S</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/chemistry.html#riv_dTm_dc"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.chemistry.riv_dTm_dc" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculate melting temperature gradient with composition for given polynomial coefficients (to degree N) for pressure and composition.</p>
 </dd></dl>
 
 <dl class="py function">

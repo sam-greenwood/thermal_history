@@ -151,11 +151,13 @@
   <h1>Source code for thermal_history.core_models.leeds.routines.chemistry</h1><div class="highlight"><pre>
 <span></span><span class="c1">#Core chemistry functions</span>
 <span class="kn">import</span> <span class="nn">pdb</span>
+<span class="kn">from</span> <span class="nn">re</span> <span class="kn">import</span> <span class="n">I</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
 
 <span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">polyval</span>
 
 <span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">profiles</span> <span class="k">as</span> <span class="n">prof</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">rivoldini_eos</span> <span class="k">as</span> <span class="n">riv</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">bisect</span>
@@ -187,6 +189,9 @@
 <span class="sd">    Like &#39;SG&#39;, the partitioning is also described by fixed parition coefficients (=conc_s/conc_l) in the partition_coeff parameter.</span>
 <span class="sd">    After &#39;WN&#39;, the constants Tl0 and the polynomial coefficients in pressure should be given. E.g. in Davies and Pommier (2018)</span>
 <span class="sd">    this would be represented as core_melting_params = [&#39;WN&#39;, Tl0, 1, Tl1, Tl2]</span>
+
+<span class="sd">    &#39;RI&#39;: Uses a polynomial fit to Rivoldini&#39;s EOS model. Polynomial coefficients are for both Pressure and Compositional dependence</span>
+<span class="sd">    and are calculated in the included stand-alone script riv_pre_compute_poly.py. </span>
 
 <span class="sd">    Parameters</span>
 <span class="sd">    ----------</span>
@@ -268,11 +273,33 @@
         <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;conc_l&#39;</span> <span class="ow">in</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
             <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;conc_l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">n_profiles</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
 
-        <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">Tl0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">)</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">P</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">Tl0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">)</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">P</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1">#If Tm has no dependence on P</span>
+            <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">Tl0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">))</span>
 
         <span class="n">dTm</span>   <span class="o">=</span> <span class="o">-</span><span class="n">Tm_fe</span><span class="o">*</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;conc_l&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">)</span>
 
         <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">Tl0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="o">-</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;conc_l&#39;</span><span class="p">])</span><span class="o">*</span><span class="n">iron_melting_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+    <span class="k">elif</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;RI&#39;</span><span class="p">:</span>
+        <span class="c1">#Melting temperature based on fitting Rivoldini&#39;s EOS model to represent</span>
+        <span class="c1">#Tm with polynomials in both pressure and composition. Polynomials are pre-computed</span>
+        <span class="c1">#using the riv_pre_compute_poly.py script in the routines sub-package. Output coefficients</span>
+        <span class="c1">#are saved into optimal_solution.txt and must be included into the parameters file.</span>
+
+        <span class="c1">#Simple partitioning</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">conc_s</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span> <span class="o">*</span> <span class="n">prm</span><span class="o">.</span><span class="n">partition_coeff</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1">#Don&#39;t use first string</span>
+
+        <span class="c1">#melting points of iron and alloy</span>
+        <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">riv_Tm</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">Tm</span> <span class="o">=</span> <span class="n">riv_Tm</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">dTm</span> <span class="o">=</span> <span class="n">Tm</span><span class="o">-</span><span class="n">Tm_fe</span>
+
+        <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">riv_dTm_dP</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
 
     <span class="k">else</span><span class="p">:</span>
 
@@ -281,6 +308,87 @@
     <span class="n">Tm</span> <span class="o">=</span> <span class="n">Tm_fe</span> <span class="o">+</span> <span class="n">dTm</span>
 
     <span class="k">return</span> <span class="n">Tm_fe</span><span class="p">,</span> <span class="n">Tm</span><span class="p">,</span> <span class="n">dTm_dP</span></div>
+
+<div class="viewcode-block" id="riv_Tm"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.riv_Tm">[docs]</a><span class="k">def</span> <span class="nf">riv_Tm</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">S</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate melting temperature given polynomial coefficients (to degree N) for pressure and composition.</span>
+
+<span class="sd">    Tm0 = melting_params[0] + melting_params[1]*S + melting_params[2]*S**2 + .... </span>
+<span class="sd">    Tm1 = melting_params[N+1] + ...</span>
+<span class="sd">    TmN = ....</span>
+
+<span class="sd">    Tm = Tm0 + Tm1*P + ... TmN*P**N</span>
+
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">melting_params</span><span class="p">)))</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+    <span class="n">Tm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">temp</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">melting_params</span><span class="p">[</span><span class="n">c</span><span class="o">+</span><span class="n">j</span><span class="p">],</span> <span class="n">S</span><span class="o">**</span><span class="n">j</span><span class="p">)</span>
+
+        <span class="n">Tm</span> <span class="o">+=</span> <span class="n">temp</span><span class="o">*</span><span class="n">P</span><span class="o">**</span><span class="n">i</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">Tm</span></div>
+
+
+<div class="viewcode-block" id="riv_dTm_dP"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.riv_dTm_dP">[docs]</a><span class="k">def</span> <span class="nf">riv_dTm_dP</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">melting_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate melting temperature gradient with pressure for given polynomial coefficients (to degree N) for pressure and composition.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">melting_params</span><span class="p">)))</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+    <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">temp</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">melting_params</span><span class="p">[</span><span class="n">c</span><span class="o">+</span><span class="n">j</span><span class="p">],</span> <span class="n">S</span><span class="o">**</span><span class="n">j</span><span class="p">)</span>
+
+        <span class="n">dTm_dP</span> <span class="o">+=</span> <span class="n">i</span><span class="o">*</span><span class="n">temp</span><span class="o">*</span><span class="n">P</span><span class="o">**</span><span class="p">(</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">dTm_dP</span></div>
+
+<div class="viewcode-block" id="riv_dTm_dc"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.riv_dTm_dc">[docs]</a><span class="k">def</span> <span class="nf">riv_dTm_dc</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">S</span><span class="p">,</span><span class="n">melting_params</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculate melting temperature gradient with composition for given polynomial coefficients (to degree N) for pressure and composition.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">N</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">melting_params</span><span class="p">)))</span> <span class="o">-</span> <span class="mi">1</span>
+
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="n">P</span><span class="p">)</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+        <span class="n">P</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">P</span><span class="p">)</span>
+
+    <span class="n">dTm_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+
+        <span class="n">temp</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">N</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">temp</span> <span class="o">+=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">j</span><span class="o">*</span><span class="n">melting_params</span><span class="p">[</span><span class="n">c</span><span class="o">+</span><span class="n">j</span><span class="p">],</span> <span class="n">S</span><span class="o">**</span><span class="p">(</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">))</span>
+
+        <span class="n">dTm_dc</span> <span class="o">+=</span> <span class="n">temp</span><span class="o">*</span><span class="n">P</span><span class="o">**</span><span class="n">i</span>
+        <span class="n">c</span> <span class="o">+=</span> <span class="n">N</span><span class="o">+</span><span class="mi">1</span>
+
+    <span class="k">return</span> <span class="n">dTm_dc</span></div>
+
 
 <div class="viewcode-block" id="iron_melting"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.chemistry.html#thermal_history.core_models.leeds.routines.chemistry.iron_melting">[docs]</a><span class="k">def</span> <span class="nf">iron_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;Simple polynomial representation of iron melting temperature with pressure</span>
@@ -457,7 +565,7 @@
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">mf_sol</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">bisect</span><span class="p">(</span><span class="n">f</span><span class="p">,</span><span class="n">lower</span><span class="p">,</span><span class="n">upper</span><span class="p">,</span><span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">dmu</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">lambda_liq</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">lambda_sol</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">mf_liq</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">T_m</span><span class="p">,</span><span class="n">ds_fe</span><span class="p">),</span><span class="n">maxiter</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
             <span class="k">except</span><span class="p">:</span>
-                <span class="n">breakpoint</span><span class="p">()</span>
+                <span class="nb">breakpoint</span><span class="p">()</span>
                 <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Can</span><span class="se">\&#39;</span><span class="s1">t solve for mole fraction in the solid. Check radial polynomials for melting temperature and entropy of freezing&#39;</span><span class="p">)</span>
 
 
