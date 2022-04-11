@@ -18,7 +18,7 @@ Requirements:
 Simply clone this repo and install the anaconda environment by running from a unix terminal:
 
 ```
-git clone git@github.com:sam-greenwood/thermal_history.git
+git clone https://github.com/sam-greenwood/thermal_history.git
 cd thermal_history
 conda env create -f environment.yml
 conda activate thermal_history

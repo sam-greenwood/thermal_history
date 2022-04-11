@@ -97,7 +97,7 @@ def setup_model(parameters, core_method =         None,
     assert len(regions) > 0, 'No models specified'
 
     #Check that all necessary inputs have been specified in parameters.
-    th.utils.check_parameters(parameters, regions, required_params)
+    th.utils.check_parameters(parameters, regions, required_params, verbose=verbose)
 
     #Set optional parameters to their default values if not set in parameter file
     for r in regions:

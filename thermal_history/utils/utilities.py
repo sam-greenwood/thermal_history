@@ -27,13 +27,14 @@ class PackagePathFilter(logging.Filter):
 
 
 
-def check_parameters(parameters, method_names, required_params):
+def check_parameters(parameters, method_names, required_params, verbose=True):
 
     error = False
 
     message = '------- Parameter Check -------'
     n1 = len(message)
-    print('\n'+message)
+    if verbose:
+        print('\n'+message)
 
     result = ' Passed '
     All_params=[] #Keep track of params given but not required
@@ -52,9 +53,10 @@ def check_parameters(parameters, method_names, required_params):
             All_params=[x for x in All_params if not x==key]
 
     if len(All_params)>0:
-        print('Following parameters have been specified but are not specifically listed as required by the given methods')
-        for key in All_params:
-            print(f'{key} = {getattr(parameters, key)}')
+        if verbose:
+            print('Following parameters have been specified but are not specifically listed as required by the given methods')
+            for key in All_params:
+                print(f'{key} = {getattr(parameters, key)}')
 
 
     #Check regions are defined
@@ -91,7 +93,8 @@ def check_parameters(parameters, method_names, required_params):
 
 
     n2 = int((n1-len(result))/2)
-    print('-'*n2 + result + '-'*n2 + '\n')
+    if verbose:
+        print('-'*n2 + result + '-'*n2 + '\n')
 
     if error == True:
         raise ValueError('\n\nParameters missing/inconsistent with declared methods (see above parameter check message)')

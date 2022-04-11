@@ -1,6 +1,8 @@
+from scipy.optimize import bisect, brentq
 import numpy as np
 from numba import njit
 from thermal_history.utils.optimised_funcs import trapezoid
+from thermal_history.core_models.leeds.routines.chemistry import riv_Tm
 
 import logging
 logger = logging.getLogger(__name__)
@@ -51,7 +53,7 @@ def snow_radius(r,T,Tm):
 
     return r_snow
 
-def snow_composition(Ta,Tm_fe,initial_conc,snow_index):
+def snow_composition(Ta,Tm_fe,initial_conc,snow_index, conc_l, P, melting_params):
 
     '''
     Calculates the composition of the slurry such that the melting temperature
@@ -69,6 +71,8 @@ def snow_composition(Ta,Tm_fe,initial_conc,snow_index):
         Initial concentration of liquid
     snow_index : int
         Index from which snow zone starts in arrays
+    melting_params: array
+        Array of melting temperature parameters
 
     Returns
     -------
@@ -78,7 +82,34 @@ def snow_composition(Ta,Tm_fe,initial_conc,snow_index):
 
     n = snow_index
 
-    conc_l_snow = (1 + initial_conc)*(1 - Ta[n:]/Tm_fe[n:])
+    if melting_params[0] == 'RI':
+
+        params = melting_params[1:].astype('float64')
+    
+        #Difference between polynomial evalutation at guessed composition and the target temp
+        def f(guess,P,Target,params):
+            return riv_Tm(P,guess,params) - Target
+
+        conc_l_snow = np.zeros(P[n:].size)
+
+        conc_l_snow[0] = brentq(f, conc_l-0.01, conc_l+0.01, args=(P[n],Ta[n], params)) #Calculate first value at interface
+        
+        #Find composition that gives Tm=Ta.
+        for i in range(n+1,P.size):
+            try:
+                #Try optimiser brackets close to the previous value for speed. We generally expect small changes in composition from grid point to grid point
+                conc_l_snow[i-n] = brentq(f, conc_l_snow[i-n-1]-0.001, conc_l_snow[i-n-1]+0.001, args=(P[i],Ta[i], params), rtol=0.0001)
+            except:
+                #If that fails it's likely because f(a) and f(b) are not opposite signs. Try the full range of possible values
+                conc_l_snow[i-n] = brentq(f, 0, 1, args=(P[i],Ta[i], params), rtol=0.0001)
+
+
+    else:
+
+        if not melting_params[0] == 'WN':
+            logger.warning('Assuming Williams and Nimmo melting curve (WN) for snow zone.')
+
+        conc_l_snow = (1 + initial_conc)*(1 - Ta[n:]/Tm_fe[n:])
 
     if np.min(conc_l_snow) < 0:
        logger.warning('Warning conc_l below zero!: {}'.format(np.min(conc_l_snow)))

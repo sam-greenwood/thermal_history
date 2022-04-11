@@ -487,6 +487,9 @@ def update(model):
 
         core.r_snow = snow.snow_radius(profiles['r'], profiles['T'], profiles['Tm'])
 
+        if core.r_snow < prm.r_cmb and profiles['T'][-1] > profiles['Tm'][-1]:
+            logger.critical(f'it: {model.it}. Snow zone has not started at the CMB')
+
         if core.r_snow == 0:
             logger.critical(f'it: {model.it}. Snow zone has covered entire core!! Not defined how to procede')
     else:
@@ -655,7 +658,7 @@ def snow_evolution(model):
         assert hasattr(core, 'dT_dt'), 'No cooling rate has been calculated yet on iteration {}'.format(model.it)
 
         #Concentration of slurry to depress Tm to adiabatic temperature
-        conc_l_profile[snow_idx:] = snow.snow_composition(T, Tm_fe, core.initial_conc_l, snow_idx)
+        conc_l_profile[snow_idx:] = snow.snow_composition(T, Tm_fe, core.initial_conc_l, snow_idx, core.conc_l[0], P, prm.core_melting_params)
         core.profiles.update({'conc_l': conc_l_profile})
 
         #Move melting temperature accordingly and update latent heat
