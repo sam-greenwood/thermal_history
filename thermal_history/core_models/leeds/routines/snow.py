@@ -41,10 +41,11 @@ def snow_radius(r,T,Tm):
             if Tm[i]>=T[i]:
 
                 dr = r[i]-r[i-1]
-                m1 = (T[i]-T[i-1])/dr
-                m2 = (Tm[i]-Tm[i-1])/dr
-                r_snow = r[i-1] + (T[i-1]-Tm[i-1])/(m2-m1)
-                break
+                if not dr == 0:
+                    m1 = (T[i]-T[i-1])/dr
+                    m2 = (Tm[i]-Tm[i-1])/dr
+                    r_snow = r[i-1] + (T[i-1]-Tm[i-1])/(m2-m1)
+                    break
 
         if r_snow > r[-1]:
             r_snow = r[-1]
@@ -52,6 +53,43 @@ def snow_radius(r,T,Tm):
             r_snow = r[0]
 
     return r_snow
+
+
+def check_top_down_freezing(r, T, Tm):
+    '''Checks for top-down freezing regime
+
+    Parameters
+    ----------
+    r : array   
+        radius
+    T : array
+        Temperature
+    Tm : array
+        Melting temperature
+    '''
+
+    
+    if T[0]-Tm[0] >= 0:
+        flag = 'liquid'
+    else:
+        flag = 'solid'
+    
+    top_down = True
+    #Iterate up and check for intermediate snow zones or bottom up
+    for i in range(1,r.size):
+
+        dT = T[i]-Tm[i]
+        if dT >= 0 and flag == 'solid':
+            top_down = False #Gone from region of sub-liquidus to super-liquidus
+
+        elif dT < 0:
+            flag = 'solid' #Entered base of snow_zone
+
+    return top_down
+
+
+
+
 
 def snow_composition(Ta,Tm_fe,initial_conc,snow_index, conc_l, P, melting_params):
 

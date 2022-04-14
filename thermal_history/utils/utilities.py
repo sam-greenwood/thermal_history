@@ -1,6 +1,7 @@
 from builtins import breakpoint
 import importlib
 import os
+from types import ModuleType
 
 # #Set numba logger to warning only
 # numba_logger = logging.getLogger('numba')
@@ -27,7 +28,7 @@ class PackagePathFilter(logging.Filter):
 
 
 
-def check_parameters(parameters, method_names, required_params, verbose=True):
+def check_parameters(parameters, method_names, required_params, optional_params, verbose=True):
 
     error = False
 
@@ -37,9 +38,6 @@ def check_parameters(parameters, method_names, required_params, verbose=True):
         print('\n'+message)
 
     result = ' Passed '
-    All_params=[] #Keep track of params given but not required
-    for f in method_names:
-        All_params+=[x for x in required_params[f].keys() if not x in All_params]
 
     #Check required parameters have been given
     for f in method_names:
@@ -50,12 +48,21 @@ def check_parameters(parameters, method_names, required_params, verbose=True):
                 error = True
                 result = ' Failed '
 
-            All_params=[x for x in All_params if not x==key]
+    #Parameters given but not explicitly required
 
-    if len(All_params)>0:
+    All_params=[] #All required/optional parameters
+    for f in method_names:
+        All_params+=[x for x in required_params[f].keys() if not x in All_params]
+        All_params+=[x for x in optional_params[f].keys() if not x in All_params]
+
+    given_params = [key for key in parameters.__dict__.keys() if ('__' not in key and not type(getattr(parameters,key))==ModuleType)] #Params specified
+    not_required = [key for key in given_params if not key in All_params] #Exclude required/optional parameters
+    not_required = [key for key in not_required if not key in ['core', 'mantle', 'stable_layer']] #Exclude 'core'/'mantle'/'stable_layer'. These are assumed required
+
+    if len(not_required) > 0:
         if verbose:
-            print('Following parameters have been specified but are not specifically listed as required by the given methods')
-            for key in All_params:
+            print('Following parameters have been specified but are not specifically listed as required by the given methods:')
+            for key in not_required:
                 print(f'{key} = {getattr(parameters, key)}')
 
 

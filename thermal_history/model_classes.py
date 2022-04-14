@@ -140,6 +140,8 @@ class ThermalModel(BaseModel):
     model_type = 'thermal'
     time = 0
     it = 1
+    critical_failure = False
+    critical_failure_reason = ''
 
     def __init__(self, parameters, methods, verbose=True, log_file='out.log', log_level=30):
         '''Setup the model based on given parameters and methods
@@ -159,7 +161,9 @@ class ThermalModel(BaseModel):
         '''
 
 
-        self.parameters = deepcopy(parameters)
+        # self.parameters = deepcopy(parameters)
+        from thermal_history.model import Parameters
+        self.parameters = Parameters(parameters, copy=True)
         if hasattr(parameters, 'time'):
             self.time = self.parameters.time
 
@@ -248,7 +252,7 @@ class ThermalModel(BaseModel):
 
         return full_state
 
-    def evolve(self, dt, print_freq=100):
+    def evolve(self, dt, print_freq=100, verbose=True):
         '''Evolve the model one timestep.
 
         When this is called, the evolve method for each region is called, results are appended to the save_dict and the update method for each region is called.
@@ -289,7 +293,7 @@ class ThermalModel(BaseModel):
 
         #Update values and print progress
         self.update()
-        if self.verbose and self.it%print_freq == 0:
+        if verbose and self.it%print_freq == 0:
             self.print_progress()
 
     def update(self):

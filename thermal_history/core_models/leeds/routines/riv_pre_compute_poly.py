@@ -183,10 +183,27 @@ try:
     plt.colorbar()
     plt.show()
 
-    #Plot error between eos and polynomial as a function of S
-    plt.plot(S_array*100, forward((S_array,P_array[0]*np.ones(S_array.size)), *xopt) - np.array([liquidus(S,P_array[0]/1e9) for S in S_array]))
+    for i in [0,-1]:
+        #Plot error between eos and polynomial as a function of S
+        Tm_eos = np.array([liquidus(S,P_array[i]/1e9) for S in S_array])
+        Tm_poly = forward((S_array,P_array[i]*np.ones(S_array.size)), *xopt)
+
+        plt.plot(S_array*100, Tm_poly - Tm_eos, label=f'P={P_array[i]/1e9:.2f} GPa')
+    plt.legend(loc=0)
     plt.xlabel('Sulphur composition [wt%]')
     plt.ylabel('Error in poly representation to eos.')
     plt.show()
+
+    for i in [0,-1]:
+        #Plot error between eos and polynomial as a function of P
+        Tm_eos = np.array([liquidus(S_array[i],P/1e9) for P in P_array])
+        Tm_poly = forward((S_array[i]*np.ones(P_array.size),P_array), *xopt)
+
+        plt.plot(P_array/1e9,  Tm_poly - Tm_eos, label=f'S={S_array[i]*100:.1f} wt %')
+    plt.legend(loc=0)
+    plt.xlabel('Pressure [GPa]')
+    plt.ylabel('Error in poly representation to eos.')
+    plt.show()
+    breakpoint()
 except:
     pass

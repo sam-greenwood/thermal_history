@@ -487,17 +487,13 @@ def update(model):
 
         core.r_snow = snow.snow_radius(profiles['r'], profiles['T'], profiles['Tm'])
 
-        if core.r_snow < prm.r_cmb and profiles['T'][-1] > profiles['Tm'][-1]:
-            logger.critical(f'it: {model.it}. Snow zone has not started at the CMB')
-
-        if core.r_snow == 0:
-            logger.critical(f'it: {model.it}. Snow zone has covered entire core!! Not defined how to procede')
     else:
         core.ri = prof.ic_radius(profiles['r'],
                                 prof.adiabat(profiles['r'], core.Tcen, prm.core_adiabat_params),
                                 profiles['Tm'])
 
         if core.ri == prm.r_cmb:
+            model.critical_failure = True
             logger.critical(f'it: {model.it}. Inner core has covered entire core!! Not defined how to procede')
 
     #Update profiles on new grid
@@ -506,8 +502,16 @@ def update(model):
     profiles['Tm_fe'], profiles['Tm'], profiles['dTm_dP'] = chem.melting_curve(model)
 
     #Melting temperature constrained to temperature profile with iron snow
-    if prm.iron_snow and core.r_snow < prm.r_cmb:
-        profiles['Tm'][core._snow_idx:] = core.profiles['T'][core._snow_idx:]
+    if prm.iron_snow:
+    
+        flag = snow.check_top_down_freezing(profiles['r'], profiles['T'], profiles['Tm'])
+        if not flag:
+            model.critical_failure = True
+            model.critical_failure_reason = 'Not top down freezing'
+            logger.critical(f'it: {model.it}. Intermediate freezing occuring, not exclusively top-down from CMB!')
+
+        elif core.r_snow < prm.r_cmb:
+            profiles['Tm'][core._snow_idx:] = core.profiles['T'][core._snow_idx:]
 
 
 #Dictionary of required parameters by this model. 'Name': 'Description'
@@ -654,7 +658,7 @@ def snow_evolution(model):
     snow_idx = core._snow_idx
     rs_idx = core._rs_idx
 
-    if core.r_snow < prm.r_cmb:
+    if core.r_snow < prm.r_cmb and not core.r_snow==0:
         assert hasattr(core, 'dT_dt'), 'No cooling rate has been calculated yet on iteration {}'.format(model.it)
 
         #Concentration of slurry to depress Tm to adiabatic temperature
@@ -668,7 +672,12 @@ def snow_evolution(model):
         #Melting temperature constrained to temperature profile with iron snow
         Tm[core._snow_idx:] = core.profiles['T'][core._snow_idx:]
 
-        L = prof.entropy_melting(P, prm.entropy_melting_params) * prm.Na *1000/prm.mm[0] * Tm
+        #Latent heat in J/kg
+        if prm.core_latent_heat is None:
+            L = core.profiles['dS'] * prm.Na *1000/prm.mm[0] * Tm   #Latent heat based on dS for iron
+        else:
+            L = np.ones(Tm.size)*prm.core_latent_heat               #Fixed value for latent heat
+        # L = prof.entropy_melting(P, prm.entropy_melting_params) * prm.Na *1000/prm.mm[0] * Tm
 
         M_liquid = prof.mass(rho_s, rho_l, 0, core.r_snow, core.r_snow)[-1] #Mass of liquid region
 
@@ -696,13 +705,9 @@ def snow_evolution(model):
 
 
         if prm.use_new_Cr:
-            Cr_snow = (1/(dTm_dr + dT_dr + dTm_dc*Cc_snow))*(T[snow_idx]/core.Tcen)  #dTm_dc terms needs to be tested properly.
+            Cr_snow = (1/(dTm_dr + dT_dr + dTm_dc*Cc_snow))*(T[snow_idx]/core.Tcen)  #Tested this enough to determine it is required.
         else:
             Cr_snow = (1/(dTm_dr - dT_dr))*(T[snow_idx]/core.Tcen)
-
-        # I think it should be +Cc_snow.. Chris' code has it as -Cc_snow. Where is the inconsistency?
-        # Cr_snow = (1/(dTm_dr - dT_dr - Cc_snow*dTm_dc))*(T[snow_idx]/core.Tcen)
-        # Cr_snow = (1/(dTm_dr - dT_dr + Cc_snow*dTm_dc))*(T[snow_idx]/core.Tcen)
 
 
         #Normalised latent heat from moving snow zone radius (DP18 Qlb eq 14). Analagous to inner core growth.
@@ -738,6 +743,11 @@ def snow_evolution(model):
         Cc_snow, Cr_snow, Cp_snow = np.zeros(core.conc_l.size), 0, 0
         Ql_snow_tilde, Ql_freezing_tilde, Ql_melting_tilde, Qg_freezing_tilde, Qg_melting_tilde, Qg_snow_tilde = 0,0,0,0,0,0
         El_snow_tilde, El_freezing_tilde, El_melting_tilde, Eg_freezing_tilde, Eg_melting_tilde, Eg_snow_tilde = 0,0,0,0,0,0
+
+        if core.r_snow == 0:
+            model.critical_failure = True   #Set flag that critical failure has occured.
+            model.critical_failure_reason = 'Snow zone covers whole core'
+            logger.critical(f'it: {model.it}. Snow zone has encompassed entire core, not defined how to continue!')
 
 
     #Normalised energies and entropies associated with the snow zone. Values to be returned to the main evolution function

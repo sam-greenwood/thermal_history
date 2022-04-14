@@ -97,7 +97,7 @@ def setup_model(parameters, core_method =         None,
     assert len(regions) > 0, 'No models specified'
 
     #Check that all necessary inputs have been specified in parameters.
-    th.utils.check_parameters(parameters, regions, required_params, verbose=verbose)
+    th.utils.check_parameters(parameters, regions, required_params, optional_params, verbose=verbose)
 
     #Set optional parameters to their default values if not set in parameter file
     for r in regions:
@@ -140,12 +140,12 @@ class Parameters:
             If a parameter is specified twice with different values
         '''        
 
-        if copy:
-            for key in parameters.__dict__.keys():
-                setattr(self, key, deepcopy(getattr(parameters, key)))
+        # if copy:
+        #     for key in parameters.__dict__.keys():
+        #         setattr(self, key, deepcopy(getattr(parameters, key)))
 
-        else:
-
+        # else:
+        if not copy:
             assert type(parameters) in [str,list,tuple], 'input parameters must be a single string or list/tuple'
 
             if type(parameters) == str:
@@ -163,20 +163,21 @@ class Parameters:
                     params[i] = importlib.util.module_from_spec(spec)
                     spec.loader.exec_module(params[i])
 
+        else:
+            #An exisiting parameters class has been provided
+            params = [parameters]
 
-            for prm in params:
-                keys = [key for key in prm.__dict__.keys() if ('__' not in key and not type(getattr(prm,key))==ModuleType)]
-                for key in keys:
-                    value = getattr(prm,key)
-                    if type(value)==list: #Lists should be converted to arrays
-                        value = np.array(value)
 
-                    if not hasattr(self,key):
-                        setattr(self, key, value)
+        for prm in params:
+            keys = [key for key in prm.__dict__.keys() if ('__' not in key and not type(getattr(prm,key))==ModuleType)]
+            for key in keys:
+                value = deepcopy(getattr(prm,key))
+                if type(value)==list: #Lists should be converted to arrays
+                    value = np.array(value)
 
-                    elif not value == getattr(self,key):
-                        v1, v2 = getattr(self,key), value
-                        raise ValueError('multiple instances of {} in provided parameters files: \n{}\n{}'.format(key,v1,v2))
+                if not hasattr(self,key):
+                    setattr(self, key, value)
 
-            if not hasattr(self,'filename'):
-                self.filename = 'output'
+                elif not value == getattr(self,key):
+                    v1, v2 = getattr(self,key), value
+                    raise ValueError('multiple instances of {} in provided parameters files: \n{}\n{}'.format(key,v1,v2))
