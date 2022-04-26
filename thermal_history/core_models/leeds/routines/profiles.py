@@ -184,7 +184,7 @@ def temp_dependent_profiles(model, setup=False):
     T = profiles['Ta'].copy()
 
     #If a stable layer is present, interpolate it's temperature profile onto the upper core.
-    if (not setup) and prm.stable_layer:
+    if (not setup) and (prm.stable_layer and core.rs < prm.r_cmb):
         T[core._rs_idx:] = np.interp(r[core._rs_idx:], sl.profiles['r'], sl.profiles['T'])
 
     profiles['T'] = T

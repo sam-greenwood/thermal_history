@@ -130,8 +130,8 @@ def snow_composition(Ta,Tm_fe,initial_conc,snow_index, conc_l, P, melting_params
 
         conc_l_snow = np.zeros(P[n:].size)
 
-        conc_l_snow[0] = brentq(f, conc_l-0.01, conc_l+0.01, args=(P[n],Ta[n], params)) #Calculate first value at interface
-        
+        conc_l_snow[0] = brentq(f, 0, 1, args=(P[n],Ta[n], params)) #Calculate first value at interface
+
         #Find composition that gives Tm=Ta.
         for i in range(n+1,P.size):
             try:
