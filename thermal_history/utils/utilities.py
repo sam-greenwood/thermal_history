@@ -209,7 +209,7 @@ def create_parameters_file(fname,
     
         #Write required parameters
 
-        if len(required_params.keys())>0:
+        if len(required_params[r].keys())>0:
 
             #Track maximum length of parameter names to neatly format
             max_l = max([len(x) for x in required_params[r].keys()])
@@ -244,21 +244,22 @@ def create_parameters_file(fname,
 
         f.write('\n\n')
 
-        #Write any optional parameters to file but all commented out.
-        f.write('#Optional parameters that if not specified take their default values\n\n')
+        if len(optional_params[r].keys()) > 0:
 
+            #Write any optional parameters to file but all commented out.
+            f.write('#Optional parameters that if not specified take their default values\n\n')
 
-        #Header for method
-        f.write(f'#{r}: {methods[r]} optional parameters\n\n')
+            #Header for method
+            f.write(f'#{r}: {methods[r]} optional parameters\n\n')
 
-        #Max length of strings for neat formatting
-        max_l = max([len(x) for x in optional_params[r].keys()])
+            #Max length of strings for neat formatting
+            max_l = max([len(x) for x in optional_params[r].keys()])
+ 
+            for key, value in optional_params[r].items():
 
-        for key, value in optional_params[r].items():
-
-            #Write parameter
-            write_line(f, key, value[0], max_l, comment_out=True)
-            f.write('\n')
+                #Write parameter
+                write_line(f, key, value[0], max_l, comment_out=True)
+                f.write('\n')
 
     f.close()
 

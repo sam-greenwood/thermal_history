@@ -1,6 +1,7 @@
 import thermal_history as th
 
 #Create parameters class with just those necessary for 'simple_test' core method.
+#This shortcut saves needing a parameters file for this test case.
 #Inherit from th.model.Parameters to get built in constants
 class test_parameters(th.model.Parameters):
 
