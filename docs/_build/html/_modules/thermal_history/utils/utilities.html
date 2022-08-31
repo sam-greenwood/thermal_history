@@ -152,6 +152,7 @@
 <span></span><span class="kn">from</span> <span class="nn">builtins</span> <span class="kn">import</span> <span class="nb">breakpoint</span>
 <span class="kn">import</span> <span class="nn">importlib</span>
 <span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">ModuleType</span>
 
 <span class="c1"># #Set numba logger to warning only</span>
 <span class="c1"># numba_logger = logging.getLogger(&#39;numba&#39;)</span>
@@ -178,18 +179,16 @@
 
 
 
-<span class="k">def</span> <span class="nf">check_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">method_names</span><span class="p">,</span> <span class="n">required_params</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">check_parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">method_names</span><span class="p">,</span> <span class="n">required_params</span><span class="p">,</span> <span class="n">optional_params</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
 
     <span class="n">error</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="n">message</span> <span class="o">=</span> <span class="s1">&#39;------- Parameter Check -------&#39;</span>
     <span class="n">n1</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">message</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">message</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="o">+</span><span class="n">message</span><span class="p">)</span>
 
     <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39; Passed &#39;</span>
-    <span class="n">All_params</span><span class="o">=</span><span class="p">[]</span> <span class="c1">#Keep track of params given but not required</span>
-    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">method_names</span><span class="p">:</span>
-        <span class="n">All_params</span><span class="o">+=</span><span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">All_params</span><span class="p">]</span>
 
     <span class="c1">#Check required parameters have been given</span>
     <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">method_names</span><span class="p">:</span>
@@ -200,12 +199,22 @@
                 <span class="n">error</span> <span class="o">=</span> <span class="kc">True</span>
                 <span class="n">result</span> <span class="o">=</span> <span class="s1">&#39; Failed &#39;</span>
 
-            <span class="n">All_params</span><span class="o">=</span><span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">All_params</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span><span class="o">==</span><span class="n">key</span><span class="p">]</span>
+    <span class="c1">#Parameters given but not explicitly required</span>
 
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">All_params</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Following parameters have been specified but are not specifically listed as required by the given methods&#39;</span><span class="p">)</span>
-        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">All_params</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="n">All_params</span><span class="o">=</span><span class="p">[]</span> <span class="c1">#All required/optional parameters</span>
+    <span class="k">for</span> <span class="n">f</span> <span class="ow">in</span> <span class="n">method_names</span><span class="p">:</span>
+        <span class="n">All_params</span><span class="o">+=</span><span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">All_params</span><span class="p">]</span>
+        <span class="n">All_params</span><span class="o">+=</span><span class="p">[</span><span class="n">x</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">f</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">All_params</span><span class="p">]</span>
+
+    <span class="n">given_params</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">parameters</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">keys</span><span class="p">()</span> <span class="k">if</span> <span class="p">(</span><span class="s1">&#39;__&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">key</span> <span class="ow">and</span> <span class="ow">not</span> <span class="nb">type</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span><span class="n">key</span><span class="p">))</span><span class="o">==</span><span class="n">ModuleType</span><span class="p">)]</span> <span class="c1">#Params specified</span>
+    <span class="n">not_required</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">given_params</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">All_params</span><span class="p">]</span> <span class="c1">#Exclude required/optional parameters</span>
+    <span class="n">not_required</span> <span class="o">=</span> <span class="p">[</span><span class="n">key</span> <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">not_required</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">key</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;core&#39;</span><span class="p">,</span> <span class="s1">&#39;mantle&#39;</span><span class="p">,</span> <span class="s1">&#39;stable_layer&#39;</span><span class="p">]]</span> <span class="c1">#Exclude &#39;core&#39;/&#39;mantle&#39;/&#39;stable_layer&#39;. These are assumed required</span>
+
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">not_required</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Following parameters have been specified but are not specifically listed as required by the given methods:&#39;</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">not_required</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s1"> = </span><span class="si">{</span><span class="nb">getattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">key</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
 
 
     <span class="c1">#Check regions are defined</span>
@@ -242,7 +251,8 @@
 
 
     <span class="n">n2</span> <span class="o">=</span> <span class="nb">int</span><span class="p">((</span><span class="n">n1</span><span class="o">-</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">))</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="n">n2</span> <span class="o">+</span> <span class="n">result</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="n">n2</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">verbose</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="n">n2</span> <span class="o">+</span> <span class="n">result</span> <span class="o">+</span> <span class="s1">&#39;-&#39;</span><span class="o">*</span><span class="n">n2</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">Parameters missing/inconsistent with declared methods (see above parameter check message)&#39;</span><span class="p">)</span>
@@ -350,7 +360,7 @@
     
         <span class="c1">#Write required parameters</span>
 
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">required_params</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
 
             <span class="c1">#Track maximum length of parameter names to neatly format</span>
             <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">required_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
@@ -385,21 +395,22 @@
 
         <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1">#Write any optional parameters to file but all commented out.</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#Optional parameters that if not specified take their default values</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
 
+            <span class="c1">#Write any optional parameters to file but all commented out.</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;#Optional parameters that if not specified take their default values</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1">#Header for method</span>
-        <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1"> optional parameters</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="c1">#Header for method</span>
+            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;#</span><span class="si">{</span><span class="n">r</span><span class="si">}</span><span class="s1">: </span><span class="si">{</span><span class="n">methods</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="si">}</span><span class="s1"> optional parameters</span><span class="se">\n\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
-        <span class="c1">#Max length of strings for neat formatting</span>
-        <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+            <span class="c1">#Max length of strings for neat formatting</span>
+            <span class="n">max_l</span> <span class="o">=</span> <span class="nb">max</span><span class="p">([</span><span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">()])</span>
+ 
+            <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
 
-        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">optional_params</span><span class="p">[</span><span class="n">r</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-
-            <span class="c1">#Write parameter</span>
-            <span class="n">write_line</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_l</span><span class="p">,</span> <span class="n">comment_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-            <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="c1">#Write parameter</span>
+                <span class="n">write_line</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">max_l</span><span class="p">,</span> <span class="n">comment_out</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+                <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="n">f</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 

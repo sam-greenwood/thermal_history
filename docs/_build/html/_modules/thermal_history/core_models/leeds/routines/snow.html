@@ -149,9 +149,11 @@
            <div itemprop="articleBody">
             
   <h1>Source code for thermal_history.core_models.leeds.routines.snow</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span></span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">bisect</span><span class="p">,</span> <span class="n">brentq</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
 <span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">trapezoid</span>
+<span class="kn">from</span> <span class="nn">thermal_history.core_models.leeds.routines.chemistry</span> <span class="kn">import</span> <span class="n">riv_Tm</span>
 
 <span class="kn">import</span> <span class="nn">logging</span>
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
@@ -190,10 +192,11 @@
             <span class="k">if</span> <span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
 
                 <span class="n">dr</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
-                <span class="n">m1</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
-                <span class="n">m2</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
-                <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">m2</span><span class="o">-</span><span class="n">m1</span><span class="p">)</span>
-                <span class="k">break</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">dr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">m1</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
+                    <span class="n">m2</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
+                    <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">m2</span><span class="o">-</span><span class="n">m1</span><span class="p">)</span>
+                    <span class="k">break</span>
 
         <span class="k">if</span> <span class="n">r_snow</span> <span class="o">&gt;</span> <span class="n">r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
             <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -202,7 +205,44 @@
 
     <span class="k">return</span> <span class="n">r_snow</span></div>
 
-<div class="viewcode-block" id="snow_composition"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.snow_composition">[docs]</a><span class="k">def</span> <span class="nf">snow_composition</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span><span class="n">Tm_fe</span><span class="p">,</span><span class="n">initial_conc</span><span class="p">,</span><span class="n">snow_index</span><span class="p">):</span>
+
+<div class="viewcode-block" id="check_top_down_freezing"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.check_top_down_freezing">[docs]</a><span class="k">def</span> <span class="nf">check_top_down_freezing</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Tm</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Checks for top-down freezing regime</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array   </span>
+<span class="sd">        radius</span>
+<span class="sd">    T : array</span>
+<span class="sd">        Temperature</span>
+<span class="sd">    Tm : array</span>
+<span class="sd">        Melting temperature</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    
+    <span class="k">if</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="s1">&#39;liquid&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
+    
+    <span class="n">top_down</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1">#Iterate up and check for intermediate snow zones or bottom up</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+
+        <span class="n">dT</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">dT</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">flag</span> <span class="o">==</span> <span class="s1">&#39;solid&#39;</span><span class="p">:</span>
+            <span class="n">top_down</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#Gone from region of sub-liquidus to super-liquidus</span>
+
+        <span class="k">elif</span> <span class="n">dT</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span> <span class="c1">#Entered base of snow_zone</span>
+
+    <span class="k">return</span> <span class="n">top_down</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="snow_composition"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.snow_composition">[docs]</a><span class="k">def</span> <span class="nf">snow_composition</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span><span class="n">Tm_fe</span><span class="p">,</span><span class="n">initial_conc</span><span class="p">,</span><span class="n">snow_index</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
 
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Calculates the composition of the slurry such that the melting temperature</span>
@@ -220,6 +260,8 @@
 <span class="sd">        Initial concentration of liquid</span>
 <span class="sd">    snow_index : int</span>
 <span class="sd">        Index from which snow zone starts in arrays</span>
+<span class="sd">    melting_params: array</span>
+<span class="sd">        Array of melting temperature parameters</span>
 
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
@@ -229,7 +271,34 @@
 
     <span class="n">n</span> <span class="o">=</span> <span class="n">snow_index</span>
 
-    <span class="n">conc_l_snow</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">initial_conc</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">Tm_fe</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+    <span class="k">if</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;RI&#39;</span><span class="p">:</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    
+        <span class="c1">#Difference between polynomial evalutation at guessed composition and the target temp</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">guess</span><span class="p">,</span><span class="n">P</span><span class="p">,</span><span class="n">Target</span><span class="p">,</span><span class="n">params</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">riv_Tm</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">guess</span><span class="p">,</span><span class="n">params</span><span class="p">)</span> <span class="o">-</span> <span class="n">Target</span>
+
+        <span class="n">conc_l_snow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="n">conc_l_snow</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">params</span><span class="p">))</span> <span class="c1">#Calculate first value at interface</span>
+
+        <span class="c1">#Find composition that gives Tm=Ta.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1">#Try optimiser brackets close to the previous value for speed. We generally expect small changes in composition from grid point to grid point</span>
+                <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">params</span><span class="p">),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1">#If that fails it&#39;s likely because f(a) and f(b) are not opposite signs. Try the full range of possible values</span>
+                <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">params</span><span class="p">),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;WN&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Assuming Williams and Nimmo melting curve (WN) for snow zone.&#39;</span><span class="p">)</span>
+
+        <span class="n">conc_l_snow</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">initial_conc</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">Tm_fe</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
 
     <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">conc_l_snow</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Warning conc_l below zero!: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">conc_l_snow</span><span class="p">)))</span>

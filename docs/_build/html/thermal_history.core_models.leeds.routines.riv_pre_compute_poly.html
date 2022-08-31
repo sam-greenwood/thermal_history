@@ -181,6 +181,18 @@
   <section id="riv-pre-compute-poly">
 <h1>riv_pre_compute_poly<a class="headerlink" href="#riv-pre-compute-poly" title="Permalink to this headline">¶</a></h1>
 <p>(thermal_history.core_models.leeds.routines.riv_pre_compute_poly)</p>
+<span class="target" id="module-thermal_history.core_models.leeds.routines.riv_pre_compute_poly"></span><p>Stand alone script to pre-compute values for melting temperature of Fe-S alloys using Rivoldini’s EOS, then fitting with polynomials
+in order to have a fast calculation of Tm for P=4-10GPa and Sulphur content (S) of 0-15 wt%.</p>
+<p>Polynomial coefficients are defined in the following way:</p>
+<p>Tm0 = x[0]      + x[1]*S   + x[2]*S**2 + …. x[N]*S**N
+Tm1 = x[N+1]    + x[N+2]*S + …
+TmN = x[N(N+1)] + ….</p>
+<p>Tm = Tm0 + Tm1*P + … TmN*P**N</p>
+<p>The coefficients of zero order in S (x[0], x[N+1]…) are defined by a fit to the pure iron parameterisation of Anzellini
+Tm_fe = 495.4969600595926*(22.19 + P)**0.42016806722689076</p>
+<p>The max polynomial degree N is set by default to 3 but can be changed if required.</p>
+<p>The coefficients are calculated and printed to screen and also saved in a file called ‘optimal_solution.txt’.</p>
+<p>A plot is produced of the error between the polynomial representation and the EOS values of TM is plotted at the end by randomly sampling the P/S space.</p>
 </section>
 
 

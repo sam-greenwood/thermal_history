@@ -291,6 +291,8 @@
     <span class="n">model_type</span> <span class="o">=</span> <span class="s1">&#39;thermal&#39;</span>
     <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">it</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">critical_failure</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="n">critical_failure_reason</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">parameters</span><span class="p">,</span> <span class="n">methods</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">log_file</span><span class="o">=</span><span class="s1">&#39;out.log&#39;</span><span class="p">,</span> <span class="n">log_level</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Setup the model based on given parameters and methods</span>
@@ -310,7 +312,9 @@
 <span class="sd">        &#39;&#39;&#39;</span>
 
 
-        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">parameters</span><span class="p">)</span>
+        <span class="c1"># self.parameters = deepcopy(parameters)</span>
+        <span class="kn">from</span> <span class="nn">thermal_history.model</span> <span class="kn">import</span> <span class="n">Parameters</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span> <span class="o">=</span> <span class="n">Parameters</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="n">copy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">parameters</span><span class="p">,</span> <span class="s1">&#39;time&#39;</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">time</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">time</span>
 
@@ -399,7 +403,7 @@
 
         <span class="k">return</span> <span class="n">full_state</span></div>
 
-<div class="viewcode-block" id="ThermalModel.evolve"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+<div class="viewcode-block" id="ThermalModel.evolve"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.evolve">[docs]</a>    <span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dt</span><span class="p">,</span> <span class="n">print_freq</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;Evolve the model one timestep.</span>
 
 <span class="sd">        When this is called, the evolve method for each region is called, results are appended to the save_dict and the update method for each region is called.</span>
@@ -440,7 +444,7 @@
 
         <span class="c1">#Update values and print progress</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">update</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">verbose</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">it</span><span class="o">%</span><span class="n">print_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">verbose</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">it</span><span class="o">%</span><span class="n">print_freq</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">print_progress</span><span class="p">()</span></div>
 
 <div class="viewcode-block" id="ThermalModel.update"><a class="viewcode-back" href="../../thermal_history.model_classes.html#thermal_history.model_classes.ThermalModel.update">[docs]</a>    <span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>

@@ -22,188 +22,190 @@ A plot is produced of the error between the polynomial representation and the EO
 
 N = 3 #Max degree of fit
 
-import numpy as np
-from scipy.optimize import curve_fit
-import sys
+#Only run when called from the command line (building docs imports this script)
+if __name__ == '__main__':
 
-import rivoldini_eos as eos
+    import numpy as np
+    from scipy.optimize import curve_fit
+    import sys
 
-P_array = np.linspace(4,10, 30)*1e9 #Range of Pressures to consider
-S_array = np.linspace(0,0.15, P_array.size) #Range of Sulphur concentrations to consider
-Tm = np.zeros((P_array.size, S_array.size))
+    from . import rivoldini_eos as eos
 
-# Initialize the EoS 
-fccFe=eos.eosAndersonGrueneisen(M0=eos.param["MFe"],p0=1.e-5,T0=298,V0=6.82,alpha0=7.e-5,KT0=163.4,KTP0=5.38,deltaT=5.5,kappa=1.4,GibbsE=(lambda T: 16300.921-395355.43/T-2476.28*np.sqrt(T)+ 381.47162*T+0.000177578*T**2-52.2754*T*np.log(T)))        
-liquidFe=eos.eosAndersonGrueneisen(M0=eos.param['MFe'],p0=1E-5,T0=298,V0=6.88,alpha0=9E-5,KT0=148,KTP0=5.8,deltaT=5.1,kappa=0.56,GibbsE=(lambda T: 300-9007.3402+290.29866*T-46*T*np.log(T)))                                                                                           
+    P_array = np.linspace(4,10, 30)*1e9 #Range of Pressures to consider
+    S_array = np.linspace(0,0.15, P_array.size) #Range of Sulphur concentrations to consider
+    Tm = np.zeros((P_array.size, S_array.size))
 
-def deltaMu(chi,p,T): # chemical potentals are equal at melting, assume no S in solid Fe
-    y=chi/(1-chi) # mol fraction of Fe-S pseudo compound
-    RGas=eos.param['RGas']
-    L1=53700.86652423554 - 3815.484280673008*p - 29.091372419282234*T
-    L2=25339.70399255915 - 2951.106280178772*p
-    fccFe.eos(p,T)
-    liquidFe.eos(p,T)
-    return -fccFe.GE+liquidFe.GE+RGas*T*np.log(1-y)+y**2 *(2*y-1)*L1 +2*(1-y)*y**2 *L2
+    # Initialize the EoS 
+    fccFe=eos.eosAndersonGrueneisen(M0=eos.param["MFe"],p0=1.e-5,T0=298,V0=6.82,alpha0=7.e-5,KT0=163.4,KTP0=5.38,deltaT=5.5,kappa=1.4,GibbsE=(lambda T: 16300.921-395355.43/T-2476.28*np.sqrt(T)+ 381.47162*T+0.000177578*T**2-52.2754*T*np.log(T)))        
+    liquidFe=eos.eosAndersonGrueneisen(M0=eos.param['MFe'],p0=1E-5,T0=298,V0=6.88,alpha0=9E-5,KT0=148,KTP0=5.8,deltaT=5.1,kappa=0.56,GibbsE=(lambda T: 300-9007.3402+290.29866*T-46*T*np.log(T)))                                                                                           
 
-liquidus=eos.liquidusFeS(deltaMu)
+    def deltaMu(chi,p,T): # chemical potentals are equal at melting, assume no S in solid Fe
+        y=chi/(1-chi) # mol fraction of Fe-S pseudo compound
+        RGas=eos.param['RGas']
+        L1=53700.86652423554 - 3815.484280673008*p - 29.091372419282234*T
+        L2=25339.70399255915 - 2951.106280178772*p
+        fccFe.eos(p,T)
+        liquidFe.eos(p,T)
+        return -fccFe.GE+liquidFe.GE+RGas*T*np.log(1-y)+y**2 *(2*y-1)*L1 +2*(1-y)*y**2 *L2
 
-
-
-#Fit pure Fe melting curve of Anzellini. These will be coefficients when Sulphur concentration=0
-x_fe = np.polyfit(P_array, 495.4969600595926*(22.19 + P_array/1e9)**0.42016806722689076, N)[::-1]
-
-def forward_fit(u,*args):
-    #Forward problem. Calcluate Tm using polynomial representation of Tm for
-    #give S content and pressure. Takes coefficients for pure iron above
-    #for the non S dependent terms.
-
-    #Tm0 = x_fe[0] + x[1]*S + x[2]*S**2 + .... 
-    #Tm1 = ....
-    #TmN = ....
-
-    #Tm = Tm0 + Tm1*P + ... TmN*P**N
-
-    x = args
-
-    S, P = u #Sulphur comp and Pressure in first input
-
-    Tm = np.zeros(S.size)
-    c = 0
-    for i in range(N+1):
-
-        temp = np.dot(x_fe[i], S**0) #Pure iron coefficient
-
-        for j in range(1,N+1):
-            temp += np.dot(x[c+j-1], S**j)
-
-        Tm += temp*P**i
-        c += N
-
-    return Tm
+    liquidus=eos.liquidusFeS(deltaMu)
 
 
-def forward(u,*args):
-    #Forward problem including pure iron coefficients in given parameters.
 
-    x = args
+    #Fit pure Fe melting curve of Anzellini. These will be coefficients when Sulphur concentration=0
+    x_fe = np.polyfit(P_array, 495.4969600595926*(22.19 + P_array/1e9)**0.42016806722689076, N)[::-1]
 
-    S, P = u #Sulphur comp and Pressure in first input
+    def forward_fit(u,*args):
+        #Forward problem. Calcluate Tm using polynomial representation of Tm for
+        #give S content and pressure. Takes coefficients for pure iron above
+        #for the non S dependent terms.
 
-    Tm = np.zeros(S.size)
-    c = 0
-    for i in range(N+1):
+        #Tm0 = x_fe[0] + x[1]*S + x[2]*S**2 + .... 
+        #Tm1 = ....
+        #TmN = ....
 
-        temp = np.zeros(S.size)
+        #Tm = Tm0 + Tm1*P + ... TmN*P**N
 
-        for j in range(0,N+1):
-            temp += np.dot(x[c+j], S**j)
+        x = args
 
-        Tm += temp*P**i
-        c += N+1
+        S, P = u #Sulphur comp and Pressure in first input
 
-    return Tm
+        Tm = np.zeros(S.size)
+        c = 0
+        for i in range(N+1):
+
+            temp = np.dot(x_fe[i], S**0) #Pure iron coefficient
+
+            for j in range(1,N+1):
+                temp += np.dot(x[c+j-1], S**j)
+
+            Tm += temp*P**i
+            c += N
+
+        return Tm
 
 
-#Check to see if -f flag given to reuse saved coefficients in file.
-flag = True
-if len(sys.argv) > 1:
-    if sys.argv[1] == '-f':
-        flag = False
+    def forward(u,*args):
+        #Forward problem including pure iron coefficients in given parameters.
+
+        x = args
+
+        S, P = u #Sulphur comp and Pressure in first input
+
+        Tm = np.zeros(S.size)
+        c = 0
+        for i in range(N+1):
+
+            temp = np.zeros(S.size)
+
+            for j in range(0,N+1):
+                temp += np.dot(x[c+j], S**j)
+
+            Tm += temp*P**i
+            c += N+1
+
+        return Tm
+
+
+    #Check to see if -f flag given to reuse saved coefficients in file.
+    flag = True
+    if len(sys.argv) > 1:
+        if sys.argv[1] == '-f':
+            flag = False
+        else:
+            print('only accepted arugment is -f, assuming no flags were given')
+
+    if flag:
+        #Calculate Tm from eos at each P/S combination
+        for i,P in enumerate(P_array):
+
+            for j,S in enumerate(S_array):
+
+                eutectic = eos.xeFeS(P/1e9)
+                assert S <= eutectic, f'S concentration ({S}) above eutectic ({eutectic})' #Double check we stay on iron side of eutectic comp.
+
+                if S == 0:
+                    Tm[i,j] = eos.TmFeA(P/1e9) #Pure iron melting temp
+                else:
+                    Tm[i,j] = liquidus(S,P/1e9) #Alloy melting temp
+            
+
+            print(f'computing Tm at pressure {P/1e9} GPa')
+
+
+        #Mesh data for passing into curve_fit
+        S_mesh, P_mesh = np.meshgrid(S_array, P_array)
+        xdata = np.vstack((S_mesh.ravel(), P_mesh.ravel()))
+
+        x_initial = np.ones((N+1)**2-(N+1)) #Initial guess of ones for every coefficient
+
+        #Fit 2D data to produce coefficients.
+        xopt, xcov = curve_fit(forward_fit, xdata, Tm.ravel(), x_initial)
+
+        xopt = np.insert(xopt, 0, x_fe[0])
+        for i in range(1,N+1):
+            xopt = np.insert(xopt, i*(N+1), x_fe[i])
+
+        #Save solution to file to reuse
+        with open('optimal_solution.txt', 'w') as f:
+            for x in xopt:
+                f.write(f'{x}\n')
+
     else:
-        print('only accepted arugment is -f, assuming no flags were given')
+        xopt = np.genfromtxt('optimal_solution.txt') #Read in solution from file
 
-if flag:
-    #Calculate Tm from eos at each P/S combination
-    for i,P in enumerate(P_array):
+    print('Optimal Solution')
+    print(xopt)
+    print('------------------')
 
-        for j,S in enumerate(S_array):
+    #Error across random points
 
-            eutectic = eos.xeFeS(P/1e9)
-            assert S <= eutectic, f'S concentration ({S}) above eutectic ({eutectic})' #Double check we stay on iron side of eutectic comp.
-
-            if S == 0:
-                Tm[i,j] = eos.TmFeA(P/1e9) #Pure iron melting temp
-            else:
-                Tm[i,j] = liquidus(S,P/1e9) #Alloy melting temp
-        
-
-        print(f'computing Tm at pressure {P/1e9} GPa')
+    S_rand = np.random.rand(150)*S_array[-1]
+    P_rand = np.random.rand(S_rand.size)*(P_array[-1]-P_array[0]) + P_array[0]
+    Tm_rand = np.zeros(S_rand.size)
+    Tm_predict = np.zeros(S_rand.size)
 
 
-    #Mesh data for passing into curve_fit
-    S_mesh, P_mesh = np.meshgrid(S_array, P_array)
-    xdata = np.vstack((S_mesh.ravel(), P_mesh.ravel()))
+    #Calculate Tm from eos and polynomial fit at random points in S/P space.
+    for i in range(S_rand.size):
+        S, P = S_rand[i], P_rand[i]
 
-    x_initial = np.ones((N+1)**2-(N+1)) #Initial guess of ones for every coefficient
+        if S == 0:
+            Tm_rand[i] = eos.TmFeA(P/1e9) #Pure iron melting temp
+        else:
+            Tm_rand[i] = liquidus(S,P/1e9) #Alloy melting temp
 
-    #Fit 2D data to produce coefficients.
-    xopt, xcov = curve_fit(forward_fit, xdata, Tm.ravel(), x_initial)
+        Tm_predict[i] = forward((S,P), *xopt)
 
-    xopt = np.insert(xopt, 0, x_fe[0])
-    for i in range(1,N+1):
-        xopt = np.insert(xopt, i*(N+1), x_fe[i])
+    try:
+        import matplotlib.pyplot as plt
 
-    #Save solution to file to reuse
-    with open('optimal_solution.txt', 'w') as f:
-        for x in xopt:
-            f.write(f'{x}\n')
+        #Plot random points coloured by error
+        y = Tm_predict-Tm_rand
+        plt.scatter(S_rand*100, P_rand, s=200, c=y, marker='o', cmap='seismic', edgecolor='k', vmin=-np.max(np.abs(y)), vmax=np.max(np.abs(y)))
+        plt.colorbar()
+        plt.show()
 
-else:
-    xopt = np.genfromtxt('optimal_solution.txt') #Read in solution from file
+        for i in [0,-1]:
+            #Plot error between eos and polynomial as a function of S
+            Tm_eos = np.array([liquidus(S,P_array[i]/1e9) for S in S_array])
+            Tm_poly = forward((S_array,P_array[i]*np.ones(S_array.size)), *xopt)
 
-print('Optimal Solution')
-print(xopt)
-print('------------------')
+            plt.plot(S_array*100, Tm_poly - Tm_eos, label=f'P={P_array[i]/1e9:.2f} GPa')
+        plt.legend(loc=0)
+        plt.xlabel('Sulphur composition [wt%]')
+        plt.ylabel('Error in poly representation to eos.')
+        plt.show()
 
-#Error across random points
+        for i in [0,-1]:
+            #Plot error between eos and polynomial as a function of P
+            Tm_eos = np.array([liquidus(S_array[i],P/1e9) for P in P_array])
+            Tm_poly = forward((S_array[i]*np.ones(P_array.size),P_array), *xopt)
 
-S_rand = np.random.rand(150)*S_array[-1]
-P_rand = np.random.rand(S_rand.size)*(P_array[-1]-P_array[0]) + P_array[0]
-Tm_rand = np.zeros(S_rand.size)
-Tm_predict = np.zeros(S_rand.size)
-
-
-#Calculate Tm from eos and polynomial fit at random points in S/P space.
-for i in range(S_rand.size):
-    S, P = S_rand[i], P_rand[i]
-
-    if S == 0:
-        Tm_rand[i] = eos.TmFeA(P/1e9) #Pure iron melting temp
-    else:
-        Tm_rand[i] = liquidus(S,P/1e9) #Alloy melting temp
-
-    Tm_predict[i] = forward((S,P), *xopt)
-
-try:
-    import matplotlib.pyplot as plt
-
-    #Plot random points coloured by error
-    y = Tm_predict-Tm_rand
-    plt.scatter(S_rand*100, P_rand, s=200, c=y, marker='o', cmap='seismic', edgecolor='k', vmin=-np.max(np.abs(y)), vmax=np.max(np.abs(y)))
-    plt.colorbar()
-    plt.show()
-
-    for i in [0,-1]:
-        #Plot error between eos and polynomial as a function of S
-        Tm_eos = np.array([liquidus(S,P_array[i]/1e9) for S in S_array])
-        Tm_poly = forward((S_array,P_array[i]*np.ones(S_array.size)), *xopt)
-
-        plt.plot(S_array*100, Tm_poly - Tm_eos, label=f'P={P_array[i]/1e9:.2f} GPa')
-    plt.legend(loc=0)
-    plt.xlabel('Sulphur composition [wt%]')
-    plt.ylabel('Error in poly representation to eos.')
-    plt.show()
-
-    for i in [0,-1]:
-        #Plot error between eos and polynomial as a function of P
-        Tm_eos = np.array([liquidus(S_array[i],P/1e9) for P in P_array])
-        Tm_poly = forward((S_array[i]*np.ones(P_array.size),P_array), *xopt)
-
-        plt.plot(P_array/1e9,  Tm_poly - Tm_eos, label=f'S={S_array[i]*100:.1f} wt %')
-    plt.legend(loc=0)
-    plt.xlabel('Pressure [GPa]')
-    plt.ylabel('Error in poly representation to eos.')
-    plt.show()
-    breakpoint()
-except:
-    pass
+            plt.plot(P_array/1e9,  Tm_poly - Tm_eos, label=f'S={S_array[i]*100:.1f} wt %')
+        plt.legend(loc=0)
+        plt.xlabel('Pressure [GPa]')
+        plt.ylabel('Error in poly representation to eos.')
+        plt.show()
+    except:
+        pass

@@ -231,6 +231,21 @@ to changes in temperature.</p>
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.snow.check_top_down_freezing">
+<span class="sig-name descname"><span class="pre">check_top_down_freezing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#check_top_down_freezing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.check_top_down_freezing" title="Permalink to this definition">¶</a></dt>
+<dd><p>Checks for top-down freezing regime</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
+<li><p><strong>T</strong> (<em>array</em>) – Temperature</p></li>
+<li><p><strong>Tm</strong> (<em>array</em>) – Melting temperature</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.snow.gravitational_freezing">
 <span class="sig-name descname"><span class="pre">gravitational_freezing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snow_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#gravitational_freezing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.gravitational_freezing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the gravitational energy/entropy associated with reducing density of snow zone.</p>
@@ -310,7 +325,7 @@ the slurry.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.snow.snow_composition">
-<span class="sig-name descname"><span class="pre">snow_composition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm_fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_conc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snow_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#snow_composition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.snow_composition" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">snow_composition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm_fe</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">initial_conc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snow_index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">conc_l</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">melting_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#snow_composition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.snow_composition" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the composition of the slurry such that the melting temperature
 is elevated to the adiabatic temperature. The Williams and Nimmo (2004)
 parameterisation for the melting curve is assumed:
@@ -322,6 +337,7 @@ Tm = Tm_fe*(1-conc_l+initial_conc)</p>
 <li><p><strong>Tm_fe</strong> (<em>array</em>) – Melting temperature of pure iron (array)</p></li>
 <li><p><strong>intial_conc</strong> (<em>float</em>) – Initial concentration of liquid</p></li>
 <li><p><strong>snow_index</strong> (<em>int</em>) – Index from which snow zone starts in arrays</p></li>
+<li><p><strong>melting_params</strong> (<em>array</em>) – Array of melting temperature parameters</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns</dt>
