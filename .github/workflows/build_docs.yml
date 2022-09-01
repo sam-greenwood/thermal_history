@@ -52,7 +52,7 @@ jobs:
     #Commit the new built html pages
     - name: commit build
       run: |
-          git add _build/html
+          git add docs/_build/html
           git commit -m 'Built latest docs'
           git push
       
