@@ -6,6 +6,8 @@ Open source Python model for calculating the 2D (radius and time) thermo-chemica
 All regions are optional allowing flexible calculations based on the interests of the user. For each region, there are a choice of methods available based on different
 published models, whilst the framework of the code makes it easy to add additional methods as they are developed for ultimate flexibility.
 
+Full documentation at: https://sam-greenwood.github.io/thermal_history/
+
 ## Getting Started
 
 Requirements:
