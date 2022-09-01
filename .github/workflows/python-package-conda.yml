@@ -1,6 +1,13 @@
 name: Test Python Package
 
-on: [push]
+#Run on any push that modifies a file outside of docs.
+on:
+  push:
+    paths-ignore:
+      - 'docs/**'
+      
+  #Allow manual trigger
+  workflow_dispatch:
 
 jobs:
   build-linux:
