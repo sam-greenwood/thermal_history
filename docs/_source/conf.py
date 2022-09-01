@@ -13,7 +13,7 @@
 import os
 import sys
 sys.path.insert(0, '../') #add path to the thermal_history package
-
+sys.path.insert(0, '../../')
 
 # -- Project information -----------------------------------------------------
 
