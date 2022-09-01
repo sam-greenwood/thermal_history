@@ -25,4 +25,5 @@ jobs:
       run: |
         conda install pytest
         cd tests/
+        export PYTHONPATH=$PYTHONPATH:"../"
         pytest
