@@ -36,7 +36,7 @@ jobs:
       run: |
         conda env update --file environment.yml --name base
         conda install sphinx sphinx_rtd_theme
-        conda install -c conda-forge myst_parser
+        conda install -c conda-forge myst-parser
         
     - name: run sphinx
       run: |
