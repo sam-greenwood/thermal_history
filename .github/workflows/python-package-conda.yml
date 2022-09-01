@@ -1,10 +1,11 @@
 name: Test Python Package
 
-#Run on any push that modifies a file outside of docs.
+#Run on any push that modifies a file outside of docs or workflows.
 on:
   push:
     paths-ignore:
       - 'docs/**'
+      - '.github/workflows/**'
       
   #Allow manual trigger
   workflow_dispatch:
