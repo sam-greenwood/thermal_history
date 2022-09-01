@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -179,7 +180,7 @@
            <div itemprop="articleBody">
             
   <section id="snow">
-<h1>snow<a class="headerlink" href="#snow" title="Permalink to this headline">¶</a></h1>
+<h1>snow<a class="headerlink" href="#snow" title="Permalink to this heading">¶</a></h1>
 <p>(thermal_history.core_models.leeds.routines.snow)</p>
 <span class="target" id="module-thermal_history.core_models.leeds.routines.snow"></span><dl class="py function">
 <dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.snow.Cl_calc">
@@ -187,7 +188,7 @@
 <dd><p>Returns the Cl factor which normalises changes in slurry mass fraction
 to changes in temperature.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>phi</strong> (<em>array</em>) – solid fraction</p></li>
 <li><p><strong>L</strong> (<em>array</em>) – Latent heat</p></li>
@@ -197,10 +198,10 @@ to changes in temperature.</p>
 <li><p><strong>snow_index</strong> (<em>int</em>) – Index from which snow zone starts in arrays</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Cl factor</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -211,7 +212,7 @@ to changes in temperature.</p>
 <span class="sig-name descname"><span class="pre">Cp_factor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M_liquid</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snow_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#Cp_factor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.Cp_factor" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates factor relating changes in mass fraction of the liquid region to those of the slurry</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – Radius</p></li>
 <li><p><strong>rho</strong> (<em>array</em>) – Density</p></li>
@@ -221,10 +222,10 @@ to changes in temperature.</p>
 <li><p><strong>snow_index</strong> (<em>int</em>) – Index from which snow zone starts in arrays</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Cp factor</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -235,7 +236,7 @@ to changes in temperature.</p>
 <span class="sig-name descname"><span class="pre">check_top_down_freezing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#check_top_down_freezing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.check_top_down_freezing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Checks for top-down freezing regime</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>T</strong> (<em>array</em>) – Temperature</p></li>
@@ -250,7 +251,7 @@ to changes in temperature.</p>
 <span class="sig-name descname"><span class="pre">gravitational_freezing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cl</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snow_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#gravitational_freezing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.gravitational_freezing" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the gravitational energy/entropy associated with reducing density of snow zone.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – Radius</p></li>
 <li><p><strong>rho</strong> (<em>array</em>) – Density</p></li>
@@ -261,10 +262,10 @@ to changes in temperature.</p>
 <li><p><strong>snow_index</strong> (<em>int</em>) – Index from which snow zone starts in arrays</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Normalised energy/entropy</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>(float, float)</p>
 </dd>
 </dl>
@@ -275,7 +276,7 @@ to changes in temperature.</p>
 <span class="sig-name descname"><span class="pre">gravitational_melting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">psi</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alpha_c</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cp</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Cr</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcmb</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">snow_index</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#gravitational_melting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.gravitational_melting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Calculates the gravitational energy/entropy associated with increasing density of liquid region</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – Radius</p></li>
 <li><p><strong>rho</strong> (<em>array</em>) – Density</p></li>
@@ -288,10 +289,10 @@ to changes in temperature.</p>
 <li><p><strong>snow_index</strong> (<em>int</em>) – Index from which snow zone starts in arrays</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Normalised energy/entropy</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>(float, float)</p>
 </dd>
 </dl>
@@ -303,7 +304,7 @@ to changes in temperature.</p>
 <dd><p>Returns the normalised rate of latent heat release from changes in mass fraction throughout
 the slurry.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – Radius</p></li>
 <li><p><strong>rho</strong> (<em>array</em>) – Density</p></li>
@@ -314,10 +315,10 @@ the slurry.</p>
 <li><p><strong>snow_index</strong> (<em>int</em>) – Index from which snow zone starts in arrays</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Normalised energy and entropy release</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>(float, float)</p>
 </dd>
 </dl>
@@ -331,7 +332,7 @@ is elevated to the adiabatic temperature. The Williams and Nimmo (2004)
 parameterisation for the melting curve is assumed:
 Tm = Tm_fe*(1-conc_l+initial_conc)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Ta</strong> (<em>array</em>) – Adiabatic temperature (array)</p></li>
 <li><p><strong>Tm_fe</strong> (<em>array</em>) – Melting temperature of pure iron (array)</p></li>
@@ -340,10 +341,10 @@ Tm = Tm_fe*(1-conc_l+initial_conc)</p>
 <li><p><strong>melting_params</strong> (<em>array</em>) – Array of melting temperature parameters</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Radial concentration profile in snow zone</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -354,17 +355,17 @@ Tm = Tm_fe*(1-conc_l+initial_conc)</p>
 <span class="sig-name descname"><span class="pre">snow_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/snow.html#snow_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.snow.snow_radius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Finds the snow zone radius by intersection of the temperature with the melting curve.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – Radius</p></li>
 <li><p><strong>T</strong> (<em>array</em>) – Temperature</p></li>
 <li><p><strong>Tm</strong> (<em>array</em>) – Melting temperature</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Snow zone radius</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>

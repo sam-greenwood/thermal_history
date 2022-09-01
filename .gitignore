@@ -7,3 +7,6 @@ __pycache__/
 /.vscode/
 .nfs000000000a2808ac00002adc
 *.log
+docs/_source/thermal_history*.rst
+docs/_source/API_index.rst
+docs/_build/doctrees/
