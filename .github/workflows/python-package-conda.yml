@@ -26,5 +26,4 @@ jobs:
         conda install pytest
         cd tests/
         export PYTHONPATH=$PYTHONPATH:"../"
-        ls -la
-        pytest setup_test.py
+        pytest ./ -W ignore::DeprecationWarning
