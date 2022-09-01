@@ -3,7 +3,7 @@ name: build docs
 on:
   #Only run on a successful test
   workflow_run:
-    workflows: [Run Tests]
+    workflows: [Test Python Package]
     types:
       - completed
 
