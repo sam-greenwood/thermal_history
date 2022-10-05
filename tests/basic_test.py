@@ -1,5 +1,8 @@
-def test_setup():
+"""
+Basic test, check whether a simple example model can run.
+"""
 
+def basic_test():
 
     import thermal_history as th
 
@@ -22,8 +25,15 @@ def test_setup():
 
     prm = example_parameters()
 
+    #Setup the model
     model = th.model.setup_model(prm, core_method='simple_test', verbose=False)
 
+    #Iterate the model 1s
+    model.mantle.Q_cmb = 1
+    model.evolve(1)
+
+    #Save model output
+    model.write_data('example')
 
 if __name__ == '__main__':
-    test_setup()
+    basic_test()
