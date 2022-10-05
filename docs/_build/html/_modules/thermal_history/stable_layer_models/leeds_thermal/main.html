@@ -157,6 +157,7 @@
 <span class="n">compatibility</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;core&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;greenwood21&#39;</span><span class="p">],</span>
                  <span class="s1">&#39;mantle&#39;</span><span class="p">:</span> <span class="p">[</span><span class="s1">&#39;driscoll_bercovici14&#39;</span><span class="p">]}</span>
 
+<span class="kn">from</span> <span class="nn">smtplib</span> <span class="kn">import</span> <span class="n">bCRLF</span>
 <span class="kn">from</span> <span class="nn">...core_models.leeds.routines</span> <span class="kn">import</span> <span class="n">profiles</span> <span class="k">as</span> <span class="n">prof</span>
 <span class="kn">from</span> <span class="nn">...core_models.leeds.routines</span> <span class="kn">import</span> <span class="n">energy</span> <span class="k">as</span> <span class="n">en</span>
 <span class="kn">from</span> <span class="nn">...core_models.leeds.routines</span> <span class="kn">import</span> <span class="n">chemistry</span> <span class="k">as</span> <span class="n">chem</span>
@@ -213,7 +214,6 @@
 
     <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;T&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
     <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span>      <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">rs</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span></div>
-
 
 
 <div class="viewcode-block" id="evolve"><a class="viewcode-back" href="../../../../thermal_history.stable_layer_models.leeds_thermal.main.html#thermal_history.stable_layer_models.leeds_thermal.main.evolve">[docs]</a><span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
@@ -368,11 +368,13 @@
 <span class="sd">    &#39;&#39;&#39;</span>
 
     <span class="n">sl</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
     <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
 
     <span class="c1">#Update profiles</span>
     <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span> <span class="o">=</span> <span class="n">sl</span><span class="o">.</span><span class="n">_next_profiles</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Ta&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat</span><span class="p">(</span><span class="n">sl</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
+    <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">rs</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_adiabat_params</span><span class="p">)</span>
 
     <span class="c1">#Update core profiles if no core model is being used.</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">prm</span><span class="o">.</span><span class="n">core</span><span class="p">:</span>
@@ -557,8 +559,8 @@
         <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">Tcen</span> <span class="o">=</span> <span class="n">T_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
-        <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">T_new</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
-            <span class="nb">breakpoint</span><span class="p">()</span>
+        <span class="c1"># if np.isnan(T_new[0]):</span>
+        <span class="c1">#     breakpoint()</span>
 
 
         <span class="c1">#Mix layer (experimental function, not used by default)</span>
@@ -616,7 +618,7 @@
     <span class="n">sl</span><span class="o">.</span><span class="n">ds_dt</span> <span class="o">=</span> <span class="p">(</span><span class="n">r_s_new</span> <span class="o">-</span> <span class="n">r_s_original</span><span class="p">)</span><span class="o">/</span><span class="n">model</span><span class="o">.</span><span class="n">dt</span>
 
     <span class="k">if</span> <span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">adiabat_grad</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">Tcen</span><span class="p">,</span> <span class="n">core_adiabat</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="mi">0</span>
 

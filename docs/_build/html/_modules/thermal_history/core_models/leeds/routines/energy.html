@@ -151,12 +151,10 @@
             
   <h1>Source code for thermal_history.core_models.leeds.routines.energy</h1><div class="highlight"><pre>
 <span></span><span class="c1">#Core model functions</span>
-<span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">profiles</span> <span class="k">as</span> <span class="n">prof</span>
 <span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">trapezoid</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span><span class="p">,</span><span class="n">cumtrapz</span>
-<span class="kn">import</span> <span class="nn">pdb</span>
 
 <span class="n">Na</span> <span class="o">=</span> <span class="mf">6.022140857e23</span>  <span class="c1">#Avogadros Constant</span>
 <span class="c1">###############################################################################</span>

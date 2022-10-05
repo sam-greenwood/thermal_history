@@ -355,8 +355,13 @@
         <span class="n">Cc</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">rho</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">conc_l</span><span class="o">-</span><span class="n">core</span><span class="o">.</span><span class="n">conc_s</span><span class="p">)</span><span class="o">/</span><span class="n">M_conv</span>
 
         <span class="c1">#Change in melting temp with mole fraction. Assumes AL melting temperature parameterisation.</span>
-        <span class="n">dTm_dmf</span> <span class="o">=</span> <span class="o">-</span><span class="n">Tm_fe</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">]</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">kb</span><span class="o">/</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dS&#39;</span><span class="p">][</span><span class="n">ri_idx</span><span class="p">]</span>
-        <span class="c1">#dTm_dmf=0</span>
+        <span class="k">if</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dS&#39;</span><span class="p">][</span><span class="n">ri_idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dTm_dmf</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">core_melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="nb">str</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AL&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Change in melting temp with mole fraction is only implemented with </span><span class="se">\&#39;</span><span class="s1">AL</span><span class="se">\&#39;</span><span class="s1"> melting curve parameterisation. Defaulting to 0.&#39;</span><span class="p">)</span>
+            <span class="n">dTm_dmf</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">dTm_dmf</span> <span class="o">=</span> <span class="o">-</span><span class="n">Tm_fe</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">]</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">kb</span><span class="o">/</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dS&#39;</span><span class="p">][</span><span class="n">ri_idx</span><span class="p">]</span>
 
         <span class="c1">#Calculate forward diff gradient in mole fraction with mass concentration for each LE</span>
         <span class="n">dmf_dc</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">conc_l</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
@@ -425,7 +430,7 @@
 
     <span class="c1">#Radiogenic heating. Not been tested in a long time! ATM assumes no stable layer</span>
     <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_h0</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">Qr</span><span class="p">,</span> <span class="n">Er</span> <span class="o">=</span> <span class="n">en</span><span class="o">.</span><span class="n">radiogenic_heating</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">time</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">M0</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_h0</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">half_life</span><span class="p">)</span>
+        <span class="n">Qr</span><span class="p">,</span> <span class="n">Er</span> <span class="o">=</span> <span class="n">en</span><span class="o">.</span><span class="n">radiogenic_heating</span><span class="p">((</span><span class="n">model</span><span class="o">.</span><span class="n">time</span><span class="o">-</span><span class="mf">4.5e9</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">ys</span><span class="p">),</span> <span class="n">r</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">M0</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_h0</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">half_life</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">Qr</span><span class="p">,</span> <span class="n">Er</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
    
@@ -533,7 +538,7 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="n">core</span><span class="o">.</span><span class="n">ADR_s</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="n">core</span><span class="o">.</span><span class="n">Ql</span> <span class="o">=</span> <span class="n">Ql_tilda</span><span class="o">*</span><span class="n">dT_dt</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">Ql</span> <span class="o">=</span> <span class="n">Ql_tilda</span><span class="o">*</span><span class="n">dT_dt</span>   <span class="c1">#FIX LATENT HEAT T not Ta</span>
     <span class="n">core</span><span class="o">.</span><span class="n">El</span> <span class="o">=</span> <span class="n">El</span>
 
     <span class="n">core</span><span class="o">.</span><span class="n">Qg</span> <span class="o">=</span> <span class="n">Qg_tilda</span><span class="o">*</span><span class="n">dT_dt</span>
@@ -600,7 +605,7 @@
     <span class="n">core</span><span class="o">.</span><span class="n">L_ri</span> <span class="o">=</span> <span class="n">L</span><span class="p">[</span><span class="n">ri_idx</span><span class="p">]</span></div>
 
 
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
 <div class="viewcode-block" id="update"><a class="viewcode-back" href="../../../../thermal_history.core_models.leeds.main.html#thermal_history.core_models.leeds.main.update">[docs]</a><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Updates parameters based on rates of change calculatied in main fuction.</span>
@@ -681,7 +686,7 @@
                    <span class="s1">&#39;mm&#39;</span><span class="p">:</span> <span class="s1">&#39;Molar masses (g/mol) of Iron followed by alloying light elements. List(float)&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;alpha_c&#39;</span><span class="p">:</span> <span class="s1">&#39;Chemical expansivity of alloying light elements. List(float)&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;diffusivity_c&#39;</span><span class="p">:</span> <span class="s1">&#39;Chemical diffusivities of alloying light elements.  List(float)&#39;</span><span class="p">,</span>
-                   <span class="s1">&#39;use_partition_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;Boolean dictating if constant partition coefficients shoulf be used (True) or if partitioning based on chemical equilibrium should be used (False)&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;use_partition_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;Boolean dictating if constant partition coefficients should be used (True) or if partitioning based on chemical equilibrium should be used (False)&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;core_h0&#39;</span><span class="p">:</span> <span class="s1">&#39;Present day radiogenic heating per unit mass in the core&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;half_life&#39;</span><span class="p">:</span> <span class="s1">&#39;Half life of radioactive isotope in the core.&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;partition_coeff&#39;</span><span class="p">:</span> <span class="s1">&#39;Partition coefficients (x_i/x_o) for mass fraction for each light element. Defined as the ratio of inner core concentration over outer core. List(float)&#39;</span><span class="p">,</span>
@@ -752,20 +757,14 @@
 <span class="sd">    Float</span>
 <span class="sd">        The heat flow at rs</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+    <span class="n">prm</span>  <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
     <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+    <span class="n">sl</span>   <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span>
     <span class="n">rs_idx</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">_rs_idx</span>
     <span class="n">k</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;k&#39;</span><span class="p">]</span>
 
     <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">stable_layer</span> <span class="ow">and</span> <span class="n">core</span><span class="o">.</span><span class="n">rs</span> <span class="o">&lt;</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">chemical_stratification</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">model</span><span class="o">.</span><span class="n">it</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">prm</span><span class="o">.</span><span class="n">primordial_layer</span><span class="p">:</span>
-                <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">T_grad_s</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mantle</span><span class="o">.</span><span class="n">Q_cmb</span><span class="o">/</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
-
-            <span class="n">dT_dr</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">stable_layer</span><span class="o">.</span><span class="n">T_grad_s</span>
-            <span class="n">Q_rs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">core</span><span class="o">.</span><span class="n">rs</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">k</span><span class="p">[</span><span class="n">rs_idx</span><span class="p">]</span><span class="o">*</span><span class="n">dT_dr</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">Q_rs</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;Qa&#39;</span><span class="p">][</span><span class="n">rs_idx</span><span class="p">]</span>
+        <span class="n">Q_rs</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">core</span><span class="o">.</span><span class="n">rs</span><span class="o">**</span><span class="mi">2</span> <span class="o">*</span> <span class="n">k</span><span class="p">[</span><span class="n">rs_idx</span><span class="p">]</span> <span class="o">*</span> <span class="n">sl</span><span class="o">.</span><span class="n">T_grad_s</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">Q_rs</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Q_cmb</span>
 
