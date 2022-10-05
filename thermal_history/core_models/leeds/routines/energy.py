@@ -1,10 +1,8 @@
 #Core model functions
-from . import profiles as prof
 from thermal_history.utils.optimised_funcs import trapezoid
 
 import numpy as np
 from scipy.integrate import trapz,cumtrapz
-import pdb
 
 Na = 6.022140857e23  #Avogadros Constant
 ###############################################################################

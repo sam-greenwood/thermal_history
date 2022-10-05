@@ -5,6 +5,7 @@ Description = 'General stable layer model for thermal/chemical/thermo-chemical s
 compatibility = {'core': ['greenwood21'],
                  'mantle': ['driscoll_bercovici14']}
 
+from smtplib import bCRLF
 from ...core_models.leeds.routines import profiles as prof
 from ...core_models.leeds.routines import energy as en
 from ...core_models.leeds.routines import chemistry as chem
@@ -61,7 +62,6 @@ def setup(model):
 
     sl.profiles['T'] = prof.adiabat(sl.profiles['r'], core.Tcen, prm.core_adiabat_params)
     sl.T_grad_s      = prof.adiabat_grad(core.rs, core.Tcen, prm.core_adiabat_params)
-
 
 
 def evolve(model):
@@ -216,11 +216,13 @@ def update(model):
     '''
 
     sl = model.stable_layer
+    core = model.core
     prm = model.parameters
 
     #Update profiles
     sl.profiles = sl._next_profiles.copy()
-    sl.profiles['Ta'] = prof.adiabat(sl.profiles['r'], model.core.Tcen, prm.core_adiabat_params)
+    sl.profiles['Ta'] = prof.adiabat(sl.profiles['r'], core.Tcen, prm.core_adiabat_params)
+    sl.T_grad_s = prof.adiabat_grad(core.rs, core.Tcen, prm.core_adiabat_params)
 
     #Update core profiles if no core model is being used.
     if not prm.core:
@@ -405,8 +407,8 @@ def pure_thermal_method(model):
         if r[0] == 0:
             Tcen = T_new[0]
 
-        if np.isnan(T_new[0]):
-            breakpoint()
+        # if np.isnan(T_new[0]):
+        #     breakpoint()
 
 
         #Mix layer (experimental function, not used by default)
@@ -464,7 +466,7 @@ def pure_thermal_method(model):
     sl.ds_dt = (r_s_new - r_s_original)/model.dt
 
     if r[1]-r[0] > 0:
-        sl.T_grad_s = (T[1]-T[0])/(r[1]-r[0])
+        sl.T_grad_s = prof.adiabat_grad(r[-1], core.Tcen, core_adiabat)
     else:
         sl.T_grad_s = 0
 

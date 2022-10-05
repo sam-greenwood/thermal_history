@@ -1,7 +1,7 @@
 Description = 'Mantle model for convection with plate tectonics. \
                No heat flow modified by volcanism is used here.'
 
-#List individually confirmed compatibility with other regions.
+#List confirmed compatibility with other regions.
 compatibility = {'core': ['leeds'],
                  'stable_layer': ['leeds_thermal']}
 
@@ -140,8 +140,10 @@ def evolve(model):
     Q_lower = mantle.Q_cmb
 
 
-
     #BMO routine
+
+    #Initialise flux BC with zero value. First value indicates fixed value(0) or fixed flux(1), then second number is the value of the BC.
+    mantle.chemical_bc_cmb = np.array([1,0]) 
     if prm.basal_magma_ocean:
         mantle.Q_bmo = Q_lower
 
@@ -223,7 +225,7 @@ def progress(model):
 #Required parameters. 'Name': 'Description'
 required_params = {'T_surf': 'Surface temperature. Float',
                    'mantle_alpha_T': 'Thermal expansivity. Float',
-                   'g': 'Gravity (assumed constant throughout mantle. Float',
+                   'g': 'Gravity, assumed constant throughout mantle. Float',
                    'mantle_diffusivity_T': 'Thermal diffusivity. Float',
                    'mantle_cp': 'Mantle specific heat capacity. Float',
                    'Rac': 'Critical Rayleigh number. Float',
@@ -310,7 +312,7 @@ def bmo_evolution(model):
 
         #HoR from FeO flux
         Qh   = 4*np.pi*r_cmb**2 * (1.0 - cFeO_bmo) * iFeO_bmo * L / dc #Eq 15
-        # Qh = 0
+        Qh = 0 #Not using Qh
 
         #Normalised concentration and bmo radius rates of change.
         dcdt_d   = 4*np.pi*r_cmb**2 * (1.0 - cFeO_bmo) * iFeO_bmo     / mass_bmo                 #Eq 13
@@ -321,7 +323,7 @@ def bmo_evolution(model):
         Qrbmo = mantle.Qr * mass_bmo/prm.mantle_mass
 
         #Calculate normalised core cooling to dTl_dt, assumes only secular cooling is enegy in the core.
-        r_core, T_core ,rho_core, cp_core = model.core.profiles['r'], model.core.profiles['T'], model.core.profiles['rho'], model.core.profiles['cp']
+        r_core, T_core ,rho_core, cp_core = core.profiles['r'], core.profiles['T'], core.profiles['rho'], core.profiles['cp']
 
         I = 4*np.pi* integrate(r_core, cp_core * rho_core * T_core * r_core**2)
 
@@ -350,7 +352,6 @@ def bmo_evolution(model):
         FeO_flux, dFeO_dt = 0,0
 
 
-
     #Save values
     mantle.iFeO_bmo = iFeO_bmo
     mantle.MgO_cmb_bmo, mantle.FeO_cmb_bmo = cMgO_bmo_cmb, cFeO_bmo_cmb
@@ -371,9 +372,6 @@ def bmo_evolution(model):
     mantle.iFeO_cmb      = FeO_flux      
     mantle.dFeOdt_cmb    = dFeO_dt
 
-
-    #Provide function to return the chemical flux for a chemically stratified layer
-    # if prm.stable_layer:
-    #     dc_dr = -iFeO_bmo / (model.core.profiles['rho'][-1] * D_c) * 16/72
-    #     prm.chemical_cmb_bc = lambda x : (1, dc_dr)
-    #LET STABLE LAYER DO THIS CALCULATION
+    #Set O flux boundary condition at CMB.
+    dc_dr = -iFeO_bmo / (model.core.profiles['rho'][-1] * D_c) * 16/72
+    mantle.chemical_bc_cmb = np.array([1, dc_dr])

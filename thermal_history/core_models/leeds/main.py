@@ -203,8 +203,13 @@ def evolve(model):
         Cc = 4*np.pi*r[ri_idx]**2*rho[ri_idx]*(core.conc_l-core.conc_s)/M_conv
 
         #Change in melting temp with mole fraction. Assumes AL melting temperature parameterisation.
-        dTm_dmf = -Tm_fe[ri_idx]*prm.kb/core.profiles['dS'][ri_idx]
-        #dTm_dmf=0
+        if core.profiles['dS'][ri_idx] == 0:
+            dTm_dmf = 0
+        elif type(prm.core_melting_params[0]) == str and not prm.core_melting_params[0] == 'AL':
+            logger.warning('Change in melting temp with mole fraction is only implemented with \'AL\' melting curve parameterisation. Defaulting to 0.')
+            dTm_dmf = 0
+        else:
+            dTm_dmf = -Tm_fe[ri_idx]*prm.kb/core.profiles['dS'][ri_idx]
 
         #Calculate forward diff gradient in mole fraction with mass concentration for each LE
         dmf_dc = np.zeros(core.conc_l.size)
@@ -273,7 +278,7 @@ def evolve(model):
 
     #Radiogenic heating. Not been tested in a long time! ATM assumes no stable layer
     if prm.core_h0 > 0:
-        Qr, Er = en.radiogenic_heating(model.time, r, rho, Ta, core.M0, prm.core_h0, prm.half_life)
+        Qr, Er = en.radiogenic_heating((model.time-4.5e9*prm.ys), r, rho, Ta, core.M0, prm.core_h0, prm.half_life)
     else:
         Qr, Er = 0, 0
    
@@ -381,7 +386,7 @@ def evolve(model):
     else:
         core.ADR_s = 0
 
-    core.Ql = Ql_tilda*dT_dt
+    core.Ql = Ql_tilda*dT_dt   #FIX LATENT HEAT T not Ta
     core.El = El
 
     core.Qg = Qg_tilda*dT_dt
@@ -448,7 +453,7 @@ def evolve(model):
     core.L_ri = L[ri_idx]
 
 
-import matplotlib.pyplot as plt
+
 def update(model):
     '''
     Updates parameters based on rates of change calculatied in main fuction.
@@ -529,7 +534,7 @@ required_params = {'T_cmb': 'Initial temperature of the CMB. Can specify Tcen (t
                    'mm': 'Molar masses (g/mol) of Iron followed by alloying light elements. List(float)',
                    'alpha_c': 'Chemical expansivity of alloying light elements. List(float)',
                    'diffusivity_c': 'Chemical diffusivities of alloying light elements.  List(float)',
-                   'use_partition_coeff': 'Boolean dictating if constant partition coefficients shoulf be used (True) or if partitioning based on chemical equilibrium should be used (False)',
+                   'use_partition_coeff': 'Boolean dictating if constant partition coefficients should be used (True) or if partitioning based on chemical equilibrium should be used (False)',
                    'core_h0': 'Present day radiogenic heating per unit mass in the core',
                    'half_life': 'Half life of radioactive isotope in the core.',
                    'partition_coeff': 'Partition coefficients (x_i/x_o) for mass fraction for each light element. Defined as the ratio of inner core concentration over outer core. List(float)',
@@ -600,20 +605,14 @@ def set_Q_rs(model):
     Float
         The heat flow at rs
     '''
-    prm = model.parameters
+    prm  = model.parameters
     core = model.core
+    sl   = model.stable_layer
     rs_idx = core._rs_idx
     k = core.profiles['k']
 
     if prm.stable_layer and core.rs < prm.r_cmb:
-        if prm.chemical_stratification:
-            if model.it == 1 and prm.primordial_layer:
-                model.stable_layer.T_grad_s = model.mantle.Q_cmb/(-4*np.pi*prm.r_cmb**2*k[-1])
-
-            dT_dr = model.stable_layer.T_grad_s
-            Q_rs = -4*np.pi*core.rs**2*k[rs_idx]*dT_dr
-        else:
-            Q_rs = core.profiles['Qa'][rs_idx]
+        Q_rs = -4 * np.pi * core.rs**2 * k[rs_idx] * sl.T_grad_s
     else:
         Q_rs = model.core.Q_cmb
 

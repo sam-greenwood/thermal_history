@@ -92,9 +92,11 @@ def melting_curve(model):
         core.mf_s = mass_conc2mole_frac(core.conc_s, prm.mm)
 
 
-
         #Melting point depression. Assumes constant dTm across the whole core since we use _ri_idx.
-        dTm = melt_pt_dep(core.mf_l, core.mf_s, Tm_fe[core._ri_idx], core.profiles['dS'][core._ri_idx])
+        if core.profiles['dS'][core._ri_idx] == 0:
+            dTm = 0   #No melting point depression if no specified entropy of freezing.
+        else:
+            dTm = melt_pt_dep(core.mf_l, core.mf_s, Tm_fe[core._ri_idx], core.profiles['dS'][core._ri_idx])
 
         dTm_dP = iron_melting_gradient(P, params)
 
