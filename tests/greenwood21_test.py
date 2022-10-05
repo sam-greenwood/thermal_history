@@ -4,6 +4,7 @@ Uses the 'thiriet19' mantle model coupled to 'leeds' and 'leeds_thermal' core/st
 greenwood21_params.py contains the parameters for the reference case in Figure 1 of Greenwood et al. (2021)
 """
 
+
 def test_greenwood21():
 
     from thermal_history.model import Parameters, setup_model
@@ -15,6 +16,8 @@ def test_greenwood21():
     dt = 1e6*prm.ys
     for i in range(4500):
         model.evolve(dt)
+
+    assert model.stable_layer.layer_thickness > 1500e3, 'There should be a thick stable layer (>1500km)'
 
 if __name__ == '__main__':
     test_greenwood21()
