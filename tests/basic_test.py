@@ -2,7 +2,7 @@
 Basic test, check whether a simple example model can run.
 """
 
-def basic_test():
+def test_basic():
 
     import thermal_history as th
 
@@ -36,4 +36,4 @@ def basic_test():
     model.write_data('example')
 
 if __name__ == '__main__':
-    basic_test()
+    test_basic()

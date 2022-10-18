@@ -131,7 +131,6 @@ def evolve(model):
     # M_ic, M_conv, Ms, M = prof.mass(rho_s, rho_l, core.ri, core.r_s, prm.r_cmb)
     M_ic, M_conv, Ms, M = prof.mass(rho_s, rho_l, core.ri, core.rs, prm.r_cmb)
 
-    #DECIDE IF WE NEED MCONV OR MOC
 
 
     #Get profiles

@@ -385,6 +385,7 @@ def pure_thermal_method(model):
         D_T = k/(rho*cp)
         #dk_dr * 1/(rho*cp). Not the same as the diffusivity gradient
         dD_dr = np.gradient(k, r, edge_order=2)/(rho*cp)
+        dk_dr = np.gradient(k, r, edge_order=2)
 
 
         #Cool adiabat
@@ -402,10 +403,14 @@ def pure_thermal_method(model):
 
 
         #Calculate diffusion solution
-        T_new = diffusion(T, r, dt_small, D_T, k, dD_dr, (lb_type,lb),(1,ub))
+        T_new = diffusion(T, r, dt_small, D_T, k, dk_dr, (lb_type,lb),(1,ub))
 
-        if r[0] == 0:
-            Tcen = T_new[0]
+        # if r[0] == 0:
+        #     Tcen = T_new[0]
+
+        #     Qs_test = -4*np.pi*trapezoid(r, r**2 * ((T_new-T)/dt_small) *rho*cp)[-1]
+        #     heat_in = 4*np.pi*r[-1]**2 * -k[-1] * ub
+        #     breakpoint()
 
         # if np.isnan(T_new[0]):
         #     breakpoint()
@@ -418,12 +423,14 @@ def pure_thermal_method(model):
 
         #Determine if layer should retreat
         r_s_new = func.retreat_layer(r, T_new, np.zeros(r.size), Tcen, 0, core_adiabat, (resolution,min_res,max_res), alpha, 0)
+
+        #while core is stratified
         if r[0] == 0 and ADR < 1:
             r_s_new = 0
 
-
         #Grow layer
-        if r_s_new == r[0]:
+        elif r_s_new == r[0]:
+
 
             #Find radius on adiabat that matches temperature at base of layer
             def f(guess,T,Tcen):
