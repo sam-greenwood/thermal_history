@@ -1,0 +1,349 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Adding new methods &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="API" href="API_index.html" />
+    <link rel="prev" title="Running a simple example" href="simple_example.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="simple_example.html">Running a simple example</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Adding new methods</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-the-package">1. Overview of the package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#required-format-for-main-py">2. Required format for main.py</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="API_index.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Adding new methods</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/Advanced.md.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <section class="tex2jax_ignore mathjax_ignore" id="adding-new-methods">
+<h1>Adding new methods<a class="headerlink" href="#adding-new-methods" title="Permalink to this heading">¶</a></h1>
+<p>Whilst this code ships with certain methods for the 3 regions (core/stable layer/mantle), the user can add alternative ones that they develop. To do so is easy enough but needs to be done in a specific way to interface with the whole python package.</p>
+<section id="overview-of-the-package">
+<h2>1. Overview of the package<a class="headerlink" href="#overview-of-the-package" title="Permalink to this heading">¶</a></h2>
+<p>To start it makes sense to explain the overall structure of the python package, here is an abbrieviated overview:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thermal_history</span>
+<span class="o">|</span>
+<span class="o">|</span>   <span class="n">model_classes</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="n">model</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span><span class="n">___core_models</span>
+<span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|</span><span class="n">___leeds</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="n">main</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span>   <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="o">|</span><span class="n">___routines</span>
+<span class="o">|</span>   <span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>       <span class="o">|</span>   <span class="n">profiles</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|</span>       <span class="o">|</span>   <span class="n">chemistry</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|</span>       <span class="o">....</span>
+<span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span><span class="n">___simple_test</span>
+<span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="n">main</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>          
+<span class="o">|</span>
+<span class="o">|</span>
+<span class="o">|</span><span class="n">___stable_layer_models</span>
+<span class="o">|</span>   <span class="o">|</span>
+<span class="o">|</span>   <span class="o">|</span>   <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>   <span class="o">|</span><span class="n">___leeds_thermal</span>
+<span class="o">|</span>       <span class="o">|</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="n">main</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span>   <span class="fm">__init__</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>       <span class="o">|</span><span class="n">___routines</span>
+<span class="o">|</span>           <span class="o">|</span>
+<span class="o">|</span>           <span class="o">|</span>   <span class="n">diffusion</span><span class="o">.</span><span class="n">py</span>
+<span class="o">|</span>           <span class="o">...</span>
+<span class="o">...</span>
+
+</pre></div>
+</div>
+<p>The code for any specific numerical model is contained within one of the sub-packages depending on it’s type (<code class="docutils literal notranslate"><span class="pre">core_models</span></code>/<code class="docutils literal notranslate"><span class="pre">stable_layer_models</span></code>/<code class="docutils literal notranslate"><span class="pre">mantle_models</span></code>). Let’s focus on the <code class="docutils literal notranslate"><span class="pre">core_models</span></code>. Here there are 2 different methods for solving the core thermal evolution: <code class="docutils literal notranslate"><span class="pre">leeds</span></code> and <code class="docutils literal notranslate"><span class="pre">simple_test</span></code>. They are each contained within their own folder (treated as another sub-package due to the presence of <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>), meaning they are isolated from one another and removing any chance of getting them mixed up. When a model is initialised, for example, with <code class="docutils literal notranslate"><span class="pre">setup_model(prm,</span> <span class="pre">core_method='simple_test')</span></code>, the code will look to import <code class="docutils literal notranslate"><span class="pre">thermal_history.core_models.simple_test.main</span></code>. Other files can exist within the folder (e.g. <code class="docutils literal notranslate"><span class="pre">core_models.leeds.routines</span></code> contains functions that are called by code in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>) but <code class="docutils literal notranslate"><span class="pre">main.py</span></code> must be there.</p>
+</section>
+<section id="required-format-for-main-py">
+<h2>2. Required format for main.py<a class="headerlink" href="#required-format-for-main-py" title="Permalink to this heading">¶</a></h2>
+<p>There are 3 functions expected to be defined in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>. They are: <code class="docutils literal notranslate"><span class="pre">setup</span></code>, <code class="docutils literal notranslate"><span class="pre">evolve</span></code>, <code class="docutils literal notranslate"><span class="pre">update</span></code>. All take a single argument (the ThermalModel class that is created by <code class="docutils literal notranslate"><span class="pre">setup_model()</span></code> is passed to them) and none of them return anything as they instead set the attributes of ThermalModel. There are also 2 dictionaries, <code class="docutils literal notranslate"><span class="pre">required_params</span></code> and <code class="docutils literal notranslate"><span class="pre">optional_params</span></code>, that must de defined within. Let’s take a look at the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> in simple_test, starting with the top of the file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
+<span class="c1">#Description of this model3</span>
+<span class="n">Description</span> <span class="o">=</span> <span class="s1">&#39;Simple example core model.&#39;</span>
+
+<span class="c1">#List individually confirmed compatibility with methods for other regions (give the names of the methods in the list if any).</span>
+<span class="n">compatibility</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;stable_layer&#39;</span><span class="p">:</span> <span class="p">[],</span>
+                 <span class="s1">&#39;mantle&#39;</span><span class="p">:</span> <span class="p">[]}</span>
+
+<span class="c1">#import our logger</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+</pre></div>
+</div>
+<p>These are all optional but can help the code determine some useful information about the model. <code class="docutils literal notranslate"><span class="pre">Description</span></code> is just that, a brief overview of what this model is. <code class="docutils literal notranslate"><span class="pre">compatibility</span></code> is a dictionary that tells the code if this method works when used in conjuction with other methods. As an example, this doesn’t work with any of the methods for other regions, so can only be run on it’s own. Next we have imported the logger, useful if you want to print some diagnostic information to the log file but not necessary. Numpy is imported at the end since it is needed by our model get the value of pi in <code class="docutils literal notranslate"><span class="pre">evolve()</span></code>.</p>
+<p>Next we have the first of the required functions: <code class="docutils literal notranslate"><span class="pre">setup()</span></code></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">setup</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="c1">#Sets up any inital conditions</span>
+
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="n">core</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">T</span> <span class="c1">#Set initial core temperature</span>
+</pre></div>
+</div>
+<p>This function is called when <code class="docutils literal notranslate"><span class="pre">thermal_history.model.setup_model()</span></code> is run. It should be used to initialise any initial conditions and anything else needed before <code class="docutils literal notranslate"><span class="pre">evolve()</span></code> is called. We can see here that the parameters we load in, are accessible at <code class="docutils literal notranslate"><span class="pre">model.parameters</span></code>.</p>
+<p>Next is the primary function, <code class="docutils literal notranslate"><span class="pre">evolve()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evolve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="c1">#Main model</span>
+
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+
+    <span class="n">Q</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">mantle</span><span class="o">.</span><span class="n">Q_cmb</span>
+
+    <span class="n">mass</span> <span class="o">=</span> <span class="p">(</span><span class="mi">4</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">rc</span><span class="o">**</span><span class="mi">3</span> <span class="o">*</span> <span class="n">prm</span><span class="o">.</span><span class="n">density</span>
+
+    <span class="n">dT_dt</span> <span class="o">=</span> <span class="n">Q</span><span class="o">/</span><span class="p">(</span><span class="o">-</span><span class="n">mass</span><span class="o">*</span><span class="n">prm</span><span class="o">.</span><span class="n">cp</span><span class="p">)</span>
+
+    <span class="c1">#Variables to be saved need to attributes of model.core</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">dT_dt</span> <span class="o">=</span> <span class="n">dT_dt</span>
+</pre></div>
+</div>
+<p>This contains the guts of the numerical scheme. Here we gather together necessary variables/parameters to calculate the rate of change of temperature of the core. Note that at the end, we make sure to set <code class="docutils literal notranslate"><span class="pre">dT_dt</span></code> as an attribute of <code class="docutils literal notranslate"><span class="pre">model.core</span></code>. This ensures that a) it is accessible by the <code class="docutils literal notranslate"><span class="pre">update()</span></code> function and b) gets saved each timstep into <code class="docutils literal notranslate"><span class="pre">model.save_dict</span></code>. Note that some attributes will never get added to <code class="docutils literal notranslate"><span class="pre">save_dict</span></code>, these are anything that isn’t an int/float/numpy array and anything called profiles. Radial profiles can contain lots of data and can potentially slow down the model significantly. If the user wishes to save the radial profiles at each timestep, they can do so in their prefered way when calling <code class="docutils literal notranslate"><span class="pre">model.evolve()</span></code>.</p>
+<p>Next we have the final required function, <code class="docutils literal notranslate"><span class="pre">update()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">update</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="c1">#Apply any changes between timesteps. Attributes of model.core will be saved to </span>
+
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+
+    <span class="c1">#Update core temperature</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">T</span> <span class="o">+=</span> <span class="n">core</span><span class="o">.</span><span class="n">dT_dt</span><span class="o">*</span><span class="n">model</span><span class="o">.</span><span class="n">dt</span>
+
+    <span class="c1">#Example use of the logger</span>
+    <span class="k">if</span> <span class="n">core</span><span class="o">.</span><span class="n">T</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">critical</span><span class="p">(</span><span class="s1">&#39;Core temperature is negative!&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is called after <code class="docutils literal notranslate"><span class="pre">evolve()</span></code> and after attributes have been appended to the save_dict. It is used to update the model to the next timestep. Here we also have used the logger to warn us of a nonsensical result just in case. Note that the timestep, <code class="docutils literal notranslate"><span class="pre">dt</span></code>, is an attribute of <code class="docutils literal notranslate"><span class="pre">model</span></code> not <code class="docutils literal notranslate"><span class="pre">model.core</span></code>.</p>
+<p>Next is an optional function which is used to format what is printed to screen during the calculation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">progress</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="c1">#Text to be printed to STDOUT on each iteration</span>
+
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+
+    <span class="n">text</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;    temperature = </span><span class="si">{</span><span class="n">core</span><span class="o">.</span><span class="n">T</span><span class="si">:</span><span class="s1">.2f</span><span class="si">}</span><span class="s1"> K&#39;</span>
+
+    <span class="k">return</span> <span class="n">text</span>
+</pre></div>
+</div>
+<p>This should return a string and can be used to include some key information about how the calcualtion is going. By default just the iteration counter is printed by this can append some extra text alongside any of text from other regions if they are also included.</p>
+<p>Finally, there are 2 dictionaries that tell the code what parameters are needed so that anything missing can be flagged during the check and is also used to automatically construct parameter files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1">#list required parameters {&#39;name&#39;: &#39;description&#39;}</span>
+<span class="n">required_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;rc&#39;</span><span class="p">:</span> <span class="s1">&#39;Radius of the core&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;density&#39;</span><span class="p">:</span> <span class="s1">&#39;Core density.&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;cp&#39;</span><span class="p">:</span> <span class="s1">&#39;Specific heat capacity&#39;</span><span class="p">,</span>
+                    <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="s1">&#39;Initial temperature of the core&#39;</span><span class="p">}</span>
+
+<span class="c1">#list optional parameters that if not specified in model.parameters, will get set to a default value.</span>
+<span class="c1">#{&#39;name&#39;: (&#39;description&#39;, default_value)}</span>
+<span class="n">optional_params</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;example_variable&#39;</span><span class="p">:</span> <span class="p">(</span><span class="s1">&#39;An example optional variable for demonstration purposes&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)}</span>
+</pre></div>
+</div>
+<p>These could just be set to empty dictionaries which may be useful while developing a model but once a model is finalised (and particularly if someone else is to use it) it is a good idea to make sure these are fully populated.</p>
+</section>
+</section>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="API_index.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="simple_example.html" class="btn btn-neutral float-left" title="Running a simple example" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -1,0 +1,528 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>thermal_history.core_models.leeds.routines.snow &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../API_index.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>thermal_history.core_models.leeds.routines.snow</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for thermal_history.core_models.leeds.routines.snow</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">scipy.optimize</span> <span class="kn">import</span> <span class="n">bisect</span><span class="p">,</span> <span class="n">brentq</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">numba</span> <span class="kn">import</span> <span class="n">njit</span>
+<span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">trapezoid</span>
+<span class="kn">from</span> <span class="nn">thermal_history.core_models.leeds.routines.chemistry</span> <span class="kn">import</span> <span class="n">riv_Tm</span>
+
+<span class="kn">import</span> <span class="nn">logging</span>
+<span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+
+<div class="viewcode-block" id="snow_radius"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.snow_radius">[docs]</a><span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">snow_radius</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">Tm</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Finds the snow zone radius by intersection of the temperature with the melting curve.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        Radius</span>
+<span class="sd">    T : array</span>
+<span class="sd">        Temperature</span>
+<span class="sd">    Tm : array</span>
+<span class="sd">        Melting temperature</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Snow zone radius</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+
+    <span class="c1">#Snow hasn&#39;t started yet</span>
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">T</span><span class="o">-</span><span class="n">Tm</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">elif</span> <span class="n">Tm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+    
+    <span class="c1">#Find first intersection of Tm and T</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+
+            <span class="k">if</span> <span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">&gt;=</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]:</span>
+
+                <span class="n">dr</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">dr</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="n">m1</span> <span class="o">=</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
+                    <span class="n">m2</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="n">dr</span>
+                    <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">m2</span><span class="o">-</span><span class="n">m1</span><span class="p">)</span>
+                    <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">r_snow</span> <span class="o">&gt;</span> <span class="n">r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]:</span>
+            <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">r_snow</span> <span class="o">&lt;</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+            <span class="n">r_snow</span> <span class="o">=</span> <span class="n">r</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">r_snow</span></div>
+
+
+<div class="viewcode-block" id="check_top_down_freezing"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.check_top_down_freezing">[docs]</a><span class="k">def</span> <span class="nf">check_top_down_freezing</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">T</span><span class="p">,</span> <span class="n">Tm</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Checks for top-down freezing regime</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array   </span>
+<span class="sd">        radius</span>
+<span class="sd">    T : array</span>
+<span class="sd">        Temperature</span>
+<span class="sd">    Tm : array</span>
+<span class="sd">        Melting temperature</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    
+    <span class="k">if</span> <span class="n">T</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="s1">&#39;liquid&#39;</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">flag</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span>
+    
+    <span class="n">top_down</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="c1">#Iterate up and check for intermediate snow zones or bottom up</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+
+        <span class="n">dT</span> <span class="o">=</span> <span class="n">T</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">dT</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">flag</span> <span class="o">==</span> <span class="s1">&#39;solid&#39;</span><span class="p">:</span>
+            <span class="n">top_down</span> <span class="o">=</span> <span class="kc">False</span> <span class="c1">#Gone from region of sub-liquidus to super-liquidus</span>
+
+        <span class="k">elif</span> <span class="n">dT</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">flag</span> <span class="o">=</span> <span class="s1">&#39;solid&#39;</span> <span class="c1">#Entered base of snow_zone</span>
+
+    <span class="k">return</span> <span class="n">top_down</span></div>
+
+
+
+
+
+<div class="viewcode-block" id="snow_composition"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.snow_composition">[docs]</a><span class="k">def</span> <span class="nf">snow_composition</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span><span class="n">Tm_fe</span><span class="p">,</span><span class="n">initial_conc</span><span class="p">,</span><span class="n">snow_index</span><span class="p">,</span> <span class="n">conc_l</span><span class="p">,</span> <span class="n">P</span><span class="p">,</span> <span class="n">melting_params</span><span class="p">):</span>
+
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculates the composition of the slurry such that the melting temperature</span>
+<span class="sd">    is elevated to the adiabatic temperature. The Williams and Nimmo (2004)</span>
+<span class="sd">    parameterisation for the melting curve is assumed:</span>
+<span class="sd">    Tm = Tm_fe*(1-conc_l+initial_conc)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        Adiabatic temperature (array)</span>
+<span class="sd">    Tm_fe : array</span>
+<span class="sd">        Melting temperature of pure iron (array)</span>
+<span class="sd">    intial_conc : float</span>
+<span class="sd">        Initial concentration of liquid</span>
+<span class="sd">    snow_index : int</span>
+<span class="sd">        Index from which snow zone starts in arrays</span>
+<span class="sd">    melting_params: array</span>
+<span class="sd">        Array of melting temperature parameters</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        Radial concentration profile in snow zone</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">snow_index</span>
+
+    <span class="k">if</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;RI&#39;</span><span class="p">:</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span>
+    
+        <span class="c1">#Difference between polynomial evalutation at guessed composition and the target temp</span>
+        <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">guess</span><span class="p">,</span><span class="n">P</span><span class="p">,</span><span class="n">Target</span><span class="p">,</span><span class="n">params</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">riv_Tm</span><span class="p">(</span><span class="n">P</span><span class="p">,</span><span class="n">guess</span><span class="p">,</span><span class="n">params</span><span class="p">)</span> <span class="o">-</span> <span class="n">Target</span>
+
+        <span class="n">conc_l_snow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+        <span class="n">conc_l_snow</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">n</span><span class="p">],</span><span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">params</span><span class="p">))</span> <span class="c1">#Calculate first value at interface</span>
+
+        <span class="c1">#Find composition that gives Tm=Ta.</span>
+        <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="c1">#Try optimiser brackets close to the previous value for speed. We generally expect small changes in composition from grid point to grid point</span>
+                <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="mf">0.001</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">params</span><span class="p">),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+            <span class="k">except</span><span class="p">:</span>
+                <span class="c1">#If that fails it&#39;s likely because f(a) and f(b) are not opposite signs. Try the full range of possible values</span>
+                <span class="n">conc_l_snow</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="n">n</span><span class="p">]</span> <span class="o">=</span> <span class="n">brentq</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">i</span><span class="p">],</span><span class="n">Ta</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">params</span><span class="p">),</span> <span class="n">rtol</span><span class="o">=</span><span class="mf">0.0001</span><span class="p">)</span>
+
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;WN&#39;</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Assuming Williams and Nimmo melting curve (WN) for snow zone.&#39;</span><span class="p">)</span>
+
+        <span class="n">conc_l_snow</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">initial_conc</span><span class="p">)</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">Tm_fe</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">conc_l_snow</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+       <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s1">&#39;Warning conc_l below zero!: </span><span class="si">{}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">min</span><span class="p">(</span><span class="n">conc_l_snow</span><span class="p">)))</span>
+
+    <span class="k">return</span> <span class="n">conc_l_snow</span></div>
+
+<div class="viewcode-block" id="Cl_calc"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.Cl_calc">[docs]</a><span class="nd">@njit</span>
+<span class="k">def</span> <span class="nf">Cl_calc</span><span class="p">(</span><span class="n">phi</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">T</span><span class="p">,</span><span class="n">conc_l</span><span class="p">,</span><span class="n">dmu_dc</span><span class="p">,</span><span class="n">snow_index</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Returns the Cl factor which normalises changes in slurry mass fraction</span>
+<span class="sd">    to changes in temperature.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    phi : array</span>
+<span class="sd">        solid fraction</span>
+<span class="sd">    L : array</span>
+<span class="sd">        Latent heat</span>
+<span class="sd">    T : array</span>
+<span class="sd">        Temperature</span>
+<span class="sd">    conc_l : array</span>
+<span class="sd">        mass fraction of alloying light element</span>
+<span class="sd">    dmu_dc : arraty</span>
+<span class="sd">        change in chemical potential with mass fraction</span>
+<span class="sd">    snow_index : int</span>
+<span class="sd">        Index from which snow zone starts in arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    array</span>
+<span class="sd">        Cl factor</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">snow_index</span>
+    <span class="n">Cl</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">phi</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+
+    <span class="n">Cl</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span> <span class="o">=</span> <span class="o">-</span><span class="n">L</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">phi</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span><span class="o">/</span><span class="p">(</span><span class="n">T</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="n">conc_l</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="n">dmu_dc</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span>
+
+    <span class="k">return</span> <span class="n">Cl</span></div>
+
+<div class="viewcode-block" id="latent_snow"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.latent_snow">[docs]</a><span class="k">def</span> <span class="nf">latent_snow</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">L</span><span class="p">,</span> <span class="n">Cl</span><span class="p">,</span> <span class="n">conc_l_profile</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">snow_index</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Returns the normalised rate of latent heat release from changes in mass fraction throughout</span>
+<span class="sd">    the slurry.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        Radius</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        Density</span>
+<span class="sd">    L : array</span>
+<span class="sd">        Latent heat</span>
+<span class="sd">    Cl : array</span>
+<span class="sd">        Cl factor relating slurry mass fraction changes to temperature</span>
+<span class="sd">    conc_l_profile : array</span>
+<span class="sd">        Light element concentration profile</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        Adiabatic temperature</span>
+<span class="sd">    snow_index : int</span>
+<span class="sd">        Index from which snow zone starts in arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Normalised energy and entropy release</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">snow_index</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">L</span><span class="p">)</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">L</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">r</span><span class="o">.</span><span class="n">size</span><span class="p">)</span><span class="o">*</span><span class="n">L</span>
+
+    <span class="n">Ql_tilde</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:],</span> <span class="n">rho</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="n">L</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="p">(</span><span class="n">Cl</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">conc_l_profile</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span><span class="o">*</span><span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">El_tilde</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:],</span> <span class="n">rho</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="n">L</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="p">(</span><span class="n">Cl</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">conc_l_profile</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span><span class="o">*</span><span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="mi">1</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:])</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Ql_tilde</span><span class="p">,</span> <span class="n">El_tilde</span></div>
+
+<div class="viewcode-block" id="Cp_factor"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.Cp_factor">[docs]</a><span class="k">def</span> <span class="nf">Cp_factor</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">Cl</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">M_liquid</span><span class="p">,</span> <span class="n">snow_index</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculates factor relating changes in mass fraction of the liquid region to those of the slurry</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        Radius</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        Density</span>
+<span class="sd">    Cl : array</span>
+<span class="sd">        Cl factor relating slurry mass fraction changes to temperature</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        Adiabatic temperature</span>
+<span class="sd">    M_liquid : float</span>
+<span class="sd">        Mass of the liquid region</span>
+<span class="sd">    snow_index : int</span>
+<span class="sd">        Index from which snow zone starts in arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Cp factor</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">snow_index</span>
+
+    <span class="n">Cp</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:],</span> <span class="n">rho</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="n">Cl</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">M_liquid</span>
+
+    <span class="k">return</span> <span class="n">Cp</span></div>
+
+<div class="viewcode-block" id="gravitational_freezing"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.gravitational_freezing">[docs]</a><span class="k">def</span> <span class="nf">gravitational_freezing</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">,</span> <span class="n">Cl</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">snow_index</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculates the gravitational energy/entropy associated with reducing density of snow zone.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        Radius</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        Density</span>
+<span class="sd">    psi : array</span>
+<span class="sd">        Gravitational potential</span>
+<span class="sd">    alpha_c : float</span>
+<span class="sd">        Chemical expansivity</span>
+<span class="sd">    Cl : array</span>
+<span class="sd">        Cl factor relating slurry mass fraction changes to temperature</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        Adiabatic temperature</span>
+<span class="sd">    snow_index : int</span>
+<span class="sd">        Index from which snow zone starts in arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Normalised energy/entropy</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">snow_index</span>
+
+    <span class="n">Qg_tilde</span> <span class="o">=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:],</span> <span class="n">rho</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="n">psi</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="n">alpha_c</span><span class="o">*</span><span class="n">Cl</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">*</span><span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">n</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">Eg_tilde</span> <span class="o">=</span> <span class="n">Qg_tilde</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Qg_tilde</span><span class="p">,</span> <span class="n">Eg_tilde</span></div>
+
+<div class="viewcode-block" id="gravitational_melting"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.snow.html#thermal_history.core_models.leeds.routines.snow.gravitational_melting">[docs]</a><span class="k">def</span> <span class="nf">gravitational_melting</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">,</span> <span class="n">Cp</span><span class="p">,</span> <span class="n">Cc</span><span class="p">,</span> <span class="n">Cr</span><span class="p">,</span> <span class="n">Tcmb</span><span class="p">,</span> <span class="n">snow_index</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Calculates the gravitational energy/entropy associated with increasing density of liquid region</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        Radius</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        Density</span>
+<span class="sd">    psi : array</span>
+<span class="sd">        Gravitational potential</span>
+<span class="sd">    alpha_c : float</span>
+<span class="sd">        Chemical expansivity</span>
+<span class="sd">    Cp : float</span>
+<span class="sd">        Cp factor relating changes in mass fraction of the liquid region to those of the slurry</span>
+<span class="sd">    Cc : float</span>
+<span class="sd">        Cc factor relating changes in snow zone radius to changes in mass fraction of the liquid</span>
+<span class="sd">    Cr : float</span>
+<span class="sd">        Cr factor relating changes in snow zone radius to changes in temperature</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        Adiabatic temperature</span>
+<span class="sd">    snow_index : int</span>
+<span class="sd">        Index from which snow zone starts in arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Normalised energy/entropy</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">n</span> <span class="o">=</span> <span class="n">snow_index</span>
+    <span class="k">if</span> <span class="n">n</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">Qg_tilde</span><span class="p">,</span> <span class="n">Eg_tilde</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Qg_tilde</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[:</span><span class="n">n</span><span class="p">],</span> <span class="n">rho</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span><span class="o">*</span><span class="n">psi</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span><span class="o">*</span><span class="n">alpha_c</span><span class="o">*</span><span class="p">(</span><span class="n">Cp</span><span class="o">+</span><span class="p">(</span><span class="n">Cc</span><span class="o">*</span><span class="n">Cr</span><span class="p">))</span><span class="o">*</span><span class="n">r</span><span class="p">[:</span><span class="n">n</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">Eg_tilde</span> <span class="o">=</span> <span class="n">Qg_tilde</span><span class="o">/</span><span class="n">Tcmb</span>
+
+    <span class="k">return</span> <span class="n">Qg_tilde</span><span class="p">,</span> <span class="n">Eg_tilde</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

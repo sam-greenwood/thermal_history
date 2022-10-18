@@ -9,4 +9,4 @@ __pycache__/
 *.log
 docs/_source/thermal_history*.rst
 docs/_source/API_index.rst
-docs/_build/
+docs/_build/doctrees

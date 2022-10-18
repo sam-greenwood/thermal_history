@@ -29,7 +29,7 @@ from thermal_history.core_models.leeds.main import setup, evolve, update, set_Q_
 def snow_evolution(model):
     '''
     Sub-evolution fuction specifically for a freezing solid FeS layer as in Rückriemen et al. (2018). Called from evolution() if required (prm.iron_snow=True).
-    Modified version of the iron snow routine. Differences have been highlighted in the comments with a *.
+    Modified version of the iron snow routine. Differences have been highlighted in the comments with a \*.
 
     Parameters
     ----------

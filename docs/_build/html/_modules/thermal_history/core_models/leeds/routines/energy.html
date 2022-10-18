@@ -1,0 +1,535 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>thermal_history.core_models.leeds.routines.energy &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../API_index.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>thermal_history.core_models.leeds.routines.energy</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for thermal_history.core_models.leeds.routines.energy</h1><div class="highlight"><pre>
+<span></span><span class="c1">#Core model functions</span>
+<span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">trapezoid</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">scipy.integrate</span> <span class="kn">import</span> <span class="n">trapz</span><span class="p">,</span><span class="n">cumtrapz</span>
+
+<span class="n">Na</span> <span class="o">=</span> <span class="mf">6.022140857e23</span>  <span class="c1">#Avogadros Constant</span>
+<span class="c1">###############################################################################</span>
+<span class="c1">#Latent Heat</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="latent_heat"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.latent_heat">[docs]</a><span class="k">def</span> <span class="nf">latent_heat</span><span class="p">(</span><span class="n">ri</span><span class="p">,</span><span class="n">rho</span><span class="p">,</span><span class="n">Ta</span><span class="p">,</span><span class="n">Cr</span><span class="p">,</span><span class="n">L</span><span class="p">,</span><span class="n">idx</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Latent heat of fusion during IC growth</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    ri : float</span>
+<span class="sd">        Inner core radius</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        Density</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        Adiabatic temperature</span>
+<span class="sd">    Cr : float</span>
+<span class="sd">        Cr factor that normalises IC growth rate to cooling rate</span>
+<span class="sd">    L : array</span>
+<span class="sd">        Latent heat</span>
+<span class="sd">    idx : int</span>
+<span class="sd">        Index for ICB in radial arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Normlised latent heat and associated entropy.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+
+    <span class="n">Ql_tilda</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">ri</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">rho</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">*</span><span class="n">L</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">*</span><span class="n">Cr</span>
+
+
+    <span class="n">El_tilda</span> <span class="o">=</span> <span class="n">Ql_tilda</span><span class="o">*</span><span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">-</span><span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">Ta</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="o">*</span><span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+
+
+    <span class="k">return</span> <span class="n">Ql_tilda</span><span class="p">,</span> <span class="n">El_tilda</span></div>
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#Gravitational Energy</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="gravitational"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.gravitational">[docs]</a><span class="k">def</span> <span class="nf">gravitational</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">Cr</span><span class="p">,</span> <span class="n">Cc</span><span class="p">,</span> <span class="n">M_oc</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">rs_idx</span><span class="p">,</span> <span class="n">Tcmb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Gravitational energy associated with growth of IC</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        temperature</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        density</span>
+<span class="sd">    psi : array</span>
+<span class="sd">        gravitational potential</span>
+<span class="sd">    Cr : float</span>
+<span class="sd">        Cr factor that normalises IC growth rate to cooling rate </span>
+<span class="sd">    Cc : array</span>
+<span class="sd">        Cc factor that normalises enrichment of light element in OC to inner core growth</span>
+<span class="sd">    M_oc : float</span>
+<span class="sd">        Mass of outer core over which light elements are distributed</span>
+<span class="sd">    alpha_c : array</span>
+<span class="sd">        chemical expansivities for light elements</span>
+<span class="sd">    idx : int</span>
+<span class="sd">        Index for ICB in radial arrays</span>
+<span class="sd">    rs_idx : int</span>
+<span class="sd">        Index for rs (base of stable layer) in radial arrays</span>
+<span class="sd">    Tcmb : bool, optional</span>
+<span class="sd">        temperature of the CMB. If False, then the end of the Ta array is used, by default False</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Normlised gravitational energy and associated entropy</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">I</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">idx</span><span class="p">:</span><span class="n">rs_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">rho</span><span class="p">[</span><span class="n">idx</span><span class="p">:</span><span class="n">rs_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">psi</span><span class="p">[</span><span class="n">idx</span><span class="p">:</span><span class="n">rs_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">idx</span><span class="p">:</span><span class="n">rs_idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">M_oc</span><span class="o">*</span><span class="n">psi</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="n">Qg_tilda</span> <span class="o">=</span> <span class="n">I</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">alpha_c</span><span class="o">*</span><span class="n">Cc</span><span class="p">)</span><span class="o">*</span><span class="n">Cr</span>
+
+    <span class="k">if</span> <span class="n">Tcmb</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">Eg_tilda</span> <span class="o">=</span> <span class="n">Qg_tilda</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Eg_tilda</span> <span class="o">=</span> <span class="n">Qg_tilda</span><span class="o">/</span><span class="n">Tcmb</span>
+
+    <span class="k">return</span> <span class="n">Qg_tilda</span><span class="p">,</span> <span class="n">Eg_tilda</span></div>
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#Gravitational Energy for Magnesium precipitation from Du et al. 2017</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="gravitational_precip"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.gravitational_precip">[docs]</a><span class="k">def</span> <span class="nf">gravitational_precip</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">Ta</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">psi</span><span class="p">,</span> <span class="n">idx</span><span class="p">,</span> <span class="n">Cm</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Gravitational energy associated with precipitation</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        temperature</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        density</span>
+<span class="sd">    psi : array</span>
+<span class="sd">        gravitational potential</span>
+<span class="sd">    Cm : float</span>
+<span class="sd">        Factor that normlises precipitation to cooling rate</span>
+<span class="sd">    alpha_c : float</span>
+<span class="sd">        chemical expansivity of precipitating element</span>
+<span class="sd">    idx : int</span>
+<span class="sd">        Index for ICB in radial arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Normlised gravitational energy and associated entropy</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">I</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[</span><span class="n">idx</span><span class="p">:],</span><span class="n">rho</span><span class="p">[</span><span class="n">idx</span><span class="p">:]</span><span class="o">*</span><span class="n">psi</span><span class="p">[</span><span class="n">idx</span><span class="p">:]</span><span class="o">*</span><span class="n">r</span><span class="p">[</span><span class="n">idx</span><span class="p">:]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="c1"># - M_oc*psi[idx] assuming no uneven partitioning of MgO</span>
+
+    <span class="n">Qg_tilda</span> <span class="o">=</span> <span class="n">I</span><span class="o">*</span><span class="n">alpha_c</span><span class="o">*</span><span class="n">Cm</span>
+
+    <span class="n">Eg_tilda</span> <span class="o">=</span> <span class="n">Qg_tilda</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Qg_tilda</span><span class="p">,</span> <span class="n">Eg_tilda</span></div>
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#Secular cooling</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="secular_cool"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.secular_cool">[docs]</a><span class="k">def</span> <span class="nf">secular_cool</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">rho</span><span class="p">,</span><span class="n">Ta</span><span class="p">,</span><span class="n">cp</span><span class="p">,</span><span class="n">idx</span><span class="p">,</span> <span class="n">Tcmb</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Energy from change in sensible energy from secular cooling</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        density</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        temperature</span>
+<span class="sd">    cp : array</span>
+<span class="sd">        specific heat capacity</span>
+<span class="sd">    idx : int</span>
+<span class="sd">        Index for rs (base of stable layer) in radial arrays</span>
+<span class="sd">    Tcmb : bool, optional</span>
+<span class="sd">        temperature of the CMB. If False, then the end of the Ta array is used, by default False</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Secular cooling energy and associated entropy</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="c1">#Values are normalised to the cooling rate.</span>
+    <span class="n">Tcen</span> <span class="o">=</span> <span class="n">Ta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+    <span class="k">if</span> <span class="n">Tcmb</span> <span class="o">==</span> <span class="kc">False</span><span class="p">:</span>
+        <span class="n">Tcmb</span> <span class="o">=</span> <span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">I1</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">rho</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">cp</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Ta</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">Qs</span> <span class="o">=</span> <span class="o">-</span><span class="n">I1</span><span class="o">/</span><span class="n">Tcen</span>
+
+    <span class="n">I2</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span> <span class="p">(</span><span class="n">Ta</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">Tcmb</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">*</span> <span class="n">rho</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">cp</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">r</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="n">Es</span> <span class="o">=</span> <span class="o">-</span><span class="n">I2</span><span class="o">/</span><span class="n">Tcen</span>
+
+    <span class="k">return</span> <span class="n">Qs</span><span class="p">,</span> <span class="n">Es</span></div>
+<span class="c1">###############################################################################</span>
+<span class="c1">#Radiogenic heating</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="radiogenic_heating"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.radiogenic_heating">[docs]</a><span class="k">def</span> <span class="nf">radiogenic_heating</span><span class="p">(</span><span class="n">time</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">rho</span><span class="p">,</span><span class="n">Ta</span><span class="p">,</span><span class="n">Mass</span><span class="p">,</span><span class="n">h0</span><span class="p">,</span><span class="n">decay_time</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Heat from radiogenic heating (NOT TESTED)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    time : float</span>
+<span class="sd">        time (relative to present day)</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    rho : array</span>
+<span class="sd">        density</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        temperature</span>
+<span class="sd">    Mass : float</span>
+<span class="sd">        mass of core</span>
+<span class="sd">    h0 : float</span>
+<span class="sd">        Present day heating rate per unit mass</span>
+<span class="sd">    decay_time : float</span>
+<span class="sd">        Half life of radiogenic element</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (float, float)</span>
+<span class="sd">        Radiogenic heating and associated entropy</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    
+    <span class="n">h</span> <span class="o">=</span> <span class="n">h0</span> <span class="o">*</span> <span class="mi">2</span><span class="o">**</span><span class="p">(</span><span class="o">-</span><span class="n">time</span><span class="o">/</span><span class="n">decay_time</span><span class="p">)</span>
+    <span class="n">Qr</span> <span class="o">=</span> <span class="n">Mass</span><span class="o">*</span><span class="n">h</span>
+
+    <span class="n">Er</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">h</span><span class="o">*</span><span class="n">rho</span><span class="o">*</span><span class="p">((</span><span class="mi">1</span><span class="o">/</span><span class="n">Ta</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span><span class="o">-</span><span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="n">Ta</span><span class="p">))</span><span class="o">*</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">Qr</span><span class="p">,</span> <span class="n">Er</span></div>
+<span class="c1">###############################################################################</span>
+<span class="c1">#Entropy of conduction</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="cond_entropy"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.cond_entropy">[docs]</a><span class="k">def</span> <span class="nf">cond_entropy</span><span class="p">(</span><span class="n">Ta</span><span class="p">,</span><span class="n">Ta_grad</span><span class="p">,</span><span class="n">k</span><span class="p">,</span><span class="n">r</span><span class="p">,</span><span class="n">idx</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Entropy of thermal conduction in adiabatic region</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    Ta : array</span>
+<span class="sd">        Adiabatic temperature</span>
+<span class="sd">    Ta_grad : array</span>
+<span class="sd">        Adiabatic temperature gradient</span>
+<span class="sd">    k : array</span>
+<span class="sd">        Thermal conductivity</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    idx : int</span>
+<span class="sd">        Index for rs (base of stable layer) in radial arrays</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Entropy of thermal conduction</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">Ek</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">],</span><span class="n">k</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">Ta_grad</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">Ta</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">r</span><span class="p">[:</span><span class="n">idx</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="c1">#pdb.set_trace()</span>
+    <span class="k">return</span> <span class="n">Ek</span></div>
+<span class="c1">###############################################################################</span>
+<span class="c1">#Entropy of mixing</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="heat_of_reaction"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.heat_of_reaction">[docs]</a><span class="k">def</span> <span class="nf">heat_of_reaction</span><span class="p">(</span><span class="n">rho_oc</span><span class="p">,</span><span class="n">dmu_dt_poly</span><span class="p">,</span><span class="n">Cc</span><span class="p">,</span><span class="n">Cr</span><span class="p">,</span><span class="n">r_oc</span><span class="p">,</span><span class="n">mm</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Entropy of heat of reaction at ICB (NOT TESTED IN A WHILE)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rho_oc : array</span>
+<span class="sd">        Outer core density</span>
+<span class="sd">    dmu_dt_poly : array</span>
+<span class="sd">        radial polynomials for change in chemical potential with temperature.</span>
+<span class="sd">    Cc : array</span>
+<span class="sd">        Cc factor that normalises enrichment of light element in OC to inner core growth</span>
+<span class="sd">    Cr : float</span>
+<span class="sd">        Cr factor that normalises IC growth rate to cooling rate </span>
+<span class="sd">    r_oc : array</span>
+<span class="sd">        outer core radial grid points</span>
+<span class="sd">    mm : array</span>
+<span class="sd">        molar masses of iron and light elements</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Entropy from heat of reaction</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="n">Eh_tilda</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">Cc</span><span class="o">.</span><span class="n">size</span><span class="p">):</span>
+
+        <span class="n">dmu_dt</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">polyval</span><span class="p">(</span><span class="n">dmu_dt_poly</span><span class="p">[</span><span class="n">i</span><span class="p">][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span><span class="n">r_oc</span><span class="p">)</span><span class="o">*</span><span class="n">Na</span><span class="o">*</span><span class="mi">1000</span><span class="o">/</span><span class="n">mm</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">Eh_tilda</span> <span class="o">+=</span> <span class="o">-</span><span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r_oc</span><span class="p">,</span><span class="n">dmu_dt</span><span class="o">*</span><span class="n">rho_oc</span><span class="o">*</span><span class="n">r_oc</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">Cc</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">*</span><span class="n">Cr</span>
+
+    <span class="k">return</span> <span class="n">Eh_tilda</span></div>
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#Entropy of mass diffusion</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="mass_diffusion"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.mass_diffusion">[docs]</a><span class="k">def</span> <span class="nf">mass_diffusion</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">alpha_D</span><span class="p">,</span> <span class="n">T</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Entropy from barodiffusion of light elements</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : array</span>
+<span class="sd">        radius</span>
+<span class="sd">    i : float or array</span>
+<span class="sd">        mass flux</span>
+<span class="sd">    alpha_D : array</span>
+<span class="sd">        barodiffusion coefficient</span>
+<span class="sd">    T : array</span>
+<span class="sd">        temperature</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float</span>
+<span class="sd">        Total entropy of barodiffusion of light elements.</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+
+    <span class="k">if</span> <span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">alpha_D</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">E_alpha</span> <span class="o">=</span> <span class="mi">0</span>  <span class="c1">#alpha_D = 0 if no light element is present</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">E_alpha</span> <span class="o">=</span> <span class="mi">4</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="o">*</span><span class="n">trapezoid</span><span class="p">(</span><span class="n">r</span><span class="p">,</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">i</span><span class="o">**</span><span class="mi">2</span><span class="o">/</span><span class="p">(</span><span class="n">alpha_D</span><span class="o">*</span><span class="n">T</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+
+
+
+    <span class="k">return</span> <span class="n">E_alpha</span></div>
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#Mass flux</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="mass_flux"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.mass_flux">[docs]</a><span class="k">def</span> <span class="nf">mass_flux</span><span class="p">(</span><span class="n">rho</span><span class="p">,</span> <span class="n">alpha_c</span><span class="p">,</span> <span class="n">alpha_D</span><span class="p">,</span> <span class="n">D</span><span class="p">,</span> <span class="n">c_grad</span><span class="p">,</span> <span class="n">g</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Mass flux from diffusion down chemical and pressure gradients</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    rho : float or array</span>
+<span class="sd">        density</span>
+<span class="sd">    alpha_c : float</span>
+<span class="sd">        chemical expansivities for light element</span>
+<span class="sd">    alpha_D : float</span>
+<span class="sd">        barodiffusion coefficients for light element</span>
+<span class="sd">    D : float</span>
+<span class="sd">        Self diffusion coefficients for light element</span>
+<span class="sd">    c_grad : float or array</span>
+<span class="sd">        chemical gradient</span>
+<span class="sd">    g : float or array</span>
+<span class="sd">        gravity</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    float or array</span>
+<span class="sd">        mass flux</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="o">-</span><span class="n">rho</span><span class="o">*</span><span class="n">D</span><span class="o">*</span><span class="n">c_grad</span> <span class="o">+</span> <span class="n">alpha_c</span><span class="o">*</span><span class="n">alpha_D</span><span class="o">*</span><span class="n">g</span>
+    <span class="k">return</span> <span class="n">i</span></div>
+
+<span class="c1">###############################################################################</span>
+<span class="c1">#Numerical integration</span>
+<span class="c1">###############################################################################</span>
+<div class="viewcode-block" id="integrate"><a class="viewcode-back" href="../../../../../thermal_history.core_models.leeds.routines.energy.html#thermal_history.core_models.leeds.routines.energy.integrate">[docs]</a><span class="k">def</span> <span class="nf">integrate</span><span class="p">(</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">cumulative</span><span class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">    Depreciated in favour of thermal_history.utils.optimised_funcs.trapezoid</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="k">if</span> <span class="n">cumulative</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">trapz</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">A</span> <span class="o">=</span> <span class="n">cumtrapz</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="n">x</span><span class="p">,</span><span class="n">initial</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">A</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
