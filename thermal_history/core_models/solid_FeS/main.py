@@ -8,11 +8,14 @@ compatibility = {'stable_layer': ['leeds_thermal'],
 import numpy as np
 import copy
 
+from ..leeds.routines import chemistry as chem    #Import this model's specific version of chemistry
+from .routines.chemistry import melting_curve
+chem.melting_curve = melting_curve
+
 from thermal_history.utils.optimised_funcs import linspace, polyval, trapezoid
 from ..leeds.routines import profiles as prof
 from ..leeds.routines import energy as en
 from ..leeds.routines import snow as snow
-from .routines import chemistry as chem    #Import this model's specific version of chemistry
 
 import logging
 logger = logging.getLogger(__name__)
