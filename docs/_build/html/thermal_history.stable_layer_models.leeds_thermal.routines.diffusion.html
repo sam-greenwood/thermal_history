@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,7 +25,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -94,6 +93,7 @@
 <li class="toctree-l3"><a class="reference internal" href="thermal_history.core_models.html">core_models</a></li>
 <li class="toctree-l3"><a class="reference internal" href="thermal_history.mantle_models.html">mantle_models</a></li>
 <li class="toctree-l3 current"><a class="reference internal" href="thermal_history.stable_layer_models.html">stable_layer_models</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="thermal_history.stable_layer_models.FeS.html">FeS</a></li>
 <li class="toctree-l4"><a class="reference internal" href="thermal_history.stable_layer_models.leeds_chemical.html">leeds_chemical</a></li>
 <li class="toctree-l4 current"><a class="reference internal" href="thermal_history.stable_layer_models.leeds_thermal.html">leeds_thermal</a></li>
 </ul>
@@ -180,14 +180,14 @@
            <div itemprop="articleBody">
             
   <section id="diffusion">
-<h1>diffusion<a class="headerlink" href="#diffusion" title="Permalink to this heading">¶</a></h1>
+<h1>diffusion<a class="headerlink" href="#diffusion" title="Permalink to this headline">¶</a></h1>
 <p>(thermal_history.stable_layer_models.leeds_thermal.routines.diffusion)</p>
 <span class="target" id="module-thermal_history.stable_layer_models.leeds_thermal.routines.diffusion"></span><dl class="py function">
 <dt class="sig sig-object py" id="thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.LHS">
 <span class="sig-name descname"><span class="pre">LHS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dk_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_type</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spherical'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/diffusion.html#LHS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.LHS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct left hand side of linear equations</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>x</strong> (<em>array</em>) – position array</p></li>
 <li><p><strong>m</strong> (<em>array</em>) – m constant defined in diffusion()</p></li>
@@ -199,10 +199,10 @@
 <li><p><strong>coord</strong> (<em>str</em><em>, </em><em>optional</em>) – either ‘cart’ to denote cartesian coordinate system of ‘spherical’ for spherical coordinates, by default ‘spherical’</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>lower, central, upper diagonals for left hand side in linear equations (A matrix in Ax=b)</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>(array , array, array)</p>
 </dd>
 </dl>
@@ -213,7 +213,7 @@
 <span class="sig-name descname"><span class="pre">RHS</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dk_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spherical'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/diffusion.html#RHS"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.RHS" title="Permalink to this definition">¶</a></dt>
 <dd><p>Construct right hand side of linear equations</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> (<em>array</em>) – Values to diffuse</p></li>
 <li><p><strong>x</strong> (<em>array</em>) – position array</p></li>
@@ -227,10 +227,10 @@
 <li><p><strong>constant</strong> (<em>float</em><em> or </em><em>array</em><em>, </em><em>optional</em>) – Constant in the partial differential eqution, by default 0</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Right hand side in linear equations (b vector in Ax=b)</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -241,7 +241,7 @@
 <span class="sig-name descname"><span class="pre">diffusion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">D</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dk_dx</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lower_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">upper_bc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coord</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'spherical'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/stable_layer_models/leeds_thermal/routines/diffusion.html#diffusion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.stable_layer_models.leeds_thermal.routines.diffusion.diffusion" title="Permalink to this definition">¶</a></dt>
 <dd><p>Numerical diffusion solution</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>y</strong> (<em>array</em>) – Values to diffuse</p></li>
 <li><p><strong>x</strong> (<em>array</em>) – position grid</p></li>
@@ -259,10 +259,10 @@ Second value is the value of the boundary condition</p></li>
 <li><p><strong>coord</strong> (<em>str</em><em>, </em><em>optional</em>) – either ‘cart’ to denote cartesian coordinate system of ‘spherical’ for spherical coordinates, by default ‘spherical’</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Diffused values after timestep dt.</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -274,7 +274,7 @@ Second value is the value of the boundary condition</p></li>
 <dd><p>Jit compiled implementation of the thomas algorithm for solving
 linear equations.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dt class="field-odd">Parameters</dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>RHS</strong> (<em>array</em>) – B vector in Ax=B</p></li>
 <li><p><strong>lower</strong> (<em>array</em>) – lower diagonal values in A matrix</p></li>
@@ -282,10 +282,10 @@ linear equations.</p>
 <li><p><strong>upper</strong> (<em>array</em>) – upper diagonal values in A matrix</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dt class="field-even">Returns</dt>
 <dd class="field-even"><p>Diffused values</p>
 </dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dt class="field-odd">Return type</dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>

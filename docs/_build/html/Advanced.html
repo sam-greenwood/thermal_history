@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,7 +25,6 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -159,10 +158,10 @@
            <div itemprop="articleBody">
             
   <section class="tex2jax_ignore mathjax_ignore" id="adding-new-methods">
-<h1>Adding new methods<a class="headerlink" href="#adding-new-methods" title="Permalink to this heading">¶</a></h1>
+<h1>Adding new methods<a class="headerlink" href="#adding-new-methods" title="Permalink to this headline">¶</a></h1>
 <p>Whilst this code ships with certain methods for the 3 regions (core/stable layer/mantle), the user can add alternative ones that they develop. To do so is easy enough but needs to be done in a specific way to interface with the whole python package.</p>
 <section id="overview-of-the-package">
-<h2>1. Overview of the package<a class="headerlink" href="#overview-of-the-package" title="Permalink to this heading">¶</a></h2>
+<h2>1. Overview of the package<a class="headerlink" href="#overview-of-the-package" title="Permalink to this headline">¶</a></h2>
 <p>To start it makes sense to explain the overall structure of the python package, here is an abbrieviated overview:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">thermal_history</span>
 <span class="o">|</span>
@@ -207,7 +206,7 @@
 <p>The code for any specific numerical model is contained within one of the sub-packages depending on it’s type (<code class="docutils literal notranslate"><span class="pre">core_models</span></code>/<code class="docutils literal notranslate"><span class="pre">stable_layer_models</span></code>/<code class="docutils literal notranslate"><span class="pre">mantle_models</span></code>). Let’s focus on the <code class="docutils literal notranslate"><span class="pre">core_models</span></code>. Here there are 2 different methods for solving the core thermal evolution: <code class="docutils literal notranslate"><span class="pre">leeds</span></code> and <code class="docutils literal notranslate"><span class="pre">simple_test</span></code>. They are each contained within their own folder (treated as another sub-package due to the presence of <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>), meaning they are isolated from one another and removing any chance of getting them mixed up. When a model is initialised, for example, with <code class="docutils literal notranslate"><span class="pre">setup_model(prm,</span> <span class="pre">core_method='simple_test')</span></code>, the code will look to import <code class="docutils literal notranslate"><span class="pre">thermal_history.core_models.simple_test.main</span></code>. Other files can exist within the folder (e.g. <code class="docutils literal notranslate"><span class="pre">core_models.leeds.routines</span></code> contains functions that are called by code in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>) but <code class="docutils literal notranslate"><span class="pre">main.py</span></code> must be there.</p>
 </section>
 <section id="required-format-for-main-py">
-<h2>2. Required format for main.py<a class="headerlink" href="#required-format-for-main-py" title="Permalink to this heading">¶</a></h2>
+<h2>2. Required format for main.py<a class="headerlink" href="#required-format-for-main-py" title="Permalink to this headline">¶</a></h2>
 <p>There are 3 functions expected to be defined in <code class="docutils literal notranslate"><span class="pre">main.py</span></code>. They are: <code class="docutils literal notranslate"><span class="pre">setup</span></code>, <code class="docutils literal notranslate"><span class="pre">evolve</span></code>, <code class="docutils literal notranslate"><span class="pre">update</span></code>. All take a single argument (the ThermalModel class that is created by <code class="docutils literal notranslate"><span class="pre">setup_model()</span></code> is passed to them) and none of them return anything as they instead set the attributes of ThermalModel. There are also 2 dictionaries, <code class="docutils literal notranslate"><span class="pre">required_params</span></code> and <code class="docutils literal notranslate"><span class="pre">optional_params</span></code>, that must de defined within. Let’s take a look at the <code class="docutils literal notranslate"><span class="pre">main.py</span></code> in simple_test, starting with the top of the file:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span>
 <span class="c1">#Description of this model3</span>

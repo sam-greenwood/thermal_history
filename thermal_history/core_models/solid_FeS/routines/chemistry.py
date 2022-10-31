@@ -6,7 +6,7 @@
 from thermal_history.utils.optimised_funcs import polyval
 import numpy as np
 
-from ...leeds.routines.chemistry import *  #Import all functions from the leeds core model. Then redefine melting curve
+from ...leeds.routines.chemistry import *  #Import all functions from the leeds core model. Then redefine melting curve.
 
 
 kb = 1.3806485e-23   #Boltzmanns constant

@@ -1,10 +1,6 @@
 Description = 'Mantle model based on Knibbe and van Westrenen (2018) for Mercury.\
 Stagnant lid plate tectonics is assumed with growth of crust by mantle melting.'
 
-#List individually confirmed compatibility with other regions.
-compatibility = {'core': [''],
-                 'stable_layer': [''],
-                 'bmo': ['']}
 
 #Import statements
 import logging
@@ -17,8 +13,6 @@ from scipy.integrate import trapezoid
 from .routines import profiles as prof
 from .routines import melting as melt
 
-#import matlab.engine
-#eng = matlab.engine.start_matlab()
 
 #setup, evolve, and update functions
 def setup(model):
@@ -380,26 +374,55 @@ required_params = {'Tm': 'Initial temperature of the mid mantle [K]. Float',
                    'mantle_latent_heat': 'Latent heat of melting for mantle [J/kg]'
 }
 
-
+#This fixed the error in the original code of Knibbe and Van Westrenen (2018). They numerically solved the problem
+#rather than analytically solving it leading to incorrect values at specific timesteps early on in the model runs.
+#The main conclusions of the paper remain unchanged after fixing it.
 def joint_conduction(T_upper, T_lower, r, H, k):
-    '''
-    Steady state spherical conduction solution for n shells.
+    '''Steady state spherical conduction solution for n shells.
 
-    ---------- r0, T_upper
-    k1, H1
-    ---------- r1
-    k2, H2
-    ---------- r2
-    ...
+    Parameters
+    ----------
+    T_upper : float
+        Temperature at top of outer shell
+    T_lower : float
+        Temperature at bottom of inner shell
+    r : array
+        Radii of outer shell through to inner radii of inner shell.
+    H : array
+        Internal heating rates (W/m^3) of shells from outer to inner
+    k : array
+        Thermal conductivities (W/m/K) of shells from outer to inner
 
-    kn, Hn
-    ---------- rn, T_lower
+    Returns
+    -------
+    list
+        list of coefficients for solution for each 
+
+
+    Notes
+    -----
 
     Shells are defined by an array of size n for their thermal conducitivities (W/m/K) and
     internal volumetric heating rates (W/m^3). Radii are specified by an array of size n+1
     of the boundaries and interfaces. Index 0 of arrays refer to the values of the outer-most shell, proceeding
     to the inner-most shell. Temperature boundary conditions for the radii r0 and rn are required, with continuity
-    of temperature and heat flux assumed at each interface.
+    of temperature and heat flux assumed at each interface (see diagram below).
+
+    __________ r0, T_upper
+
+    k1, H1
+
+    __________ r1
+
+    k2, H2
+
+    __________ r2
+
+    ...
+
+    kn, Hn
+    
+    __________ rn, T_lower
 
     Returns an array of coefficients (A1,B1...An,Bn) to the solution
 
@@ -407,23 +430,26 @@ def joint_conduction(T_upper, T_lower, r, H, k):
 
     for each shell where i is in the range [1,n].
 
-    ______________________________________
-    Example for 2 shells
+    Examples
+    --------
+    Example for 2 shells:
 
-    #Temperature Boundary conditions
-    T_upper=1
-    T_lower=1
+    .. code-block:: python
 
-    #Radii of 2 shells, outer shell between r=0.5:1, inner shell between r=0:0.5
-    r = [1,0.5,0]
+        #Temperature Boundary conditions
+        T_upper=1
+        T_lower=1
 
-    #Internat heating rates and conductivities for outer and inner shells.
-    H = [0,0]
-    k = [1,1]
+        #Radii of 2 shells, outer shell between r=0.5:1, inner shell between r=0:0.5
+        r = [1,0.5,0]
 
-    solution = joint_conduction(T_upper, T_lower, r, H, k)
-    A1, B1 = solution[:2]
-    A2, B2 = solution[2:]
+        #Internat heating rates and conductivities for outer and inner shells.
+        H = [0,0]
+        k = [1,1]
+
+        solution = joint_conduction(T_upper, T_lower, r, H, k)
+        A1, B1 = solution[:2]
+        A2, B2 = solution[2:]
     '''
 
     r, H, k = np.array(r), np.array(H), np.array(k)
