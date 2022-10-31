@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -167,16 +168,16 @@
            <div itemprop="articleBody">
             
   <section class="tex2jax_ignore mathjax_ignore" id="overview">
-<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h1>
+<h1>Overview<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h1>
 <section id="leeds-thermal-evolution-model">
-<h2>Leeds thermal evolution model<a class="headerlink" href="#leeds-thermal-evolution-model" title="Permalink to this headline">¶</a></h2>
+<h2>Leeds thermal evolution model<a class="headerlink" href="#leeds-thermal-evolution-model" title="Permalink to this heading">¶</a></h2>
 <p>Open source Python model for calculating the 2D (radius and time) thermo-chemical evolution of planetary interiors e.g. Earth/Mars/Mercury.
 <code class="docutils literal notranslate"><span class="pre">thermal_history</span></code> contains numerical implementations for a planet spearated into 3 regions: A silicate mantle, stably stratified liquid outer core, and an isentropic iron alloy core.
 All regions are optional allowing flexible calculations based on the interests of the user. For each region, there are a choice of methods available based on different
 published models, whilst the framework of the code makes it easy to add additional methods as they are developed for ultimate flexibility.</p>
 </section>
 <section id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this heading">¶</a></h2>
 <p>Requirements:</p>
 <ol class="arabic simple">
 <li><p>Works with Linux/MacOS/Windows.</p></li>
@@ -184,9 +185,9 @@ published models, whilst the framework of the code makes it easy to add addition
 </ol>
 <hr class="docutils" />
 <section id="installation">
-<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h3>
+<h3>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">¶</a></h3>
 <section id="from-the-command-line-recommended">
-<h4>From the command line (recommended)<a class="headerlink" href="#from-the-command-line-recommended" title="Permalink to this headline">¶</a></h4>
+<h4>From the command line (recommended)<a class="headerlink" href="#from-the-command-line-recommended" title="Permalink to this heading">¶</a></h4>
 <p>Simply clone this repo and install the anaconda environment by running from a unix terminal:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="nd">@github</span><span class="o">.</span><span class="n">com</span><span class="p">:</span><span class="n">sam</span><span class="o">-</span><span class="n">greenwood</span><span class="o">/</span><span class="n">thermal_history</span><span class="o">.</span><span class="n">git</span>
 <span class="n">cd</span> <span class="n">thermal_history</span>
@@ -196,18 +197,18 @@ published models, whilst the framework of the code makes it easy to add addition
 </div>
 </section>
 <section id="installing-with-the-anaconda-navigator-gui">
-<h4>Installing with the anaconda navigator GUI<a class="headerlink" href="#installing-with-the-anaconda-navigator-gui" title="Permalink to this headline">¶</a></h4>
+<h4>Installing with the anaconda navigator GUI<a class="headerlink" href="#installing-with-the-anaconda-navigator-gui" title="Permalink to this heading">¶</a></h4>
 <p>Download the code by clicking the green code button, then either download the zip file (then extract the files) or download with the github desktop app.
 Use the anaconda navigator app to install a new environment, importing the <code class="docutils literal notranslate"><span class="pre">environment.yml</span></code> file.</p>
 </section>
 <section id="importing-thermal-history-in-your-script">
-<h4>Importing thermal_history in your script<a class="headerlink" href="#importing-thermal-history-in-your-script" title="Permalink to this headline">¶</a></h4>
+<h4>Importing thermal_history in your script<a class="headerlink" href="#importing-thermal-history-in-your-script" title="Permalink to this heading">¶</a></h4>
 <p>To be able to import <code class="docutils literal notranslate"><span class="pre">thermal_history</span></code> from anywhere, you can append to the PYTHONPATH system variable by putting <code class="docutils literal notranslate"><span class="pre">export</span> <span class="pre">PYTHONPATH=$PYTHONPATH:&quot;full/path/to/directory/containing_thermal_history&quot;</span></code> into your <code class="docutils literal notranslate"><span class="pre">~/.bashrc</span></code> file (or <code class="docutils literal notranslate"><span class="pre">~/.zshrc</span></code> or equivalent depending on your shell) and running <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">~/.bashrc</span></code>. The active terminal and new terminals will allow python to always be aware of that location for imports (proper setup.py coming sometime soon!).</p>
 <p>On Windows, go to Control Panel / System / Advanced / Environment variable, and in the “User variables” sections, check if you already have PYTHONPATH. If yes, select it and click “Edit”, if not, click “New” to add it. Paths in PYTHONPATH should be separated with “;”. (Credit to stackoverflow user tiho for that).</p>
 </section>
 </section>
 <section id="documentation">
-<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
+<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this heading">¶</a></h3>
 <p>Full documentation is included in the <code class="docutils literal notranslate"><span class="pre">docs/</span></code> folder, with a pre-built html page at <code class="docutils literal notranslate"><span class="pre">docs/_build/html/README.html</span></code>. Open this file in a web browser to see them (they will be hosted on readthedocs soon!).</p>
 </section>
 </section>

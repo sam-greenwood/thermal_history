@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -175,12 +176,12 @@
            <div itemprop="articleBody">
             
   <section id="utilities">
-<h1>utilities<a class="headerlink" href="#utilities" title="Permalink to this headline">¶</a></h1>
+<h1>utilities<a class="headerlink" href="#utilities" title="Permalink to this heading">¶</a></h1>
 <p>(thermal_history.utils.utilities)</p>
 <span class="target" id="module-thermal_history.utils.utilities"></span><dl class="py class">
 <dt class="sig sig-object py" id="thermal_history.utils.utilities.PackagePathFilter">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">PackagePathFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/utils/utilities.html#PackagePathFilter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.utils.utilities.PackagePathFilter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">logging.Filter</span></code></p>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Filter</span></code></p>
 <p>Custom filter to extract just the pathname realtive to the thermal_history package top level.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="thermal_history.utils.utilities.PackagePathFilter.filter">
@@ -197,7 +198,7 @@ If deemed appropriate, the record may be modified in-place.</p>
 <span class="sig-name descname"><span class="pre">create_parameters_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">fname</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">core_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stable_layer_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mantle_method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/utils/utilities.html#create_parameters_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.utils.utilities.create_parameters_file" title="Permalink to this definition">¶</a></dt>
 <dd><p>Generate an input parameters file for the specified methods.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fname</strong> (<em>file name for generated parameters file</em>) – </p></li>
 <li><p><strong>kwargs</strong> – </p></li>
@@ -216,7 +217,7 @@ If deemed appropriate, the record may be modified in-place.</p>
 <dd><p>Write parameter to file in a formatted manner.</p>
 <p>Used by create_parameters_file().</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>f</strong> (<em>_io.TextIOWrapper</em>) – File handle for parameters</p></li>
 <li><p><strong>key</strong> (<em>string</em>) – name of parameter</p></li>

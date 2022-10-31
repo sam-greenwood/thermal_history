@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>thermal_history.core_models.solid_FeS.routines.chemistry &mdash; thermal_history  documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../../../../../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../../../../" src="../../../../../_static/documentation_options.js"></script>
+        <script data-url_root="../../../../../" id="documentation_options" src="../../../../../_static/documentation_options.js"></script>
+        <script src="../../../../../_static/jquery.js"></script>
+        <script src="../../../../../_static/underscore.js"></script>
+        <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+        <script src="../../../../../_static/doctools.js"></script>
+    
+    <script type="text/javascript" src="../../../../../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/pygments.css" type="text/css" />
+  <link rel="stylesheet" href="../../../../../_static/css/theme.css" type="text/css" />
+    <link rel="index" title="Index" href="../../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../../../../../index.html" class="icon icon-home"> thermal_history
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../README.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../simple_example.html">Running a simple example</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../Advanced.html">Adding new methods</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../API_index.html">API</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">thermal_history</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../../../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../../../../index.html">Module code</a> &raquo;</li>
+        
+      <li>thermal_history.core_models.solid_FeS.routines.chemistry</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for thermal_history.core_models.solid_FeS.routines.chemistry</h1><div class="highlight"><pre>
+<span></span><span class="sd">&#39;&#39;&#39;New function for the melting curve to use in place of the one in the &#39;leeds&#39; core model.</span>
+<span class="sd">&#39;&#39;&#39;</span>
+
+<span class="c1">#Core chemistry functions</span>
+
+<span class="kn">from</span> <span class="nn">thermal_history.utils.optimised_funcs</span> <span class="kn">import</span> <span class="n">polyval</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">...leeds.routines.chemistry</span> <span class="kn">import</span> <span class="o">*</span>  <span class="c1">#Import all functions from the leeds core model. Then redefine melting curve.</span>
+
+
+<span class="n">kb</span> <span class="o">=</span> <span class="mf">1.3806485e-23</span>   <span class="c1">#Boltzmanns constant</span>
+<span class="n">ev</span> <span class="o">=</span> <span class="mf">1.602e-19</span>        <span class="c1">#Electron volt</span>
+<span class="n">Na</span> <span class="o">=</span> <span class="mf">6.022140857e23</span>   <span class="c1">#Avogadros Constant</span>
+
+
+<div class="viewcode-block" id="melting_curve"><a class="viewcode-back" href="../../../../../thermal_history.core_models.solid_FeS.routines.chemistry.html#thermal_history.core_models.solid_FeS.routines.chemistry.melting_curve">[docs]</a><span class="k">def</span> <span class="nf">melting_curve</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Calculates the melting curve and sets the mass fraction of light element in the solid iron core (conc_s) according to</span>
+<span class="sd">    the relevant partitioning model.</span>
+<span class="sd">    Different methods for the paramterisation of the melting curve can be set by the core_melting_params parameter.</span>
+<span class="sd">    In this parameter (a List), the first element is a string, followed by the constants (floats) required for the</span>
+<span class="sd">    parameterisation of conc_s and the melting curve. The accepted strings are currently:</span>
+
+<span class="sd">    &#39;AL&#39;: This method is also the default if no string is given. Uses the method of Alfe et al. (2002) to determine conc_s</span>
+<span class="sd">    based on equal chemical potentials at the ICB and the depression of the iron melting point for the alloy. The iron melting temperature is calculated using</span>
+<span class="sd">    polynomials in pressure, with the coefficients given after &#39;AL&#39; in core_melting_params.</span>
+<span class="sd">    E.g. = core_melting_params = [&#39;AL&#39;, Tl0, Tl1, Tl2.....]</span>
+
+<span class="sd">    &#39;SG&#39;: Uses the Simon-Glatzel parameterisation of the melting curve with fractionation of elements given by fixed</span>
+<span class="sd">    partitioning behaviour given by the partition_coeff parameter. After &#39;SG&#39;, the parameters required for the melting</span>
+<span class="sd">    curve are the constants Tl0, beta1 and beta2 (see Knibbe and Van Westrenen (2018) for details).</span>
+<span class="sd">    E.g. core_melting_params = [&#39;SG&#39;, Tl0, beta1, beta2]</span>
+
+<span class="sd">    &#39;WN&#39;: Uses the Williams and Nimmo (2004) parameterisation (also used in Davies and Pommier (2018)) for the melting curve.</span>
+<span class="sd">    Like &#39;SG&#39;, the partitioning is also described by fixed parition coefficients (=conc_s/conc_l) in the partition_coeff parameter.</span>
+<span class="sd">    After &#39;WN&#39;, the constants Tl0 and the polynomial coefficients in pressure should be given. E.g. in Davies and Pommier (2018)</span>
+<span class="sd">    this would be represented as core_melting_params = [&#39;WN&#39;, Tl0, 1, Tl1, Tl2]</span>
+
+<span class="sd">    &#39;RI&#39;: Uses a polynomial fit to Rivoldini&#39;s EOS model. Polynomial coefficients are for both Pressure and Compositional dependence</span>
+<span class="sd">    and are calculated in the included stand-alone script riv_pre_compute_poly.py. </span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    model : ThermalModel</span>
+<span class="sd">        ThermalModel class</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    (numpy.ndarray, numpy.ndarray, numpy.ndarray)</span>
+<span class="sd">        Tuple of 3 arrays for the melting point of iron, melting point of the alloy, and derivative of the alloy melting point with pressure.</span>
+<span class="sd">        Values are calculated on the same radial grid as all core profiles.</span>
+
+<span class="sd">    Raises</span>
+<span class="sd">    ------</span>
+<span class="sd">    ValueError</span>
+<span class="sd">        If an unrecognised string in core_melting_params is given.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">prm</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">parameters</span>
+    <span class="n">core</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">core</span>
+    <span class="n">P</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">]</span>
+    <span class="n">melting_params</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">core_melting_params</span>
+
+    <span class="c1">#Change in entropy on melting iron</span>
+    <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dS&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">entropy_melting</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;P&#39;</span><span class="p">],</span> <span class="n">prm</span><span class="o">.</span><span class="n">entropy_melting_params</span><span class="p">)</span>
+
+    <span class="c1">#Decide on which melting curve parameterisation to use based on 2 letter string at</span>
+    <span class="c1">#beginning of melting_params. If no string is given, assume values are for Alfe parameterisation.</span>
+    <span class="c1">#Can add more conditional statements to consider more parameterisations in the furture.</span>
+
+    <span class="c1">#Alfe 2002 method</span>
+    <span class="k">if</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;AL&#39;</span> <span class="ow">or</span> <span class="nb">type</span><span class="p">(</span><span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">item</span><span class="p">())</span> <span class="ow">in</span> <span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">==</span><span class="s1">&#39;AL&#39;</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1">#Don&#39;t pass through first string</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span>
+
+        <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">iron_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+        <span class="c1">#Calculate fractionation of LE</span>
+        <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">use_partition_coeff</span><span class="p">:</span>
+            <span class="c1">#Calc using fixed partition coefficients</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">conc_s</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span> <span class="o">*</span> <span class="n">prm</span><span class="o">.</span><span class="n">partition_coeff</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="c1">#Calc conc_s based on equal chemical potential</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">conc_s</span> <span class="o">=</span> <span class="n">LE_frac_dep</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">Tm_fe</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">_ri_idx</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">mm</span><span class="p">,</span>
+                                       <span class="n">prm</span><span class="o">.</span><span class="n">dmu</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">lambda_liq</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">lambda_sol</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">entropy_melting_params</span><span class="p">)</span>
+
+        <span class="n">core</span><span class="o">.</span><span class="n">mf_s</span> <span class="o">=</span> <span class="n">mass_conc2mole_frac</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">conc_s</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">mm</span><span class="p">)</span>
+
+
+
+        <span class="c1">#Melting point depression. Assumes constant dTm across the whole core since we use _ri_idx.</span>
+        <span class="n">dTm</span> <span class="o">=</span> <span class="n">melt_pt_dep</span><span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">mf_l</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">mf_s</span><span class="p">,</span> <span class="n">Tm_fe</span><span class="p">[</span><span class="n">core</span><span class="o">.</span><span class="n">_ri_idx</span><span class="p">],</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;dS&#39;</span><span class="p">][</span><span class="n">core</span><span class="o">.</span><span class="n">_ri_idx</span><span class="p">])</span>
+
+        <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">iron_melting_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="c1">#Simon Glatzel</span>
+    <span class="k">elif</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;SG&#39;</span><span class="p">:</span>
+
+        <span class="c1">#Simple partitioning</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">conc_s</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span> <span class="o">*</span> <span class="n">prm</span><span class="o">.</span><span class="n">partition_coeff</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1">#Don&#39;t pass through first string</span>
+        <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">simon_glatzel</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">dTm</span>   <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">simon_glatzel_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="c1">#Williams and Nimmo for iron snow. Needs conc_l in core.profiles.</span>
+    <span class="k">elif</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;WN&#39;</span><span class="p">:</span>
+
+        <span class="c1">#Simple partitioning</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">conc_s</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span> <span class="o">*</span> <span class="n">prm</span><span class="o">.</span><span class="n">partition_coeff</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1">#Don&#39;t use first string</span>
+        <span class="n">Tl0</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1">#Set up conc_l profile on first iteration</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;conc_l&#39;</span> <span class="ow">in</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;conc_l&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">prm</span><span class="o">.</span><span class="n">n_profiles</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">params</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">1</span><span class="p">:</span>
+            <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">Tl0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">)</span><span class="o">*</span><span class="n">polyval</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">:][::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">P</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1">#If Tm has no dependence on P</span>
+            <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">full</span><span class="p">(</span><span class="n">P</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">Tl0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">))</span>
+
+        <span class="n">dTm</span>   <span class="o">=</span> <span class="o">-</span><span class="n">Tm_fe</span><span class="o">*</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;conc_l&#39;</span><span class="p">]</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="p">)</span>
+
+        <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">Tl0</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">core</span><span class="o">.</span><span class="n">initial_conc_l</span><span class="o">-</span><span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;conc_l&#39;</span><span class="p">])</span><span class="o">*</span><span class="n">iron_melting_gradient</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
+
+
+    <span class="k">elif</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;RI&#39;</span><span class="p">:</span>
+        <span class="c1">#Melting temperature based on fitting Rivoldini&#39;s EOS model to represent</span>
+        <span class="c1">#Tm with polynomials in both pressure and composition. Polynomials are pre-computed</span>
+        <span class="c1">#using the riv_pre_compute_poly.py script in the routines sub-package. Output coefficients</span>
+        <span class="c1">#are saved into optimal_solution.txt and must be included into the parameters file.</span>
+
+        <span class="c1">#Simple partitioning</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">conc_s</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span> <span class="o">*</span> <span class="n">prm</span><span class="o">.</span><span class="n">partition_coeff</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1">#Don&#39;t use first string</span>
+
+        <span class="c1">#melting points of iron and alloy</span>
+        <span class="n">Tm_fe</span> <span class="o">=</span> <span class="n">riv_Tm</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">Tm</span> <span class="o">=</span> <span class="n">riv_Tm</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
+        <span class="n">dTm</span> <span class="o">=</span> <span class="n">Tm</span><span class="o">-</span><span class="n">Tm_fe</span>
+
+        <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">riv_dTm_dP</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">core</span><span class="o">.</span><span class="n">conc_l</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">params</span><span class="p">)</span>
+
+    <span class="k">elif</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;RU&#39;</span><span class="p">:</span>
+        <span class="c1">#Melting temperature based on Rückriemen et al. (2018). See their apendix A2.</span>
+
+        <span class="c1">#Simple partitioning</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">conc_s</span> <span class="o">=</span> <span class="mf">0.3647</span> <span class="c1">#FeS</span>
+
+        <span class="n">params</span> <span class="o">=</span> <span class="n">melting_params</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;float64&#39;</span><span class="p">)</span> <span class="c1">#Don&#39;t use first string</span>
+
+        <span class="n">T_eutectic</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="p">(</span><span class="n">P</span><span class="o">-</span><span class="n">params</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">dT_e_dP</span> <span class="o">=</span> <span class="o">-</span><span class="n">params</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+
+        <span class="n">Tm_fes</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span> <span class="o">+</span> <span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">*</span><span class="n">P</span> <span class="o">-</span> <span class="n">params</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="n">P</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">dTm_fes_dP</span> <span class="o">=</span> <span class="n">params</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">params</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span><span class="o">*</span><span class="n">P</span>
+
+        <span class="n">x_eu</span> <span class="o">=</span> <span class="mf">0.11</span> <span class="o">+</span> <span class="mf">0.187</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.065e-9</span><span class="o">*</span><span class="n">P</span><span class="p">)</span>
+        <span class="n">dx_dP</span> <span class="o">=</span> <span class="o">-</span><span class="mf">0.065e-9</span><span class="o">*</span><span class="mf">0.187</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.065e-9</span><span class="o">*</span><span class="n">P</span><span class="p">)</span>
+
+        <span class="n">Tm</span> <span class="o">=</span> <span class="n">Tm_fes</span> <span class="o">+</span> <span class="p">(</span><span class="n">Tm_fes</span><span class="o">-</span><span class="n">T_eutectic</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">0.3647</span><span class="o">-</span><span class="n">x_eu</span><span class="p">)</span>  <span class="o">*</span> <span class="p">(</span><span class="n">core</span><span class="o">.</span><span class="n">conc_l</span> <span class="o">-</span> <span class="mf">0.3647</span><span class="p">)</span>
+
+        <span class="n">dTm_dP</span> <span class="o">=</span> <span class="n">dTm_fes_dP</span> <span class="o">+</span> <span class="p">((</span><span class="mf">0.3647</span><span class="o">-</span><span class="n">x_eu</span><span class="p">)</span><span class="o">*</span><span class="n">dTm_fes_dP</span> <span class="o">-</span> <span class="n">Tm_fes</span><span class="o">*</span><span class="n">dx_dP</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="mf">0.3647</span><span class="o">-</span><span class="n">x_eu</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="p">((</span><span class="mf">0.3647</span><span class="o">-</span><span class="n">x_eu</span><span class="p">)</span><span class="o">*</span><span class="n">dT_e_dP</span> <span class="o">-</span> <span class="n">T_eutectic</span><span class="o">*</span><span class="n">dx_dP</span><span class="p">)</span><span class="o">/</span><span class="p">((</span><span class="mf">0.3647</span><span class="o">-</span><span class="n">x_eu</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">dTm_dP</span><span class="o">.</span><span class="n">size</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">j</span> <span class="o">&gt;</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">][</span><span class="n">j</span><span class="p">]</span> <span class="o">==</span> <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="p">[</span><span class="s1">&#39;r&#39;</span><span class="p">][</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]:</span>
+                <span class="n">dTm_dP</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="n">dTm_dP</span><span class="p">[</span><span class="n">j</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">dTm_dP</span><span class="p">[</span><span class="n">j</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tm</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">Tm</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="o">/</span><span class="p">(</span><span class="n">P</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">P</span><span class="p">[</span><span class="n">j</span><span class="p">])</span>
+        <span class="n">dTm_dP</span><span class="p">[</span><span class="n">j</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">dTm_dP</span><span class="p">[</span><span class="n">j</span><span class="p">]</span>
+
+        <span class="n">Tm_fe</span> <span class="o">=</span> <span class="p">(</span><span class="n">Tm_fes</span> <span class="o">+</span> <span class="p">(</span><span class="n">Tm_fes</span><span class="o">-</span><span class="n">T_eutectic</span><span class="p">)</span><span class="o">/</span><span class="p">(</span><span class="mf">0.3647</span><span class="o">-</span><span class="n">x_eu</span><span class="p">)</span>  <span class="o">*</span> <span class="p">(</span><span class="mi">0</span><span class="o">-</span><span class="mf">0.3647</span><span class="p">))</span>
+        <span class="n">dTm</span> <span class="o">=</span> <span class="n">Tm</span> <span class="o">-</span> <span class="n">Tm_fe</span>
+
+
+    <span class="k">else</span><span class="p">:</span>
+
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Incorrect string denoting which melting parameterisation to use. See this function (core_models.leeds.routines.chemisty.melting_curve) for valid options. Supplied core_melting_params=</span><span class="si">{</span><span class="n">melting_params</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+
+    <span class="n">Tm</span> <span class="o">=</span> <span class="n">Tm_fe</span> <span class="o">+</span> <span class="n">dTm</span>
+
+    <span class="k">return</span> <span class="n">Tm_fe</span><span class="p">,</span> <span class="n">Tm</span><span class="p">,</span> <span class="n">dTm_dP</span></div>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2022, Sam Greenwood
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

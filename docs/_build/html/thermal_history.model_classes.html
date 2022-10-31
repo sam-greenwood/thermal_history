@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -168,7 +169,7 @@
            <div itemprop="articleBody">
             
   <section id="model-classes">
-<h1>model_classes<a class="headerlink" href="#model-classes" title="Permalink to this headline">¶</a></h1>
+<h1>model_classes<a class="headerlink" href="#model-classes" title="Permalink to this heading">¶</a></h1>
 <p>(thermal_history.model_classes)</p>
 <span class="target" id="module-thermal_history.model_classes"></span><dl class="py class">
 <dt class="sig sig-object py" id="thermal_history.model_classes.BaseModel">
@@ -181,7 +182,7 @@ inherits from.</p>
 <span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#thermal_history.model_classes.BaseModel.model_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>String denoting the model type for internal checking</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string</p>
 </dd>
 </dl>
@@ -192,7 +193,7 @@ inherits from.</p>
 <span class="sig-name descname"><span class="pre">ys</span></span><a class="headerlink" href="#thermal_history.model_classes.BaseModel.ys" title="Permalink to this definition">¶</a></dt>
 <dd><p>Number of seconds in a year, commonly used constant.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -204,7 +205,7 @@ inherits from.</p>
 <dd><p>Placeholder for parameters class, unless the region is not modelled in which
 case it is left as None.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
 </dd>
 </dl>
@@ -230,10 +231,10 @@ The current ‘state’ of the model. This retrieves all attributes of the model
 with exceptions listed in the ‘ignore_list’ variable, and returns them in a
 dictionary. Used primarily for producing a dictionary of values to save.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary containing model attributes (minus those ignored)</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>state</p>
 </dd>
 </dl>
@@ -250,14 +251,14 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="thermal_history.model_classes.Core">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Core</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#Core"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.Core" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">thermal_history.model_classes.BaseModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
 <p>Core model class which inherits the BaseModel class.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="thermal_history.model_classes.Core.model_type">
 <span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#thermal_history.model_classes.Core.model_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>String denoting the model type for internal checking</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string</p>
 </dd>
 </dl>
@@ -268,14 +269,14 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="thermal_history.model_classes.Mantle">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">Mantle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#Mantle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.Mantle" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">thermal_history.model_classes.BaseModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
 <p>Mantle model class which inherits the BaseModel class.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="thermal_history.model_classes.Mantle.model_type">
 <span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#thermal_history.model_classes.Mantle.model_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>String denoting the model type for internal checking</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string</p>
 </dd>
 </dl>
@@ -286,14 +287,14 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="thermal_history.model_classes.StableLayer">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">StableLayer</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method_module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#StableLayer"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.StableLayer" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">thermal_history.model_classes.BaseModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
 <p>Stable layer model class which inherits the BaseModel class.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="thermal_history.model_classes.StableLayer.model_type">
 <span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#thermal_history.model_classes.StableLayer.model_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>String denoting the model type for internal checking</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string</p>
 </dd>
 </dl>
@@ -304,14 +305,14 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="thermal_history.model_classes.ThermalModel">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ThermalModel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parameters</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">methods</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">verbose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_file</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'out.log'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">log_level</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#ThermalModel"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.ThermalModel" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">thermal_history.model_classes.BaseModel</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#thermal_history.model_classes.BaseModel" title="thermal_history.model_classes.BaseModel"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></a></p>
 <p>Main thermal history model class. Contains the primary methods for calculating the evolution of the planet. This is the main class the user interacts with.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="thermal_history.model_classes.ThermalModel.model_type">
 <span class="sig-name descname"><span class="pre">model_type</span></span><a class="headerlink" href="#thermal_history.model_classes.ThermalModel.model_type" title="Permalink to this definition">¶</a></dt>
 <dd><p>String denoting the model type for internal checking</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>string</p>
 </dd>
 </dl>
@@ -322,7 +323,7 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <span class="sig-name descname"><span class="pre">time</span></span><a class="headerlink" href="#thermal_history.model_classes.ThermalModel.time" title="Permalink to this definition">¶</a></dt>
 <dd><p>Current time of the model. Initialised at zero by default and incrimented by the time step whenever evolve() is called.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
 </dl>
@@ -333,7 +334,7 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <span class="sig-name descname"><span class="pre">it</span></span><a class="headerlink" href="#thermal_history.model_classes.ThermalModel.it" title="Permalink to this definition">¶</a></dt>
 <dd><p>Iteration number (starts at 1)</p>
 <dl class="field-list simple">
-<dt class="field-odd">Type</dt>
+<dt class="field-odd">Type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>int</p>
 </dd>
 </dl>
@@ -351,13 +352,13 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <dd><p>Evolve the model one timestep.</p>
 <p>When this is called, the evolve method for each region is called, results are appended to the save_dict and the update method for each region is called.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dt</strong> (<em>Float</em>) – Time step for the model iteration (seconds)</p></li>
 <li><p><strong>print_freq</strong> (<em>int</em><em>, </em><em>optional</em>) – Number of iterations between progress messages printed to screen, by default 100</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If a negative step time is used when a stable layer is being solved for. Diffusion requires dt&gt;0.</p>
 </dd>
 </dl>
@@ -374,10 +375,10 @@ dictionary. Used primarily for producing a dictionary of values to save.</p>
 <span class="sig-name descname"><span class="pre">save_dict_to_numpy_array</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/model_classes.html#ThermalModel.save_dict_to_numpy_array"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.model_classes.ThermalModel.save_dict_to_numpy_array" title="Permalink to this definition">¶</a></dt>
 <dd><p>Convert the lists in save_dict to numpy arrays</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Copy of save_dict except that all values are converted to numpy arrays.</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dict</p>
 </dd>
 </dl>
@@ -401,10 +402,10 @@ this can be done manually after the users calls ThermalModel.evolve() at each ti
 contained with the ThermalModel by calling their state() methods and returns them
 in a dictionary.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Returns</dt>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
 <dd class="field-odd"><p>Dictionary containing all attributes for all regions being modelled</p>
 </dd>
-<dt class="field-even">Return type</dt>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
 <dd class="field-even"><p>Dict</p>
 </dd>
 </dl>
@@ -425,14 +426,14 @@ a binary file using pickle. The time at which this function is called is also ad
 parameters. The save_dict is also passed through save_dict_to_numpy_array() to convert all
 values to numpy arrays first.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fname</strong> (<em>Str</em>) – Name of the output file (.pik will be appended if not already included)</p></li>
 <li><p><strong>overwrite</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.</p></li>
 <li><p><strong>verbose</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will print to screen a confirmation of the name of the file that has been saved, by default True.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If a file with the same name already exists.</p>
 </dd>
 </dl>
@@ -446,14 +447,14 @@ values to numpy arrays first.</p>
 a binary file using pickle. The time at which this function is called is also added to the
 parameters.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>fname</strong> (<em>Str</em>) – Name of the output file (.pik will be appended if not already included)</p></li>
 <li><p><strong>overwrite</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will overwrite existing files with the same name, otherwise an error will be raised, by default False.</p></li>
 <li><p><strong>verbose</strong> (<em>Bool</em><em>, </em><em>optional</em>) – If True will print to screen a confirmation of the name of the file that has been saved, by default True.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If a file with the same name already exists.</p>
 </dd>
 </dl>

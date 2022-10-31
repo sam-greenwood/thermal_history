@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
         <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
         <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
@@ -178,16 +179,16 @@
            <div itemprop="articleBody">
             
   <section id="leeds-chemical">
-<h1>leeds_chemical<a class="headerlink" href="#leeds-chemical" title="Permalink to this headline">¶</a></h1>
+<h1>leeds_chemical<a class="headerlink" href="#leeds-chemical" title="Permalink to this heading">¶</a></h1>
 <p>(thermal_history.stable_layer_models.leeds_chemical)</p>
 <span class="target" id="module-thermal_history.stable_layer_models.leeds_chemical"></span><section class="tex2jax_ignore mathjax_ignore" id="overview">
-<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>Stable layer model for chemical stratification of Davies and Greenwood (2022). This model uses the method of Buffett and Seagle (2010) to grow the layer, with extensions to calculate the energy/entropy balance and couple to the rest of the core. The temperature profile is also found by solving the diffusion solution, with the thermal gradient at <code class="docutils literal notranslate"><span class="pre">rs</span></code> controlling the lower chemical boundary condition. Whilst multiple light elements may be present in the iron alloy, only 1 is treated as controlling the stable layer (the light element represented by the first value in the <code class="docutils literal notranslate"><span class="pre">conc_l</span></code> array). Others are assumed to match their uniform values in the bulk. This model must be used in conjunction with a core model.</p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="expected-attributes-of-other-regions">
-<h2>Expected attributes of other regions:<a class="headerlink" href="#expected-attributes-of-other-regions" title="Permalink to this headline">¶</a></h2>
+<h2>Expected attributes of other regions:<a class="headerlink" href="#expected-attributes-of-other-regions" title="Permalink to this heading">¶</a></h2>
 <p>Core must have the following attributes (i.e. model.core.X</p>
-<table class="colwidths-auto docutils align-default">
+<table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute</p></th>
 <th class="head"><p>Description</p></th>
@@ -221,7 +222,7 @@
 </tbody>
 </table>
 <p>Mantle must have the following attributes (i.e. model.mantle.X):</p>
-<table class="colwidths-auto docutils align-default">
+<table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute</p></th>
 <th class="head"><p>Description</p></th>
@@ -255,14 +256,14 @@
 </pre></div>
 </div>
 <section id="note-some-key-modelling-assumptions">
-<h3>Note some key modelling assumptions:<a class="headerlink" href="#note-some-key-modelling-assumptions" title="Permalink to this headline">¶</a></h3>
+<h3>Note some key modelling assumptions:<a class="headerlink" href="#note-some-key-modelling-assumptions" title="Permalink to this heading">¶</a></h3>
 <ol class="arabic simple">
 <li><p>A minimum chemical gradient is assumed at <code class="docutils literal notranslate"><span class="pre">rs</span></code> of <span class="math notranslate nohighlight">\(10^-10 \mathrm{m}^{-1}\)</span> to ensure numerical stability. Lower values than this threshold arrise from heat flows approaching or below the adiabatic heat flow at the CMB. In such a case, thermal stratification can begin to grow and would likely outpace the chemical layer. A chemical layer embedded within a thermal layer may then be the appropriate core structure. There is a stable layer method, `leeds_thermochemical’, under development that attempts to account for such a scenario. However, it to date has not been used in any publication.</p></li>
 <li><p>As mentioned above, only 1 light element is assumed to diffuse in the stable layer. The light element represented by the first value in the <code class="docutils literal notranslate"><span class="pre">model.core.conc_l</span></code> array (and subsequently any other arrays relating to light elements e.g. <code class="docutils literal notranslate"><span class="pre">dc_dt</span></code>) is solved for in the stable layer. All others are equal to the homogenous interior values.</p></li>
 </ol>
 </section>
 <section id="references">
-<h3>References:<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
+<h3>References:<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Buffett, B.A. and Seagle, C.T., 2010. Stratification of the top of the core due to chemical interactions with the mantle. Journal of Geophysical Research: Solid Earth, 115(B4).</p></li>
 <li><p>Davies, C.J. &amp; Greenwood, S. 2022. Dynamics in Earth’s core arising from thermo-chemical interactions with the mantle. In: Core-Mantle coevolution – A multidisciplinary approach. Wiley. (In Press). (Accepted).</p></li>
