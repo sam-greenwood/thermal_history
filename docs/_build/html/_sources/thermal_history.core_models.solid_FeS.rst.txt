@@ -10,6 +10,14 @@ solid\_FeS
    :show-inheritance:
 
 
+Packages:
+
+.. toctree::
+   :maxdepth: 1
+
+   thermal_history.core_models.solid_FeS.routines
+
+
 Modules:
 
 

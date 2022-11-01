@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -176,17 +177,17 @@
            <div itemprop="articleBody">
             
   <section id="leeds">
-<h1>leeds<a class="headerlink" href="#leeds" title="Permalink to this headline">¶</a></h1>
+<h1>leeds<a class="headerlink" href="#leeds" title="Permalink to this heading">¶</a></h1>
 <p>(thermal_history.core_models.leeds)</p>
 <span class="target" id="module-thermal_history.core_models.leeds"></span><section class="tex2jax_ignore mathjax_ignore" id="overview">
-<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this headline">¶</a></h2>
+<h2>Overview:<a class="headerlink" href="#overview" title="Permalink to this heading">¶</a></h2>
 <p>Core thermal evolution model first used in this form in Greenwood et al. (2021). The model is based on ongoing research at the University of Leeds and their collaborators, building upon the work by (but not exclusive to) Gubbins et al. (2004) and Davies (2015).</p>
 <p>This model calculates the energy and entropy budgets for the the thermo-chemical evolution of an adiabatic core. Support for stably stratified layers is built in and works with the <code class="docutils literal notranslate"><span class="pre">leeds_thermal</span></code> and <code class="docutils literal notranslate"><span class="pre">leeds_chemical</span></code> stable layer models. The iron snow model of Davies and Pommier (2018) is also built into this core model, enabled by the parameter <code class="docutils literal notranslate"><span class="pre">iron_snow=True</span></code>. The user is assumed to have established the freezing regime of the core a priori allowing them to prescribe a bottom-up or top-down freezing regime.</p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="expected-attributes-of-other-regions">
-<h2>Expected attributes of other regions:<a class="headerlink" href="#expected-attributes-of-other-regions" title="Permalink to this headline">¶</a></h2>
+<h2>Expected attributes of other regions:<a class="headerlink" href="#expected-attributes-of-other-regions" title="Permalink to this heading">¶</a></h2>
 <p>Mantle must have the following attributes (i.e. model.mantle.X):</p>
-<table class="colwidths-auto docutils align-default">
+<table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Attribute</p></th>
 <th class="head"><p>Description</p></th>
@@ -214,7 +215,7 @@
 </pre></div>
 </div>
 <section id="references">
-<h3>References<a class="headerlink" href="#references" title="Permalink to this headline">¶</a></h3>
+<h3>References<a class="headerlink" href="#references" title="Permalink to this heading">¶</a></h3>
 <ul class="simple">
 <li><p>Davies, C. (2015). Cooling history of Earth’s core with high thermal conductivity. Physics of the Earth and Planetary Interiors, 247, pp. 65-79.</p></li>
 <li><p>Greenwood, S., Davies, C. J., &amp; Mound, J. E. (2021). On the evolution of thermally stratified layers at the top of Earth’s core. Physics of the Earth and Planetary Interiors, 106763.</p></li>

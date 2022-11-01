@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -178,7 +179,7 @@
            <div itemprop="articleBody">
             
   <section id="main">
-<h1>main<a class="headerlink" href="#main" title="Permalink to this headline">¶</a></h1>
+<h1>main<a class="headerlink" href="#main" title="Permalink to this heading">¶</a></h1>
 <p>(thermal_history.mantle_models.knibbe_westrenen18.main)</p>
 <span class="target" id="module-thermal_history.mantle_models.knibbe_westrenen18.main"></span><dl class="py function">
 <dt class="sig sig-object py" id="thermal_history.mantle_models.knibbe_westrenen18.main.evolve">
@@ -191,7 +192,7 @@
 <span class="sig-name descname"><span class="pre">joint_conduction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">T_upper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">T_lower</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">H</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/mantle_models/knibbe_westrenen18/main.html#joint_conduction"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.mantle_models.knibbe_westrenen18.main.joint_conduction" title="Permalink to this definition">¶</a></dt>
 <dd><p>Steady state spherical conduction solution for n shells.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>T_upper</strong> (<em>float</em>) – Temperature at top of outer shell</p></li>
 <li><p><strong>T_lower</strong> (<em>float</em>) – Temperature at bottom of inner shell</p></li>
@@ -200,10 +201,10 @@
 <li><p><strong>k</strong> (<em>array</em>) – Thermal conductivities (W/m/K) of shells from outer to inner</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>list of coefficients for solution for each</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>list</p>
 </dd>
 </dl>
@@ -212,7 +213,7 @@
 internal volumetric heating rates (W/m^3). Radii are specified by an array of size n+1
 of the boundaries and interfaces. Index 0 of arrays refer to the values of the outer-most shell, proceeding
 to the inner-most shell. Temperature boundary conditions for the radii r0 and rn are required, with continuity
-of temperature and heat flux assumed at each interface:</p>
+of temperature and heat flux assumed at each interface (see diagram below).</p>
 <p>__________ r0, T_upper</p>
 <p>k1, H1</p>
 <p>__________ r1</p>

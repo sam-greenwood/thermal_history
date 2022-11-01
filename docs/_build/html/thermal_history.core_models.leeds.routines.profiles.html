@@ -5,7 +5,7 @@
 <!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+  <meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
@@ -25,6 +25,7 @@
         <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
         <script src="_static/jquery.js"></script>
         <script src="_static/underscore.js"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="_static/doctools.js"></script>
     
     <script type="text/javascript" src="_static/js/theme.js"></script>
@@ -180,24 +181,24 @@
            <div itemprop="articleBody">
             
   <section id="profiles">
-<h1>profiles<a class="headerlink" href="#profiles" title="Permalink to this headline">¶</a></h1>
+<h1>profiles<a class="headerlink" href="#profiles" title="Permalink to this heading">¶</a></h1>
 <p>(thermal_history.core_models.leeds.routines.profiles)</p>
 <span class="target" id="module-thermal_history.core_models.leeds.routines.profiles"></span><dl class="py function">
 <dt class="sig sig-object py" id="thermal_history.core_models.leeds.routines.profiles.adiabat">
 <span class="sig-name descname"><span class="pre">adiabat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adiabat_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#adiabat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.adiabat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adiabatic temperature</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>Tcen</strong> (<em>float</em>) – Temperature at center of core</p></li>
 <li><p><strong>adiabat_params</strong> (<em>array</em>) – adiabat polynomial coefficients</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Adiabatic temperature at r</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -208,17 +209,17 @@
 <span class="sig-name descname"><span class="pre">adiabat_grad</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adiabat_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#adiabat_grad"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.adiabat_grad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adiabatic temperature gradient</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>Tcen</strong> (<em>float</em>) – Temperature at center of core</p></li>
 <li><p><strong>adiabat_params</strong> (<em>array</em>) – adiabat polynomial coefficients</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Adiabatic temperature gradient at r</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -229,7 +230,7 @@
 <span class="sig-name descname"><span class="pre">adiabatic_heat_flow</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tcen</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">adiabat_poly</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#adiabatic_heat_flow"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.adiabatic_heat_flow" title="Permalink to this definition">¶</a></dt>
 <dd><p>Adiabatic heat flow</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>k</strong> (<em>array</em>) – thermal conductivity</p></li>
@@ -237,10 +238,10 @@
 <li><p><strong>adiabat_poly</strong> (<em>array</em>) – adiabat polynomial coefficients</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Adiabatic heat flow at r</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -253,7 +254,7 @@
 <p>Sets radius, rho, g, P, cp, alpha_T, psi, Ta, dTa_dr profiles.
 Also will set the adiabat polynomials if required.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>ThermalModel class</em>) – Main class being used for the calculation</p></li>
 <li><p><strong>setup</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to setup the profiles dictionary during model setup, by default False</p></li>
@@ -272,7 +273,7 @@ conductivity parameters should be a string (‘r’/’T’/’P’) indicating 
 polynomial coefficients. If only a single value is give, the thermal conductivity
 is given as constant with that value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>P</strong> (<em>arrat</em>) – pressure</p></li>
@@ -280,13 +281,13 @@ is given as constant with that value.</p>
 <li><p><strong>conductivity_params</strong> (<em>array</em>) – Conducitvity polynomial coefficients</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>thermal conductivity at r/P/T</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If more than one value is given in conductivity_params but no string is given indicating type of polynomial coefficients.</p>
 </dd>
 </dl>
@@ -297,16 +298,16 @@ is given as constant with that value.</p>
 <span class="sig-name descname"><span class="pre">density</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#density"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.density" title="Permalink to this definition">¶</a></dt>
 <dd><p>Density in the core</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>float</em><em> or </em><em>array</em>) – radius</p></li>
 <li><p><strong>density_params</strong> (<em>array</em>) – radial polynomial coefficients for density</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>density at r</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float or array</p>
 </dd>
 </dl>
@@ -317,16 +318,16 @@ is given as constant with that value.</p>
 <span class="sig-name descname"><span class="pre">entropy_melting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ent_melt_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#entropy_melting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.entropy_melting" title="Permalink to this definition">¶</a></dt>
 <dd><p>Change in entropy on fusion</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>P</strong> (<em>float</em><em> or </em><em>array</em>) – pressure</p></li>
 <li><p><strong>ent_melt_params</strong> (<em>array</em>) – pressure polynomial coefficients for change in entropy on fusion</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Change in entropy on fusion</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -341,7 +342,7 @@ given gravity, specific heat and thermal expansivity arrays. Then fits 3rd order
 polynomial coefficients normalised to the temperature at r[0]. The linear temperature
 dependence is also forced to be zero such that the adiabatic gradient is zero at r=0.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>g</strong> (<em>float</em><em> or </em><em>array</em>) – gravity</p></li>
@@ -349,10 +350,10 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <li><p><strong>alpha</strong> (<em>float</em><em> or </em><em>array</em>) – thermal expansivity</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>adiabatic temperature polynomial coefficients</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -363,16 +364,16 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <span class="sig-name descname"><span class="pre">grav_potential</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#grav_potential"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.grav_potential" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gravitational potential in the core</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>float</em><em> or </em><em>array</em>) – radius</p></li>
 <li><p><strong>density_params</strong> (<em>array</em>) – radial polynomial coefficients for density</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>gravititational potential at r</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float or array</p>
 </dd>
 </dl>
@@ -383,16 +384,16 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <span class="sig-name descname"><span class="pre">gravity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#gravity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.gravity" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gravity in the core</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>float</em><em> or </em><em>array</em>) – radius</p></li>
 <li><p><strong>density_params</strong> (<em>array</em>) – radial polynomial coefficients for density</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>gravity at r</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float or array</p>
 </dd>
 </dl>
@@ -403,20 +404,20 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <span class="sig-name descname"><span class="pre">ic_radius</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ta</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Tm</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#ic_radius"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.ic_radius" title="Permalink to this definition">¶</a></dt>
 <dd><p>Find the inner core radius by intersection of melting curve</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>Ta</strong> (<em>array</em>) – temperature</p></li>
 <li><p><strong>Tm</strong> (<em>array</em>) – melting temperature</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>inner core radius</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>float</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If ri comes to be NaN, r, T, Tm arrays will be logged.</p>
 </dd>
 </dl>
@@ -427,7 +428,7 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <span class="sig-name descname"><span class="pre">mass</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rho_ic_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rho_oc_poly</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rs</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_cmb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#mass"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.mass" title="Permalink to this definition">¶</a></dt>
 <dd><p>mass of regions within the core</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>rho_ic_poly</strong> (<em>array</em>) – inner core density polynomial coefficients</p></li>
 <li><p><strong>rho_oc_poly</strong> (<em>array</em>) – outer core density polynomial coefficient</p></li>
@@ -436,10 +437,10 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <li><p><strong>r_cmb</strong> (<em>float</em>) – CMB radius</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>Masses for the inner core, convecting outer core, stable layer, total mass</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>(float, float, float, float)</p>
 </dd>
 </dl>
@@ -450,7 +451,7 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <span class="sig-name descname"><span class="pre">mass_correct</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">solid_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ri</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">M</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_cmb</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#mass_correct"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.mass_correct" title="Permalink to this definition">¶</a></dt>
 <dd><p>Correct outer core density polynomials to account for changing LE concentration.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>solid_params</strong> (<em>array</em>) – inner core density polynomial coefficients</p></li>
 <li><p><strong>liquid_params</strong> (<em>array</em>) – outer core density polynomial coefficients</p></li>
@@ -459,10 +460,10 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <li><p><strong>r_cmb</strong> (<em>float</em>) – CMB radius</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>corrected outer core density polynomial coefficients</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -475,16 +476,16 @@ dependence is also forced to be zero such that the adiabatic gradient is zero at
 <p>Creates the adaptive radial grid that ensures 2 radii at each interface to allow
 for resolving dicontinuous variables. E.g. 2 points at the ICB to resolve density jump.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>radii</strong> (<em>array</em>) – radii for layer interfaces throughout the core, in order.</p></li>
 <li><p><strong>n_points</strong> (<em>int</em>) – Number of radial grid points</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>radial grid</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>
@@ -495,20 +496,20 @@ for resolving dicontinuous variables. E.g. 2 points at the ICB to resolve densit
 <span class="sig-name descname"><span class="pre">specific_heat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">r</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">P</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cp_params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/thermal_history/core_models/leeds/routines/profiles.html#specific_heat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#thermal_history.core_models.leeds.routines.profiles.specific_heat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Specific heat capacity as a function of Pressure.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>P</strong> (<em>array</em>) – Pressure</p></li>
 <li><p><strong>cp_params</strong> (<em>array</em>) – pressure polynomial coefficients for specific heat</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>specific heat capacity at P</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
-<dt class="field-even">Raises</dt>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
 <dd class="field-even"><p><strong>ValueError</strong> – If more than constant cp is given (cp_params is longer than one number), not yet implemented</p>
 </dd>
 </dl>
@@ -520,7 +521,7 @@ for resolving dicontinuous variables. E.g. 2 points at the ICB to resolve densit
 <dd><p>Set the temperature dependent profiles.</p>
 <p>Sets the k, Qa, T profiles.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>model</strong> (<em>ThermalModel class</em>) – Main class being used for the calculation</p></li>
 <li><p><strong>setup</strong> (<em>bool</em><em>, </em><em>optional</em>) – Flag to setup the profiles dictionary during model setup, by default False</p></li>
@@ -537,17 +538,17 @@ for resolving dicontinuous variables. E.g. 2 points at the ICB to resolve densit
 If only a single value is given in the alpha_params array, then alpha will be constant
 with this value.</p>
 <dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>r</strong> (<em>array</em>) – radius</p></li>
 <li><p><strong>P</strong> (<em>array</em>) – pressure</p></li>
 <li><p><strong>alpha_params</strong> (<em>array</em>) – parameters for thermal expansivity in the order: alpha_T at ambient pressure, bulk modulus, derivative of bulk modulus with pressure</p></li>
 </ul>
 </dd>
-<dt class="field-even">Returns</dt>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>thermal expansivity at P</p>
 </dd>
-<dt class="field-odd">Return type</dt>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>array</p>
 </dd>
 </dl>

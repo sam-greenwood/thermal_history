@@ -24,6 +24,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
@@ -190,17 +191,16 @@
     <span class="k">if</span> <span class="n">prm</span><span class="o">.</span><span class="n">layer_thickness</span><span class="o">==</span><span class="mi">0</span><span class="p">:</span>
         <span class="n">prm</span><span class="o">.</span><span class="n">primordial_layer</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="c1">#Commented out because a core model is now required.</span>
-    <span class="c1"># #If no core model is being used, assume simple case of fully molten core</span>
-    <span class="c1"># if not prm.core:</span>
-    <span class="c1">#     core.T_cmb = prm.T_cmb</span>
-    <span class="c1">#     core.ri = 0</span>
-    <span class="c1">#     core.r_snow = prm.r_cmb</span>
 
-    <span class="c1">#     #Set core profiles</span>
-    <span class="c1">#     prof.basic_profiles(model)</span>
-    <span class="c1">#     prof.temp_dependent_profiles(model)</span>
-    <span class="k">assert</span> <span class="n">prm</span><span class="o">.</span><span class="n">core</span><span class="p">,</span> <span class="s2">&quot;A core model is required for this method!&quot;</span>
+    <span class="c1">#If no core model is being used, assume simple case of fully molten core</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">prm</span><span class="o">.</span><span class="n">core</span><span class="p">:</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">T_cmb</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">T_cmb</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">ri</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">core</span><span class="o">.</span><span class="n">r_snow</span> <span class="o">=</span> <span class="n">prm</span><span class="o">.</span><span class="n">r_cmb</span>
+
+        <span class="c1">#Set core profiles</span>
+        <span class="n">prof</span><span class="o">.</span><span class="n">basic_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="n">prof</span><span class="o">.</span><span class="n">temp_dependent_profiles</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 
     <span class="c1">#Initialise profiles dictionaries</span>

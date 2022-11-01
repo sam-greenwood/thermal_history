@@ -24,6 +24,7 @@
         <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
         <script src="../../../../_static/jquery.js"></script>
         <script src="../../../../_static/underscore.js"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
         <script src="../../../../_static/doctools.js"></script>
     
     <script type="text/javascript" src="../../../../_static/js/theme.js"></script>
@@ -557,7 +558,7 @@
 <span class="sd">    internal volumetric heating rates (W/m^3). Radii are specified by an array of size n+1</span>
 <span class="sd">    of the boundaries and interfaces. Index 0 of arrays refer to the values of the outer-most shell, proceeding</span>
 <span class="sd">    to the inner-most shell. Temperature boundary conditions for the radii r0 and rn are required, with continuity</span>
-<span class="sd">    of temperature and heat flux assumed at each interface:</span>
+<span class="sd">    of temperature and heat flux assumed at each interface (see diagram below).</span>
 
 <span class="sd">    __________ r0, T_upper</span>
 
@@ -586,7 +587,7 @@
 <span class="sd">    Example for 2 shells:</span>
 
 <span class="sd">    .. code-block:: python</span>
-<span class="sd">    </span>
+
 <span class="sd">        #Temperature Boundary conditions</span>
 <span class="sd">        T_upper=1</span>
 <span class="sd">        T_lower=1</span>
