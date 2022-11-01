@@ -53,6 +53,11 @@ jobs:
     - name: commit build
       run: |
           git add docs/_build/html
-          git commit -m 'Built latest docs'
-          git push
+          git diff --cached --exit-code
+          if [ $? != 0 ]
+          then
+            git commit -m 'Built latest docs'
+            git push
+          fi
+          
       
