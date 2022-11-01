@@ -24,7 +24,7 @@ def test_simon_glatzel():
 
     P = np.array([6e9])
 
-    Tm_fe   = simon_glatzel(P, melting_params)
+    Tm   = simon_glatzel(P, melting_params)
     assert Tm[0] == 2, f"iron_melting should give [2], not: {Tm}"
 
     Tm_grad = simon_glatzel_gradient(P, melting_params)
