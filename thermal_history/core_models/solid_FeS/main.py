@@ -25,10 +25,10 @@ logger = logging.getLogger(__name__)
 
 #Use functions from leeds core model. Just the snow_evolution function is modified in comparison
 from thermal_history.core_models.leeds.main import setup, evolve, update, set_Q_rs, progress, required_params, optional_params
+import thermal_history.core_models.leeds.main as leeds
 
 
-#Extra functions used by the main functions 'setup', 'evolve', and 'update'.
-
+#Redefine snow evolution for solid FeS then overwrite leeds.snow_evolution.
 def snow_evolution(model):
     '''
     Sub-evolution fuction specifically for a freezing solid FeS layer as in Rückriemen et al. (2018). Called from evolution() if required (prm.iron_snow=True).
@@ -183,6 +183,7 @@ def snow_evolution(model):
 
         # Ql_snow_tilde, Ql_freezing_tilde, Ql_melting_tilde, Qg_freezing_tilde, Qg_melting_tilde, Qg_snow_tilde = 0,0,0,0,0,0
 
+        # breakpoint()
 
     else:
         L = prof.entropy_melting(P, prm.entropy_melting_params) * prm.Na *1000/prm.mm[0] * Tm
@@ -208,3 +209,5 @@ def snow_evolution(model):
     core.profiles.update({'L': L, 'Cl': Cl, 'phi_snow': phi_snow, 'Tm': Tm, 'conc_l': conc_l_profile, 'T': T})
 
     return snow_dict
+
+leeds.snow_evolution = snow_evolution
