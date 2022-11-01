@@ -177,10 +177,10 @@
 
 <span class="c1">#Use functions from leeds core model. Just the snow_evolution function is modified in comparison</span>
 <span class="kn">from</span> <span class="nn">thermal_history.core_models.leeds.main</span> <span class="kn">import</span> <span class="n">setup</span><span class="p">,</span> <span class="n">evolve</span><span class="p">,</span> <span class="n">update</span><span class="p">,</span> <span class="n">set_Q_rs</span><span class="p">,</span> <span class="n">progress</span><span class="p">,</span> <span class="n">required_params</span><span class="p">,</span> <span class="n">optional_params</span>
+<span class="kn">import</span> <span class="nn">thermal_history.core_models.leeds.main</span> <span class="k">as</span> <span class="nn">leeds</span>
 
 
-<span class="c1">#Extra functions used by the main functions &#39;setup&#39;, &#39;evolve&#39;, and &#39;update&#39;.</span>
-
+<span class="c1">#Redefine snow evolution for solid FeS then overwrite leeds.snow_evolution.</span>
 <div class="viewcode-block" id="snow_evolution"><a class="viewcode-back" href="../../../../thermal_history.core_models.solid_FeS.main.html#thermal_history.core_models.solid_FeS.main.snow_evolution">[docs]</a><span class="k">def</span> <span class="nf">snow_evolution</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">    Sub-evolution fuction specifically for a freezing solid FeS layer as in Rückriemen et al. (2018). Called from evolution() if required (prm.iron_snow=True).</span>
@@ -335,6 +335,7 @@
 
         <span class="c1"># Ql_snow_tilde, Ql_freezing_tilde, Ql_melting_tilde, Qg_freezing_tilde, Qg_melting_tilde, Qg_snow_tilde = 0,0,0,0,0,0</span>
 
+        <span class="c1"># breakpoint()</span>
 
     <span class="k">else</span><span class="p">:</span>
         <span class="n">L</span> <span class="o">=</span> <span class="n">prof</span><span class="o">.</span><span class="n">entropy_melting</span><span class="p">(</span><span class="n">P</span><span class="p">,</span> <span class="n">prm</span><span class="o">.</span><span class="n">entropy_melting_params</span><span class="p">)</span> <span class="o">*</span> <span class="n">prm</span><span class="o">.</span><span class="n">Na</span> <span class="o">*</span><span class="mi">1000</span><span class="o">/</span><span class="n">prm</span><span class="o">.</span><span class="n">mm</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">Tm</span>
@@ -360,6 +361,8 @@
     <span class="n">core</span><span class="o">.</span><span class="n">profiles</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="s1">&#39;L&#39;</span><span class="p">:</span> <span class="n">L</span><span class="p">,</span> <span class="s1">&#39;Cl&#39;</span><span class="p">:</span> <span class="n">Cl</span><span class="p">,</span> <span class="s1">&#39;phi_snow&#39;</span><span class="p">:</span> <span class="n">phi_snow</span><span class="p">,</span> <span class="s1">&#39;Tm&#39;</span><span class="p">:</span> <span class="n">Tm</span><span class="p">,</span> <span class="s1">&#39;conc_l&#39;</span><span class="p">:</span> <span class="n">conc_l_profile</span><span class="p">,</span> <span class="s1">&#39;T&#39;</span><span class="p">:</span> <span class="n">T</span><span class="p">})</span>
 
     <span class="k">return</span> <span class="n">snow_dict</span></div>
+
+<span class="n">leeds</span><span class="o">.</span><span class="n">snow_evolution</span> <span class="o">=</span> <span class="n">snow_evolution</span>
 </pre></div>
 
            </div>
