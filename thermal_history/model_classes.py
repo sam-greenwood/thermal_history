@@ -192,15 +192,6 @@ class ThermalModel(BaseModel):
             getattr(self,r).setup(self)
 
 
-        # #Set log level and log file
-        # import logging
-        # if debug:
-        #     logging.basicConfig(filename=self.parameters.filename+'.log', level=logging.DEBUG)
-        # else:
-        #     logging.basicConfig(filename=self.parameters.filename+'.log', level=logging.INFO)
-
-        # self.logger = logging.getLogger(__name__)
-
         #Print out initial conditions
         if verbose:
             print('\n~~~~~ Initial Conditions ~~~~~')
@@ -418,6 +409,31 @@ class ThermalModel(BaseModel):
 
         return x
 
+    def warnings(self, verbose=True):
+        '''returns the number of warnings generated in the log file.
+
+        Parameters
+        ----------
+        verbose : bool, optional
+            print out each warning, by default True
+
+        Returns
+        -------
+        int
+            number of warnings
+        '''
+
+        #Get number of warnings
+        with open(self.log_file) as f:
+            n_warn = 0
+            for line in f:
+                n_warn += 1
+
+                if verbose:
+                    print(line)
+
+        return n_warn
+
     def write_data(self, fname, overwrite=False, verbose=True):
         '''Writes the model data to a binary file.
 
@@ -451,6 +467,11 @@ class ThermalModel(BaseModel):
             else:
                 logger.error(f'{fname} already exists')
                 raise ValueError(f'{fname} already exists')
+
+        #Check for warnings in log file and alert user if needed
+        n_warn = self.warnings(verbose=False)
+        if n_warn > 0:
+            print(f'Note {n_warn} warnings present in {self.log_file}')
 
         #Convert to numpy array
         numpy_dict = self.save_dict_to_numpy_array()
