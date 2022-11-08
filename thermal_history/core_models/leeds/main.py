@@ -437,7 +437,13 @@ def evolve(model):
         core.mass_le_solid = 0
 
     if core.r_snow > 0:
-        core.mass_le_liq  = 4*np.pi*trapezoid(r[:snow_idx], r[:snow_idx]**2*rho[:snow_idx]*np.sum(core.conc_l))[-1]
+        if core.r_snow == prm.r_cmb:
+            radius = r
+            density = rho
+        else:
+            radius = r[:snow_idx]
+            density = rho[:snow_idx]
+        core.mass_le_liq  = 4*np.pi*trapezoid(radius, radius**2*density*np.sum(core.conc_l))[-1]
     else:
         core.mass_le_liq = 0
 

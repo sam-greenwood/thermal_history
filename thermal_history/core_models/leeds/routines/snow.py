@@ -68,13 +68,25 @@ def check_top_down_freezing(r, T, Tm):
         Melting temperature
     '''
 
+
+    top_down = True
     
     if T[0]-Tm[0] >= 0:
         flag = 'liquid'
+
+        #Still fully liquid
+        if np.min(T-Tm) > 0:
+            #Check if likely to be top_down
+            if np.min(T-(T[-1]-Tm[-1]) - Tm) < 0:
+                logger.warning('May not be top-down freezing, currently regions of Tm are steeper than T.')
+
+                #Set top_down to False if freezing starts
+                if T[0]<Tm[0]:
+                    top_down=False
+            
     else:
         flag = 'solid'
     
-    top_down = True
     #Iterate up and check for intermediate snow zones or bottom up
     for i in range(1,r.size):
 
