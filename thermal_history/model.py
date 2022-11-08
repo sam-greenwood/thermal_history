@@ -51,14 +51,16 @@ def setup_model(parameters, core_method =         None,
                'stable_layer': stable_layer_method,
                'mantle':       mantle_method}
 
+    #Check which regions should be modelled have been specified
+    for r in methods.keys():
+        assert hasattr(parameters, r), f"parameters has no attribute {r}. Set to True or False"
+
     #Check that supplied methods are consistent with regions specified in parameters
     for key, r in methods.items():
         if r == None and getattr(parameters, key):
             raise ValueError(f'{key} is set to True in parameters but a method has not been specified for it')
         elif type(r)==str and not getattr(parameters, key):
-            if verbose:
-                print(f'{key} is set to False in parameters but a method has been specified for that region. Ignoring method specified.')
-            methods[key] = None
+            raise ValueError(f'{key} is set to False in parameters but a method has been specified for that region.')
 
     required_params = {}
     optional_params = {}
