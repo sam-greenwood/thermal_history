@@ -23,8 +23,8 @@ logger = logging.getLogger(__name__)
 
 #Required functions: setup(), evolution(), update()
 
-#Use functions from leeds core model. Just the snow_evolution function is modified in comparison
-from thermal_history.core_models.leeds.main import setup, evolve, update, set_Q_rs, progress, required_params, optional_params
+#Use functions from leeds core model. Just the snow_evolution, update and set_Q_rs functions are modified in comparison
+from thermal_history.core_models.leeds.main import setup, evolve, progress, required_params, optional_params
 import thermal_history.core_models.leeds.main as leeds
 
 
@@ -151,11 +151,11 @@ def snow_evolution(model):
         # Ql_melting_tilde,  El_melting_tilde  = snow.latent_snow(r, rho, -L[snow_idx], Cl, conc_l_profile, T, snow_idx)
 
         # *** Simple latent heat at advancing boundary ***
-        Ql_freezing_tilde, El_freezing_tilde = en.latent_heat(core.r_snow, rho, T, -Cr_snow, L, snow_idx) #Negative Cr because these fncts are for inner core
+        Ql_snow_tilde, El_snow_tilde = en.latent_heat(core.r_snow, rho, T, -Cr_snow, L, snow_idx) #Negative Cr because these fncts are for inner core
 
+        Ql_freezing_tilde, El_freezing_tilde = 0, 0
         Ql_melting_tilde,  El_melting_tilde = 0, 0
-        Ql_snow_tilde, El_snow_tilde = 0,0
-
+        
         # *** NOT NEEDED ***
         #Cp factor, normalises changing mass fraction in liquid region to changes in slurry mass fraction (which in turn uses Cl to relate to cooling)
         #Uses DP18 eqn 20
@@ -168,8 +168,8 @@ def snow_evolution(model):
         # Qg_freezing_tilde, Eg_freezing_tilde = snow.gravitational_freezing(r, rho, psi, prm.alpha_c[0], Cl, T, snow_idx)
         # Qg_melting_tilde,  Eg_melting_tilde  = snow.gravitational_melting(r, rho,  psi, prm.alpha_c[0], Cp_snow, Cc_snow, Cr_snow, T[-1], snow_idx)
 
-        Qg_freezing_tilde, Eg_freezing_tilde = en.gravitational(r, T, rho, psi, -Cr_snow, Cc_snow, M_liquid, prm.alpha_c, 0, snow_idx, Tcmb=core.T_cmb) #Negative Cr because these fncts are for inner core
-        Qg_melting_tilde,  Eg_melting_tilde = 0, 0
+        Qg_freezing_tilde, Eg_freezing_tilde = 0, 0
+        Qg_melting_tilde,  Eg_melting_tilde = en.gravitational(r, T, rho, psi, -Cr_snow, Cc_snow, M_liquid, prm.alpha_c, 0, snow_idx, Tcmb=core.T_cmb) #Negative Cr because these fncts are for inner core
         Qg_snow_tilde, Eg_snow_tilde = 0, 0
 
         # I showed in the notes on the gravitational energy than this term should include the jump in conc_l
@@ -211,3 +211,115 @@ def snow_evolution(model):
     return snow_dict
 
 leeds.snow_evolution = snow_evolution
+
+import matplotlib.pyplot as plt
+def update(model):
+    '''
+    Updates parameters based on rates of change calculatied in main fuction.
+
+    Parameters
+    ----------
+    model : ThermalModel Class
+        Main model
+    '''
+
+    prm = model.parameters
+    core= model.core
+    profiles = core.profiles
+
+    #Update with RoC
+    core.Tcen   += model.dt*core.dT_dt
+    core.conc_l += model.dt*core.dc_dt
+    core.mf_l    = chem.mass_conc2mole_frac(core.conc_l, prm.mm)
+    core.mf_s    = chem.mass_conc2mole_frac(core.conc_s, prm.mm)
+
+    #Update conc_l profile
+    if 'conc_l' in profiles.keys():
+        profiles['conc_l'][:core._snow_idx] = core.conc_l[0]
+
+    #Update temperature/melting curve to find new snow/ICB radius
+    profiles['T'] = prof.adiabat(profiles['r'], core.Tcen, prm.core_adiabat_params)
+    if prm.stable_layer:
+        sl_prof =  model.stable_layer._next_profiles
+        profiles['T'][core._rs_idx:] = np.interp(profiles['r'][core._rs_idx:], sl_prof['r'], sl_prof['T'])
+
+    profiles['Tm_fe'], profiles['Tm'], profiles['dTm_dP'] = chem.melting_curve(model)
+
+        
+    #New snow/ICB radius
+    if prm.iron_snow:
+        idx = core._snow_idx
+        core.r_snow = snow.snow_radius(profiles['r'][:idx+1], profiles['T'][:idx+1], profiles['Tm'][:idx+1])
+        # if core.r_snow < prm.r_cmb:
+        #     breakpoint()
+
+    else:
+        core.ri = prof.ic_radius(profiles['r'],
+                                prof.adiabat(profiles['r'], core.Tcen, prm.core_adiabat_params),
+                                profiles['Tm'])
+
+        if core.ri == prm.r_cmb:
+            model.critical_failure = True
+            logger.critical(f'it: {model.it}. Inner core has covered entire core!! Not defined how to procede')
+
+    #Update profiles on new grid
+    prof.basic_profiles(model)
+    prof.temp_dependent_profiles(model)
+    profiles['Tm_fe'], profiles['Tm'], profiles['dTm_dP'] = chem.melting_curve(model)
+
+    #Check if top-down freezing
+    if prm.iron_snow:
+        idx = core._snow_idx
+        if idx > 1:
+            flag = snow.check_top_down_freezing(profiles['r'][:idx], profiles['T'][:idx], profiles['Tm'][:idx])
+
+            if not flag:
+                model.critical_failure = True
+                model.critical_failure_reason = 'Not top down freezing'
+                logger.critical(f'it: {model.it}. Intermediate freezing occuring, not exclusively top-down from CMB!')
+
+
+leeds.update = update
+
+
+def set_Q_rs(model):
+    '''
+    Sets the heat flow at the top of the convecting region (rs)
+
+    Parameters
+    ----------
+    model : ThermalModel Class
+        Main model
+
+    Returns
+    -------
+    Float
+        The heat flow at rs
+    '''
+    prm  = model.parameters
+    core = model.core
+    sl   = model.stable_layer
+    rs_idx = core._rs_idx
+    snow_idx = core._snow_idx
+    k = core.profiles['k']
+
+
+    if prm.stable_layer:
+        #If stable layer is thicker than snow layer
+        if core.rs < core.r_snow and core.rs < prm.r_cmb:
+            Q_rs = -4 * np.pi * core.rs**2 * k[rs_idx] * sl.T_grad_s
+
+        #If snow layer is thicker than stable layer
+        elif core.r_snow < core.rs:
+            Q_rs = -4 * np.pi * core.r_snow**2 * k[snow_idx] * sl.T_grad_s
+
+        else:
+            Q_rs = model.core.Q_cmb
+
+    else:
+        Q_rs = model.core.Q_cmb
+
+    return Q_rs
+
+leeds.set_Q_rs = set_Q_rs
+

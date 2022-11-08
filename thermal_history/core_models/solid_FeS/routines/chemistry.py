@@ -6,6 +6,9 @@
 from thermal_history.utils.optimised_funcs import polyval
 import numpy as np
 
+import logging
+logger = logging.getLogger(__name__)
+
 from ...leeds.routines.chemistry import *  #Import all functions from the leeds core model. Then redefine melting curve.
 
 
@@ -155,27 +158,8 @@ def melting_curve(model):
 
         params = melting_params[1:].astype('float64') #Don't use first string
 
-        T_eutectic = params[0] - params[1]*(P-params[2])
-        dT_e_dP = -params[1]
-
-        Tm_fes = params[3] + params[4]*P - params[5]*P**2
-        dTm_fes_dP = params[4] - 2*params[5]*P
-
-        x_eu = 0.11 + 0.187*np.exp(-0.065e-9*P)
-        dx_dP = -0.065e-9*0.187*np.exp(-0.065e-9*P)
-
-        Tm = Tm_fes + (Tm_fes-T_eutectic)/(0.3647-x_eu)  * (core.conc_l - 0.3647)
-
-        dTm_dP = dTm_fes_dP + ((0.3647-x_eu)*dTm_fes_dP - Tm_fes*dx_dP)/((0.3647-x_eu)**2) - ((0.3647-x_eu)*dT_e_dP - T_eutectic*dx_dP)/((0.3647-x_eu)**2)
-
-        for j in range(dTm_dP.size-1):
-            if j > 1 and core.profiles['r'][j] == core.profiles['r'][j+1]:
-                dTm_dP[j] = dTm_dP[j-1]
-            else:
-                dTm_dP[j] = (Tm[j+1]-Tm[j])/(P[j+1]-P[j])
-        dTm_dP[j+1] = dTm_dP[j]
-
-        Tm_fe = (Tm_fes + (Tm_fes-T_eutectic)/(0.3647-x_eu)  * (0-0.3647))
+        Tm_fe, Tm, dTm_dP = melting_temp_R18(core.profiles['r'], core.profiles['P'], core.conc_l[0], params)
+        
         dTm = Tm - Tm_fe
 
 
@@ -187,3 +171,53 @@ def melting_curve(model):
 
     return Tm_fe, Tm, dTm_dP
 
+
+def melting_temp_R18(r, P, conc_l, melting_params):
+    '''Melting curve of Ruckreimen et al. (2018) for S rich Fe-S alloys.
+
+    Parameters
+    ----------
+    r : array
+        radial array for whole core
+    P : array
+        pressure array for whole core
+    conc_l : float
+        mass fraction of S
+    melting_params : array
+        parameters for melting temperature.
+
+    Returns
+    -------
+    (array, array)
+        Iron melting temperature and iron-sulphur alloy melting temperature.
+    '''
+
+    #Eutectic temperature
+    T_eutectic = melting_params[0] - melting_params[1]*(P-melting_params[2])
+    dT_e_dP = -melting_params[1] #gradient with P.
+
+    #Melting temp of FeS
+    Tm_fes = melting_params[3] + melting_params[4]*P - melting_params[5]*P**2
+    dTm_fes_dP = melting_params[4] - 2*melting_params[5]*P #gradient with P
+
+    #Eutectic composition
+    x_eu = 0.11 + 0.187*np.exp(-0.065e-9*P)
+    dx_dP = -0.065e-9*0.187*np.exp(-0.065e-9*P) #gradient with P
+
+    if conc_l <= np.min(x_eu):
+        logger.critical(f'Liquid bulk has reached eutectic composition!! conc_l:{conc_l}, min(x_eu): {np.min(x_eu)}')
+
+    Tm = Tm_fes + (Tm_fes-T_eutectic)/(0.3647-x_eu)  * (conc_l - 0.3647)
+
+    dTm_dP = dTm_fes_dP + ((0.3647-x_eu)*dTm_fes_dP - Tm_fes*dx_dP)/((0.3647-x_eu)**2) - ((0.3647-x_eu)*dT_e_dP - T_eutectic*dx_dP)/((0.3647-x_eu)**2)
+
+    for j in range(dTm_dP.size-1):
+        if j > 1 and r[j] == r[j+1]:
+            dTm_dP[j] = dTm_dP[j-1]
+        else:
+            dTm_dP[j] = (Tm[j+1]-Tm[j])/(P[j+1]-P[j])
+    dTm_dP[j+1] = dTm_dP[j]
+
+    Tm_fe = (Tm_fes + (Tm_fes-T_eutectic)/(0.3647-x_eu)  * (0-0.3647))
+
+    return Tm_fe, Tm, dTm_dP
