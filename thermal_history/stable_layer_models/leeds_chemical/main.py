@@ -39,16 +39,17 @@ def setup(model):
     if prm.layer_thickness==0:
         prm.primordial_layer = 0
 
+    #Commented out because a core model is now required.
+    # #If no core model is being used, assume simple case of fully molten core
+    # if not prm.core:
+    #     core.T_cmb = prm.T_cmb
+    #     core.ri = 0
+    #     core.r_snow = prm.r_cmb
 
-    #If no core model is being used, assume simple case of fully molten core
-    if not prm.core:
-        core.T_cmb = prm.T_cmb
-        core.ri = 0
-        core.r_snow = prm.r_cmb
-
-        #Set core profiles
-        prof.basic_profiles(model)
-        prof.temp_dependent_profiles(model)
+    #     #Set core profiles
+    #     prof.basic_profiles(model)
+    #     prof.temp_dependent_profiles(model)
+    assert prm.core, "A core model is required for this method!"
 
 
     #Initialise profiles dictionaries
