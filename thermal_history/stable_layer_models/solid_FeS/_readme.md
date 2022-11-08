@@ -1,6 +1,6 @@
 # Overview:
 
-Stable layer model for thermal stratification of Greenwood et al. (2021). In this model only the temperature structure of the stratified layer is used to evolve its size over time. This model must be used in conjunction with a core model.
+Stable layer model for a solid FeS layer to be used in conjunction with the `solid_FeS` core model. This adds a conduction solution to the solid FeS layer but does not grow thermal stratification any deeper into the core. To grow stratification into the core the `leeds_thermal` stable layer model should be used. This model is based upon the `leeds_thermal` and so imports much of its code directly from that model.
 
 # Expected attributes of other regions:
 
@@ -26,7 +26,7 @@ from thermal_history.model import Parameters, setup_model
 
 #Load parameters and setup model
 prm = Parameters('/path/to/parameters_file')
-model = setup_model(prm, core_method='leeds', stable_layer_method='leeds_thermal')
+model = setup_model(prm, core_method='solid_FeS', stable_layer_method='solid_FeS')
 
 #Evolve model
 dt = 1e6*prm.ys
@@ -38,11 +38,8 @@ for i in range(1000):
 
 
 ## Note some key modelling assumptions:
-1. Compositional changes in the core do not directly influence growth of a stratified layer.
-2. Once the entire core is thermally stable, only when the CMB heat flow exceeds the adiabatic heat flow at the CMB will the core convect again. This should be reasonable for a constant radial core conductivity profile, not necessarily true otherwise.
+1. Only the solid FeS region is taken to be conducting.
 
-## References:
-- Greenwood, S., Davies, C. J., & Mound, J. E. (2021). On the evolution of thermally stratified layers at the top of Earth’s core. Physics of the Earth and Planetary Interiors, 106763.
 
 
 ---
