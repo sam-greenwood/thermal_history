@@ -454,7 +454,6 @@ def evolve(model):
 
     core.dTm = Tm[ri_idx] - Tm_fe[ri_idx]
     core.T_upper = Ta[rs_idx]
-    core.T_cmb = T[-1]
     core.L_ri = L[ri_idx]
 
 
