@@ -1,9 +1,12 @@
 from numba import njit
 import numpy as np
+from ...leeds_thermal.routines.diffusion import thomas_algorithm, diffusion, LHS, RHS
 
 
-def diffusion2(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='spherical'):
-    '''Numerical diffusion solution
+def diffusion_uneven(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='spherical'):
+
+    '''Numerical diffusion solution on an unevenly spaced grid. D and k must both be either a single number or 
+    both an array of same size as x/y. dk_dx is either a single number or a single number/array if D/k are arrays.
 
     Parameters
     ----------
@@ -30,7 +33,7 @@ def diffusion2(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='sph
     constant : float or array, optional
         Constant in the partial differential eqution, by default 0
     coord : str, optional
-        either 'cart' to denote cartesian coordinate system of 'spherical' for spherical coordinates, by default 'spherical'
+        either 'cart' to denote cartesian coordinate system or 'spherical' for spherical coordinates, by default 'spherical'
 
     Returns
     -------
@@ -44,11 +47,13 @@ def diffusion2(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='sph
     dx[0] = dx[1]
 
     if np.array(D).size == 1:
+        #All must be single numbers
         D     = np.ones(x.size)*D
         k     = np.ones(x.size)*k
-        dk_dx = np.zeros(x.size)*D
+        dk_dx = np.zeros(x.size)*dk_dx
 
     if np.array(dk_dx).size == 1:
+        #Expand to an array if a single number is supplied
         dk_dx = np.ones(x.size)*dk_dx
 
     m = (D*dt/(2*np.min(dx)**2)) #uses minimum grid spacing present to estimate accurate time stepping.
@@ -64,24 +69,27 @@ def diffusion2(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='sph
     u_type = upper_bc[0]
 
     #Discritise into linear equations (Ay=B) under Crank-Nicolson scheme.
-    lower, main, upper = LHS2(x, dx, dt, D, k, dk_dx, l_type, u_type, coord=coord)
+    lower, main, upper = LHS_uneven(x, dx, dt, D, k, dk_dx, l_type, u_type, coord=coord)
 
+    #Solve for n iterations
     y_new = y.copy()
     for _ in range(n):
-        B = RHS2(y_new, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord=coord, constant=constant)
+        B = RHS_uneven(y_new, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord=coord, constant=constant)
         y_new = thomas_algorithm(B, lower, main, upper)
 
     return y_new
 
 
 @njit
-def LHS2(x, dx, dt, D, k, dk_dx, l_type, u_type, coord='spherical'):
+def LHS_uneven(x, dx, dt, D, k, dk_dx, l_type, u_type, coord='spherical'):
     '''Construct left hand side of linear equations
 
     Parameters
     ----------
     x : array
         position array
+    dx : array
+        array containing grid spacings.
     m : array
         m constant defined in diffusion()
     dt : float
@@ -157,7 +165,7 @@ def LHS2(x, dx, dt, D, k, dk_dx, l_type, u_type, coord='spherical'):
 
 
 @njit
-def RHS2(y, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord='spherical', constant=0):
+def RHS_uneven(y, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord='spherical', constant=0):
     '''Construct right hand side of linear equations
 
     Parameters
@@ -174,6 +182,8 @@ def RHS2(y, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord='spherical', const
         conductivity
     dk_dx : array
         spatial derivative of conductivity
+    dx : array
+        array containing grid spacings
     m : array
         m constant defined in diffusion()
     lower_bc : float
@@ -216,7 +226,7 @@ def RHS2(y, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord='spherical', const
 
         #Add terms for variable conductivity
         lower[i] += -dt*D[i]/(2*k[i]) * dk_dx[i] / (dx[i]+dx2)
-        upper[i] += dt*D[i]/(2*k[i]) * dk_dx[i] / (dx[i]+dx2)
+        upper[i] +=  dt*D[i]/(2*k[i]) * dk_dx[i] / (dx[i]+dx2)
 
         #Spherical coordinates term
         if coord == 'spherical':
@@ -225,10 +235,10 @@ def RHS2(y, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord='spherical', const
             if x[i] == 0:
                 lower[0] = 0
                 main[0]  = -3*dt*D[i]/(dx[i]**2) + 1
-                upper[0] = 3*dt*D[i]/(dx[i]**2)
+                upper[0] =  3*dt*D[i]/(dx[i]**2)
             else:
                 lower[i] += -dt*D[i]/x[i] / (dx[i]+dx2)
-                upper[i] += dt*D[i]/x[i] / (dx[i]+dx2)
+                upper[i] +=  dt*D[i]/x[i] / (dx[i]+dx2)
 
     C = np.diag(lower[1:],-1) + np.diag(main) + np.diag(upper[:-1],1)
     B = np.dot(C,y) + constant #NOTE use of constant has not been tested yet
@@ -254,14 +264,9 @@ def RHS2(y, x, dt, D, k, dk_dx, dx, lower_bc, upper_bc, coord='spherical', const
 
 
 
+def diffusion_discont(y, x, x_discont, dt,  D_lower, D_upper, k_lower, k_upper, lower_bc, upper_bc, constant=0, coord='spherical'):
 
-
-
-############################################################################################
-
-
-def diffusion(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='spherical'):
-    '''Numerical diffusion solution
+    '''Numerical diffusion solution on an unevenly spaced grid for a discontinuous conductivity.
 
     Parameters
     ----------
@@ -288,7 +293,7 @@ def diffusion(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='sphe
     constant : float or array, optional
         Constant in the partial differential eqution, by default 0
     coord : str, optional
-        either 'cart' to denote cartesian coordinate system of 'spherical' for spherical coordinates, by default 'spherical'
+        either 'cart' to denote cartesian coordinate system or 'spherical' for spherical coordinates, by default 'spherical'
 
     Returns
     -------
@@ -296,53 +301,50 @@ def diffusion(y, x, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='sphe
         Diffused values after timestep dt.
     '''
 
-    dx = x[1]-x[0]
+    dx = np.zeros(x.size)
+    
+    dx[1:] = np.diff(x) #Node spacing x(i)-x(i-1)
+    dx[0] = dx[1]
 
-    if np.array(D).size == 1:
-        D     = np.ones(x.size)*D
-        k     = np.ones(x.size)*k
-        dk_dx = np.zeros(x.size)*D
 
-    if np.array(dk_dx).size == 1:
-        dk_dx = np.ones(x.size)*dk_dx
-
-    m = (D*dt/(2*dx**2))
+    m = (np.max([D_lower, D_upper])*dt/(2*np.min(dx)**2)) #uses minimum grid spacing present to estimate accurate time stepping.
 
     #Check solution will be stable. Run multiple times with smaller dt if necessary
     n=1
     if np.max(m) > 0.5:
         n = int(np.ceil(np.max(m)/0.5))
         dt = dt/n
-        m = m/n
 
     #Get boundary condition types from tuples of BC types and values
     l_type = lower_bc[0]
     u_type = upper_bc[0]
 
     #Discritise into linear equations (Ay=B) under Crank-Nicolson scheme.
-    lower, main, upper = LHS(x, m, D, k, dk_dx, l_type, u_type, coord=coord)
+    lower, main, upper = LHS_discont(x, x_discont, dx, dt, D_lower, D_upper, k_lower, k_upper, l_type, u_type, coord=coord)
 
+    #Solve for n iterations
     y_new = y.copy()
     for _ in range(n):
-
-        B = RHS(y_new, x, D, k, dk_dx, m, lower_bc, upper_bc, coord=coord, constant=constant)
-
+        B = RHS_discont(y_new, x, x_discont, dt, D_lower, D_upper, k_lower, k_upper, dx, lower_bc, upper_bc, coord=coord, constant=constant)
         y_new = thomas_algorithm(B, lower, main, upper)
-        # thomas_algorithm(B, lower.copy(), main.copy(), upper.copy(), lower.size, y_new)
 
     return y_new
 
 
-@njit
-def LHS(x, m, D, k, dk_dx, l_type, u_type, coord='spherical'):
+
+def LHS_discont(x, x_discont, dx, dt, D_lower, D_upper, k_lower, k_upper, l_type, u_type, coord='spherical'):
     '''Construct left hand side of linear equations
 
     Parameters
     ----------
     x : array
         position array
+    dx : array
+        array containing grid spacings.
     m : array
         m constant defined in diffusion()
+    dt : float
+        time step
     D : array
         diffusivity
     k : array
@@ -362,33 +364,58 @@ def LHS(x, m, D, k, dk_dx, l_type, u_type, coord='spherical'):
         lower, central, upper diagonals for left hand side in linear equations (A matrix in Ax=b)
     '''
 
-    dx = x[1]-x[0]
-
     #Set diaganols in matrix
-    lower = m*-1
-    main  = 1+2*m
-    upper = m*-1
+    lower = np.zeros(x.size)
+    main = np.zeros(x.size)
+    upper = np.zeros(x.size)
 
-    #add terms for variable thermal conductivity
-    lower +=  m*dk_dx*dx/(2*k)
-    upper += -m*dk_dx*dx/(2*k)
+    for i in range(x.size):
 
-
-    #add terms for spherical coordinates if necessary
-    if coord == 'spherical':
-
-        #If lower boundary is at r=0, use l’Hospital’s rule to deal with singularity
-        if x[0] == 0:
-            main[0]  = (1+6*m[0])
-            upper[0] = -6*m[0]
-            lower[0] = 0
-
-            lower[1:] +=  m[1:]*dx/x[1:]
-            upper[1:] += -m[1:]*dx/x[1:]
+        if i == x.size-1:
+            dx2 = dx[i]
         else:
-            lower +=  m*dx/x
-            upper += -m*dx/x
+            dx2 = dx[i+1]
+        
 
+        if x[i] == x_discont:
+
+            # Difference in heat flow across interface
+            lower[i] = k_lower/(x[i]-x[i-1])
+            main[i]  = -(k_upper/(x[i+1]-x[i]) + k_lower/(x[i]-x[i-1]))
+            upper[i] = k_upper/(x[i+1]-x[i])
+
+        else:
+
+            if x[i] < x_discont:
+                D = D_lower
+                k = k_lower
+            else:
+                D = D_upper
+                k_upper
+
+
+            #Standard diffusion term
+            lower[i] = -dt*D/(dx[i]*(dx[i]+dx2))
+            main[i]  = 1 + dt*D/(dx[i]*dx2)
+            upper[i] = -dt*D/(dx2*(dx[i]+dx2))
+
+            # No Variable conductivity yet
+            # #Add terms for variable conductivity
+            # lower[i] += dt*D[i]/(2*k[i]) * dk_dx[i] / (dx[i]+dx2)
+            # upper[i] += -dt*D[i]/(2*k[i]) * dk_dx[i] / (dx[i]+dx2)
+
+            #Spherical coordinates term
+            if coord == 'spherical':
+
+                # #If lower boundary is at r=0, use l’Hospital’s rule to deal with singularity
+                if x[i] == 0:
+                    lower[0] = 0
+                    main[0]  = 3*dt*D/(dx[i]**2) + 1
+                    upper[0] = -3*dt*D/(dx[i]**2)
+
+                else:
+                    lower[i] += dt*D/x[i] / (dx[i]+dx2)
+                    upper[i] += -dt*D/x[i] / (dx[i]+dx2)
 
     #Handle boundary conditions
     if l_type == 0:
@@ -406,8 +433,8 @@ def LHS(x, m, D, k, dk_dx, l_type, u_type, coord='spherical'):
     return lower[1:], main, upper[:-1]
 
 
-@njit
-def RHS(y, x, D, k, dk_dx, m, lower_bc, upper_bc, coord='spherical', constant=0):
+
+def RHS_discont(y, x, x_discont, dt, D_lower, D_upper, k_lower, k_upper, dx, lower_bc, upper_bc, coord='spherical', constant=0):
     '''Construct right hand side of linear equations
 
     Parameters
@@ -416,12 +443,16 @@ def RHS(y, x, D, k, dk_dx, m, lower_bc, upper_bc, coord='spherical', constant=0)
         Values to diffuse
     x : array
         position array
+    dt : array
+        timestep
     D : array
         diffusivity
     k : array
         conductivity
     dk_dx : array
         spatial derivative of conductivity
+    dx : array
+        array containing grid spacings
     m : array
         m constant defined in diffusion()
     lower_bc : float
@@ -444,34 +475,60 @@ def RHS(y, x, D, k, dk_dx, m, lower_bc, upper_bc, coord='spherical', constant=0)
     u_type, u_bc = upper_bc
 
 
-    dx = x[1]-x[0]
-
     #Set diaganols in matrix
-    lower = m*1
-    main  = 1-2*m
-    upper = m*1
+    lower = np.zeros(x.size)
+    main = np.zeros(x.size)
+    upper = np.zeros(x.size)
 
-    #add terms for variable diffusivity
-    lower += -m*dk_dx*dx/(2*k)
-    upper +=  m*dk_dx*dx/(2*k)
 
-    #add terms for spherical coordinates if necessary
-    if coord == 'spherical':
+    for i in range(x.size):
 
-        #If lower boundary is at r=0, use l’Hospital’s rule to deal with singularity
-        if x[0] == 0:
-            main[0]  = (1-6*m[0])
-            upper[0] = 6*m[0]
-            lower[0] = 0
-
-            lower[1:] += -m[1:]*dx/x[1:]
-            upper[1:] +=  m[1:]*dx/x[1:]
+        if i == x.size-1:
+            dx2 = dx[i]
         else:
-            lower += -m*dx/x
-            upper +=  m*dx/x
+            dx2 = dx[i+1]
+
+
+        if x[i] == x_discont:
+
+            # No difference in heat flow across interface.
+            lower[i] = 0
+            main[i] = 0
+            upper[i] = 0
+
+        else:
+
+            if x[i] < x_discont:
+                D = D_lower
+                k = k_lower
+            else:
+                D = D_upper
+                k = k_upper
+        
+            #Standard diffusion term
+            lower[i] = dt*D/(dx[i]*(dx[i]+dx2))
+            main[i]  = 1 - dt*D/(dx[i]*dx2)
+            upper[i] = dt*D/(dx2*(dx[i]+dx2))
+
+            # No variable conductivity for now
+            # #Add terms for variable conductivity
+            # lower[i] += -dt*D[i]/(2*k[i]) * dk_dx[i] / (dx[i]+dx2)
+            # upper[i] +=  dt*D[i]/(2*k[i]) * dk_dx[i] / (dx[i]+dx2)
+
+            #Spherical coordinates term
+            if coord == 'spherical':
+
+                # #If lower boundary is at r=0, use l’Hospital’s rule to deal with singularity
+                if x[i] == 0:
+                    lower[0] = 0
+                    main[0]  = -3*dt*D/(dx[i]**2) + 1
+                    upper[0] =  3*dt*D/(dx[i]**2)
+                else:
+                    lower[i] += -dt*D/x[i] / (dx[i]+dx2)
+                    upper[i] +=  dt*D/x[i] / (dx[i]+dx2)
 
     C = np.diag(lower[1:],-1) + np.diag(main) + np.diag(upper[:-1],1)
-    B = np.dot(C,y) + constant
+    B = np.dot(C,y) + constant #NOTE use of constant has not been tested yet
 
     #Handle boundary conditions
     if l_type == 0:
@@ -479,55 +536,15 @@ def RHS(y, x, D, k, dk_dx, m, lower_bc, upper_bc, coord='spherical', constant=0)
 
     elif l_type == 1:
         upper[0] += lower[0]
-        B[0] = main[0]*y[0] + upper[0]*y[1] - 4*dx*l_bc*lower[0]
-
+        B[0] = main[0]*y[0] + upper[0]*y[1] - 4*dx[0]*l_bc*lower[0]
 
     if u_type == 0:
         B[-1] = u_bc
 
     elif u_type == 1:
         lower[-1] += upper[-1]
-        B[-1] = lower[-1]*y[-2] + main[-1]*y[-1] + 4*dx*u_bc*upper[-1]
+        B[-1] = lower[-1]*y[-2] + main[-1]*y[-1] + 4*dx[-1]*u_bc*upper[-1]
 
     return B
 
 
-
-@njit
-def thomas_algorithm(RHS, lower, main, upper):
-    '''Jit compiled implementation of the thomas algorithm for solving
-    linear equations.
-
-    Parameters
-    ----------
-    RHS : array
-        B vector in Ax=B
-    lower : array
-        lower diagonal values in A matrix
-    main : array
-        central diagonal values in A matrix
-    upper : array
-        upper diagonal values in A matrix
-
-    Returns
-    -------
-    array
-        Diffused values
-    '''
-
-    a, b, c, d = np.copy(lower), np.copy(main), np.copy(upper), np.copy(RHS)
-
-    n = RHS.size
-
-    for i in range(1, n):
-        w = a[i-1]/b[i-1]
-        b[i] = b[i] - w*c[i-1]
-        d[i] = d[i] - w*d[i-1]
-
-    y= np.zeros(n)
-    y[-1] = d[-1]/b[-1]
-
-    for i in range(n-2, -1, -1):
-        y[i] = (d[i]-c[i]*y[i+1])/b[i]
-
-    return y
