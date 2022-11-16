@@ -55,7 +55,7 @@ jobs:
           echo "****** 1"
           git add docs/_build/html
           echo "****** 2"
-          git diff --cached --exit-code
+          git diff --cached --quiet
           echo "****** 3"
           if [ $? != 0 ]
           then
