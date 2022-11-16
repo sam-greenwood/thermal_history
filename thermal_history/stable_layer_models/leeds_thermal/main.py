@@ -121,10 +121,6 @@ def evolve(model):
             Ek = 4*np.pi*trapz(k*(dT_dr/T_initial)**2*r_initial**2, x=r_initial)
 
 
-        # rho =  prof.density(r_initial, prm.core_density_liquid_params)
-        # g   =  np.interp(r_initial, core.profiles['r'], core.profiles['g'])
-
-    
         #Time step model
         pure_thermal_method(model)
 
@@ -164,7 +160,8 @@ def evolve(model):
 
 
         cp  = np.interp(r1, core.profiles['r'], core.profiles['cp'])
-        rho = prof.density(r1, prm.core_liquid_density_params)
+        # rho = prof.density(r1, prm.core_liquid_density_params)
+        rho = np.interp(r1, core.profiles['r'], core.profiles['rho']) #Better to use for when stable layer may cover material not described by core_liquid_density_params
         Qs = -4*np.pi*en.integrate(r1, r1**2*dT_dt*rho*cp)
         Es = -4*np.pi*en.integrate(r1, r1**2*dT_dt*rho*cp*(1/T1[-1] - 1/T1))
         sl.dT_dt_s = dT_dt[0]  #Save cooling rate at base of layer
@@ -220,7 +217,8 @@ def update(model):
     prm = model.parameters
 
     #Update profiles
-    sl.profiles = sl._next_profiles.copy()
+    sl.profiles['r'] = sl._next_profiles['r']
+    sl.profiles['T'] = sl._next_profiles['T']
     sl.profiles['Ta'] = prof.adiabat(sl.profiles['r'], core.Tcen, prm.core_adiabat_params)
     sl.T_grad_s = prof.adiabat_grad(core.rs, core.Tcen, prm.core_adiabat_params)
 
