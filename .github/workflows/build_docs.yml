@@ -52,11 +52,16 @@ jobs:
     #Commit the new built html pages
     - name: commit build
       run: |
+          echo "****** 1"
           git add docs/_build/html
+          echo "****** 2"
           git diff --cached --exit-code
+          echo "****** 3"
           if [ $? != 0 ]
           then
+            echo "****** 4"
             git commit -m 'Built latest docs'
+            echo "****** 5"
             git push
           fi
           
