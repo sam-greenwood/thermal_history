@@ -5,3 +5,7 @@
 #Path to readme is relative to the docs/_source directory.
 #You may need to update the 'docutils' python package to get
 #the myst_parser support
+
+
+from .main import *
+from . import routines

@@ -377,11 +377,11 @@ def evolve(model):
 
     #Save values to be tracked in model.save_dict
     core.Qa    = core.profiles['Qa'][-1]
-    core.Qa_rs = core.profiles['Qa'][rs_idx]
+    core.Qa_rs = core.profiles['Qa'][rs_idx-1]
 
     core.ADR = core.Q_cmb/core.profiles['Qa'][-1]
-    if core.profiles['Qa'][rs_idx] > 0: #Avoid division by 0
-        core.ADR_s = core.Q_rs/core.profiles['Qa'][rs_idx]
+    if core.profiles['Qa'][rs_idx-1] > 0: #Avoid division by 0
+        core.ADR_s = core.Q_rs/core.profiles['Qa'][rs_idx-1]
     else:
         core.ADR_s = 0
 
@@ -616,7 +616,7 @@ def set_Q_rs(model):
     k = core.profiles['k']
 
     if prm.stable_layer and core.rs < prm.r_cmb:
-        Q_rs = -4 * np.pi * core.rs**2 * k[rs_idx] * sl.T_grad_s
+        Q_rs = -4 * np.pi * core.rs**2 * k[rs_idx-1] * sl.T_grad_s
     else:
         Q_rs = model.core.Q_cmb
 
