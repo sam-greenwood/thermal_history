@@ -18,7 +18,7 @@ jobs:
     env:
       REPO_OWNER: sam-greenwood
       REPO_NAME: thermal_history_docs
-      WORKFLOW_FILENAME: build_on_dispatch.yml
+      WORKFLOW_FILENAME: build_docs.yml
        
     steps:
       - name: trigger-workflow
