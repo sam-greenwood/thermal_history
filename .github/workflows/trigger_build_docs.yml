@@ -3,12 +3,14 @@ name: Trigger build_docs
 on:
 
   workflow_dispatch:
-        
 
   workflow_run:
     workflows: [Test Python Package]
     types:
       - completed
+      
+  push:
+    paths: 'docs/**'
  
 jobs:
   trigger-workflow:
