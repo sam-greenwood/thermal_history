@@ -1,4 +1,4 @@
-name: Trigger workflow on receiver repo
+name: Trigger build_docs
 
 on:
 
