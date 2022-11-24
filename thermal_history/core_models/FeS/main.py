@@ -1,7 +1,10 @@
+Description = 'Based on leeds model but with support for a liquid FeS layer. This is under development!'
+
 import numpy as np
 from ...utils.optimised_funcs import polyval
 
-#Import redefined profiles functions
+#Import redefined profiles functions. Need to at least import it to run the code
+#and refefine functions from the leeds model.
 from . import profiles
 
 #Define main functions based on leeds
@@ -21,11 +24,12 @@ def setup(model):
     prm.layer_thickness = prm.FeS_size
     leeds.setup(model)
 
-    #Set Tcen such that T_cmb is correct to specified value
-    # taking into account the FeS layer
-    r_fes = prm.r_cmb - prm.FeS_size
-    core.Tcen =  core.T_cmb/polyval(prm.core_adiabat_params[::-1], r_fes)
-
+    #In isothermal model, adiabat is flat so Tcen needs changing for given T_cmb.
+    if prm.stable_layer and prm.FeS_method == 'isothermal':
+        #Set Tcen such that T_cmb is correct to specified value
+        # taking into account the FeS layer
+        r_fes = prm.r_cmb - prm.FeS_size
+        core.Tcen =  core.T_cmb/polyval(prm.core_adiabat_params[::-1], r_fes)
 
 
 #Add on extra required parameters
@@ -92,7 +96,10 @@ def evolve(model):
         Q_tilde = (core.Q_rs-core.Qr)/core.dT_dt
 
         Q_rs = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde))
-        Q_rs = np.max([Q_rs, core.Q_rs]) #At least an adiabatic heat flow from the interior
+
+        #If a stable layer is being used, then heat flow is always at least adiabatic at rs.
+        if prm.stable_layer:
+            Q_rs = np.max([Q_rs, core.Qa_rs])
 
         #Correct cooling rate for combined cooling of bulk and FeS layer
         dT_dt = Q_rs/Q_tilde
@@ -112,6 +119,35 @@ def evolve(model):
         # core.Q_fes = Q_rs
 
         
-        
 
-    
+def set_Q_rs(model):
+    '''
+    Sets the heat flow at the top of the convecting region (rs).
+    Modified to account for FeS layer.
+
+    Parameters
+    ----------
+    model : ThermalModel Class
+        Main model
+
+    Returns
+    -------
+    Float
+        The heat flow at rs
+    '''
+    prm  = model.parameters
+    core = model.core
+    sl   = model.stable_layer
+    rs_idx = core._rs_idx
+    k = core.profiles['k']
+
+    r_fes = prm.r_cmb - prm.FeS_size
+
+    #Adiabatic heat flow.
+    Q_rs = profiles.adiabatic_heat_flow(core.rs, k[rs_idx-1], core.Tcen, prm.core_adiabat_params)
+
+    if prm.stable_layer and prm.FeS_method == 'conducting':
+        Q_rs = core.Q_fes
+
+    return Q_rs
+leeds.set_Q_rs = set_Q_rs
