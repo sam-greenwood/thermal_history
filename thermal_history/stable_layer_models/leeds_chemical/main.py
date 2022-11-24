@@ -1,10 +1,6 @@
 Description = 'Stable layer model for chemical stratification. Uses the Buffett and Seagle (2010) method \
-    for changing the size of the layer.'
+for changing the size of the layer.'
 
-
-#List individually confirmed compatibility with other regions
-compatibility = {'core': ['leeds'],
-                 'mantle': ['driscoll_bercovici14']}
 
 from ...core_models.leeds.routines import profiles as prof
 from ...core_models.leeds.routines import energy as en

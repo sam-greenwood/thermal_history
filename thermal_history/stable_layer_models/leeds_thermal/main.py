@@ -1,10 +1,5 @@
 Description = 'General stable layer model for thermal/chemical/thermo-chemical stratification.'
 
-
-#List individually confirmed compatibility with other regions
-compatibility = {'core': ['greenwood21'],
-                 'mantle': ['driscoll_bercovici14']}
-
 from smtplib import bCRLF
 from ...core_models.leeds.routines import profiles as prof
 from ...core_models.leeds.routines import energy as en

@@ -1,9 +1,5 @@
 Description = 'Mantle model for stagnant lid convection adapted from the Mars model in Thiriet et al. (2019). \
-               Here stagnant lid size is assumed consant in time'
-
-#List individually confirmed compatibility with other methods
-compatibility = {'stable_layer': ['leeds_thermal'],
-                 'core': ['leeds']}
+Here stagnant lid size is assumed consant in time'
 
 from copy import deepcopy
 import numpy as np

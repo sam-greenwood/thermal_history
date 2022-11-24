@@ -1,9 +1,5 @@
 Description = 'Mantle model for convection with plate tectonics. \
-               No heat flow modified by volcanism is used here.'
-
-#List confirmed compatibility with other regions.
-compatibility = {'core': ['leeds'],
-                 'stable_layer': ['leeds_thermal']}
+No heat flow modified by volcanism is used here.'
 
 import numpy as np
 import logging

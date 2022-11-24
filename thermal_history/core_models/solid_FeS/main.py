@@ -1,10 +1,6 @@
 #Description of this model3
 Description = 'Based on the leeds model with adaptions for Solid FeS layer as in Rückriemen et al. (2018).'
 
-#List individually confirmed compatibility with other methods
-compatibility = {'stable_layer': ['leeds_thermal'],
-                 'mantle': ['knibbe_westrenen18']}
-
 import numpy as np
 import copy
 

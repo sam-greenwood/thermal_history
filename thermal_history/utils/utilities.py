@@ -1,4 +1,3 @@
-from builtins import breakpoint
 import importlib
 import os
 from types import ModuleType
@@ -264,7 +263,6 @@ def create_parameters_file(fname,
     f.close()
 
 
-
 def write_line(f, key, description, max_l, comment_out=False):
     '''Write parameter to file in a formatted manner.
     
@@ -316,3 +314,42 @@ def write_line(f, key, description, max_l, comment_out=False):
 
         f.write(text+'\n')
         remaining_text = remaining_text[end:]
+
+
+def get_available_models():
+
+
+    #Top level filepath
+    path = __file__.split('utils/utilities.py')[0]
+
+    print('\nAvailable models:')
+
+    errors = []
+    for region in ['core', 'stable_layer', 'mantle']:
+
+        print('\n*******************')
+        print(f'{region}_models')
+        print('*******************')
+        # Get list of available directories present
+        methods = [x for x in os.listdir(path+region+'_models') if os.path.isdir(path+region+'_models/'+x) and not '__pycache__' in x]
+
+        for method in methods:
+
+            #Try and import main.py for each method
+            try:
+                _ = importlib.import_module(f'thermal_history.{region}_models.{method}.main')
+                if hasattr(_, 'Description'):
+                    print(f'{method: <20} - {_.Description}')
+                else:
+                    print(f'{method: <20} - (No description available)')
+
+            except Exception as e:
+                errors.append([region, method, e])
+    
+    #Print any error messages from failed imports
+    if len(errors)>0:
+        print('\n\nErrors:')
+        for error in errors:
+            print('******************')
+            print(f'thermal_history.{error[0]}_models.{error[1]}.main cannot be imported. Error message:\n{error[2]}')
+            print('******************\n')

@@ -8,61 +8,60 @@ To start it makes sense to explain the overall structure of the python package, 
 
 ```
 thermal_history
-|
-|   model_classes.py
-|   model.py
-|   __init__.py
-|___core_models
-|   |
-|   |   __init__.py
-|   |___leeds
-|   |   |
-|   |   |   main.py
-|   |   |   __init__.py
-|   |   |___routines
-|   |       |
-|   |       |   profiles.py
-|   |       |   chemistry.py
-|   |       ....
-|   |
-|   |___simple_test
-|       |
-|       |   main.py
-|       |   __init__.py
-|          
-|
-|
-|___stable_layer_models
-|   |
-|   |   __init__.py
-|   |___leeds_thermal
-|       |
-|       |   main.py
-|       |   __init__.py
-|       |___routines
-|           |
-|           |   diffusion.py
-|           ...
-...
-
+      |
+      |
+   ___|____________________________________________________________....
+  |                  |          |            |                |
+model_classes.py   model.py  __init__.py   core_models   stable_layer_models
+                                             |                            |
+              _______________________________|                            |       
+             |                                                            |
+             |                                                            |
+   __________|_____....                                                   |
+  |           |                                                           |
+leeds   simple_test                                                       |
+  |           |_________________________________________                  |
+  |                                                     |                 |    
+  |_____________________________________             ___|________         |
+  |          |              |           |           |           |         |
+main.py   __init__.py   _readme.md   routines      main.py  __init__.py   |
+                                        |                                 |
+                                        |                                 |
+                            ____________|___________....                  |
+                           |                |                             |
+                        profiles.py   chemistry.py                        |
+                                                                          |
+                                                                          |
+                                                                          |
+                                                            ______________|______...
+                                                           |               |
+                                                        _init__.py   leeds_thermal
+                                                                           |
+                                      _____________________________________|
+                                     |          |              |           |        
+                                  main.py   __init__.py   _readme.md   routines
+                                                                         |
+                                                                         |
+                                                                      ___|___...   
+                                                                     |
+                                                                diffusion.py
 ```
 
-The code for any specific numerical model is contained within one of the sub-packages depending on it's type (`core_models`/`stable_layer_models`/`mantle_models`). Let's focus on the `core_models`. Here there are 2 different methods for solving the core thermal evolution: `leeds` and `simple_test`. They are each contained within their own folder (treated as another sub-package due to the presence of `__init__.py`), meaning they are isolated from one another and removing any chance of getting them mixed up. When a model is initialised, for example, with `setup_model(prm, core_method='simple_test')`, the code will look to import `thermal_history.core_models.simple_test.main`. Other files can exist within the folder (e.g. `core_models.leeds.routines` contains functions that are called by code in `main.py`) but `main.py` must be there.
+The code for any specific numerical model is contained within one of the sub-packages depending on it's type (`core_models`/`stable_layer_models`/`mantle_models`). Let's focus on the `core_models`. Here there are 2 different methods for solving the core thermal evolution: `leeds` and `simple_test`. They are each contained within their own folder (treated as another sub-package due to the presence of `__init__.py`), meaning they are isolated from one another and removing any chance of getting them mixed up. When a model is initialised, for example, with `setup_model(prm, core_method='simple_test')`, the code will look to import `thermal_history.core_models.simple_test.main`. Other files can exist within the folder (e.g. `core_models.leeds.routines` contains functions that are called by code in `main.py`) but `main.py` is the required file to be there.
+
+An additional file is present in the model folders: `_readme.md`. This will be explained in the documentation section below.
+
 
 
 ## 2. Required format for main.py
 
-There are 3 functions expected to be defined in `main.py`. They are: `setup`, `evolve`, `update`. All take a single argument (the ThermalModel class that is created by `setup_model()` is passed to them) and none of them return anything as they instead set the attributes of ThermalModel. There are also 2 dictionaries, `required_params` and `optional_params`, that must de defined within. Let's take a look at the `main.py` in simple_test, starting with the top of the file:
+There are 3 functions expected to be defined in `main.py`. They are: `setup`, `evolve`, `update`. All take a single argument (the ThermalModel class that is created by `setup_model()` is passed to them) and none of them return anything as they instead set the attributes of ThermalModel. There are also 2 dictionaries, `required_params` and `optional_params`, that must de defined within `main.py`. Let's take a look at the `main.py` in simple_test, starting with the top of the file:
 
 
 ```python
 
 #Description of this model3
 Description = 'Simple example core model.'
-
-#List individually confirmed compatibility with methods for other regions (give the names of the methods in the list if any).
-compatibility = {'stable_layer': [],
-                 'mantle': []}
 
 #import our logger
 import logging
@@ -71,7 +70,7 @@ logger = logging.getLogger(__name__)
 import numpy as np
 ```
 
-These are all optional but can help the code determine some useful information about the model. `Description` is just that, a brief overview of what this model is. `compatibility` is a dictionary that tells the code if this method works when used in conjuction with other methods. As an example, this doesn't work with any of the methods for other regions, so can only be run on it's own. Next we have imported the logger, useful if you want to print some diagnostic information to the log file but not necessary. Numpy is imported at the end since it is needed by our model get the value of pi in `evolve()`.
+These are all optional but can help the code determine some useful information about the model. `Description` is just that, a brief overview of what this model is, used when the utility function `thermal_history.utils.. `compatibility` is a dictionary that tells the code if this method works when used in conjuction with other methods. As an example, this doesn't work with any of the methods for other regions, so can only be run on it's own. Next we have imported the logger, useful if you want to print some diagnostic information to the log file but not necessary. Numpy is imported at the end since it is needed by our model get the value of pi in `evolve()`.
 
 Next we have the first of the required functions: `setup()`
 
@@ -157,3 +156,30 @@ optional_params = {'example_variable': ('An example optional variable for demons
 ```
 
 These could just be set to empty dictionaries which may be useful while developing a model but once a model is finalised (and particularly if someone else is to use it) it is a good idea to make sure these are fully populated.
+
+
+
+
+## 3. Documentation
+These instructions are aimed at anyone looking to have their changes to the thermal_history package reflected in the documentation.
+
+Documentation for this repo is handled by another Github repo: https://github.com/sam-greenwood/thermal_history_docs. See the `.github/workflows` to see how the docs are automatically built and published to Github pages.
+
+Whenever changes are made to the main thermal_history Github repo are made, this triggers the documentation repo to copy the latest version of the main repository, rebuild the documentation, and publish it to a Github pages site. Note the use of PAT tokens are required to give one repo permission to trigger a workflow once a workflow on another repo has run. Sphinx is used to build the documentation and its configuration file, templates, and any additional information such as the file containing these instructions can be found in `docs/`. A handy script `docs/create_docs.sh` is used to run the commands to build the docs and can be run locally and contains info on required packages to be installed to run. Sphinx automatically searches through the docstrings throughout the thermal_history package and builds the html files for the site. The `docs/_source/conf.py` file is setup to support the Numpy style docstrings for functions/classes.
+
+Sphinx first generates rst files before building the html files from them. The documentation is setup to automatically generate rst files for each module that exists within thermal_history using the included templates. `docs/_source/index.rst` is not automatically generated and is used to control the appearance of the top level page of the documentation. Markdown files have been used to write the README and other pages due to their readability when compared to rst, with Sphinx supporting them through the use of the Myst parser (https://myst-parser.readthedocs.io/en/latest/index.html) as specified in the `docs/_source/conf.py` file.
+
+As previously mentioned, each model folder (e.g. `thermal_history/core_models/leeds`) may contain an optional markdown file. This markdown file contains more in depth information about that particular model and is used when the documentation is built by having the `__init__.py` file include it into its docstring. This ensures that the markdown is placed onto the main page about the specific model in the API. For example, the docstring of the `__init__.py` file in the `leeds` core model directory reads:
+
+```python
+"""
+.. include:: ../../thermal_history/core_models/leeds/_readme.md
+   :parser: myst_parser.sphinx_
+"""
+#Path to readme is relative to the docs/_source directory.
+#You may need to update the 'docutils' python package to get
+#the myst_parser support
+```
+
+This tells the documentation tool sphinx to add the markdown to the docstring using the myst parser (which adds markdown support to sphinx). You can see the result of this here: https://sam-greenwood.github.io/thermal_history_docs/_build/html/thermal_history.core_models.leeds.html
+

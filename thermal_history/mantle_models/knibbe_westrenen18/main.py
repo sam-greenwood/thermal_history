@@ -1,4 +1,4 @@
-Description = 'Mantle model based on Knibbe and van Westrenen (2018) for Mercury.\
+Description = 'Mantle model based on Knibbe and van Westrenen (2018) for Mercury. \
 Stagnant lid plate tectonics is assumed with growth of crust by mantle melting.'
 
 

@@ -1,11 +1,6 @@
 Description = 'Includes a solid FeS layer as a thermally stratified layer. To be used in conjunction with the solid_FeS core model.'
 
 
-#List individually confirmed compatibility with other regions
-compatibility = {'core': ['greenwood21'],
-                 'mantle': ['driscoll_bercovici14']}
-
-
 from ...core_models.leeds.routines import profiles as prof
 from ...core_models.leeds.routines.snow import snow_radius
 from ...core_models.solid_FeS.routines.chemistry import melting_temp_R18

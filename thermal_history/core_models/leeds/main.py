@@ -1,9 +1,6 @@
 #Description of this model3
 Description = 'Core model based on Greenwood et al. (2021) with iron snow parameterisation of Davies and Pommier (2018).'
 
-#List individually confirmed compatibility with other methods
-compatibility = {'stable_layer': ['leeds_thermal'],
-                 'mantle': ['knibbe_westrenen18']}
 
 import numpy as np
 import copy

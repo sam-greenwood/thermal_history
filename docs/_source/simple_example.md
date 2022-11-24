@@ -41,6 +41,16 @@ fname='my_new_parameters_file' #Name for parameters file to be created (.py will
 create_parameters_file(fname, core_method=None, stable_layer_method=None, mantle_method=None) 
 ```
 
+To see what models are available to run, another useful utility function exists:
+
+```python
+from thermal_history.utils import get_available_models
+
+get_available_models() #Prints available choices for core/mantle/stable_layer.
+```
+
+For this example, we will be using the 'simple_test' core model.
+
 
 First thing to do is load in the parameters, do this with
 

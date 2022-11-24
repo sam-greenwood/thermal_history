@@ -1,10 +1,6 @@
 #Description of this model3
 Description = 'Simple example core model.'
 
-#List individually confirmed compatibility with methods for other regions (give the names of the methods in the list if any).
-compatibility = {'stable_layer': [],
-                 'mantle': []}
-
 #import our logger
 import logging
 logger = logging.getLogger(__name__)
