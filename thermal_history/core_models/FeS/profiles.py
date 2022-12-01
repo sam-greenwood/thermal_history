@@ -48,8 +48,8 @@ def basic_profiles(model, setup=False):
     r_cmb = prm.r_cmb
     ri    = core.ri
     r_snow= core.r_snow
-    rs    = core.rs
     r_fes = r_cmb-prm.FeS_size #!# Include r_fes
+    rs    = np.min([core.rs, r_fes]) #!# rs at least FeS layer
 
     #Just want the unique radii in order
     radii = np.unique(np.sort([0, ri, r_snow, rs, r_fes, r_cmb]))  #!# Include r_fes
@@ -137,9 +137,14 @@ def basic_profiles(model, setup=False):
     if setup:
 
         if prm.core_adiabat_params is None:
-            prm.core_adiabat_params = fit_adiabat_polynomials(r, g, profiles['cp'], profiles['alpha'])
+            #!# Just fit over bulk radial profiles
+            prm.core_adiabat_params = fit_adiabat_polynomials(r[:fes_idx], g[:fes_idx], profiles['cp'][:fes_idx], profiles['alpha'][:fes_idx])
 
-        core.Tcen = core.T_cmb/polyval(prm.core_adiabat_params[::-1], prm.r_cmb)
+        #!# Isothermal FeS layer
+        if not prm.stable_layer:
+            core.Tcen = core.T_cmb/polyval(prm.core_adiabat_params[::-1], r_fes)
+        else:
+            core.Tcen = core.T_cmb/polyval(prm.core_adiabat_params[::-1], prm.r_cmb)
 
         if not prm.Tcen is None:
             core.T_cmb = prm.T_cen*polyval(prm.core_adiabat_params[::-1], prm.r_cmb)
@@ -148,6 +153,9 @@ def basic_profiles(model, setup=False):
 
 
     Ta = adiabat(r, core.Tcen, prm.core_adiabat_params)
+    if not prm.stable_layer:
+        Ta[fes_idx:] = Ta[fes_idx] #!#Isothermal FeS layer
+
     profiles['Ta'] = Ta
 
     if setup:
@@ -157,6 +165,9 @@ def basic_profiles(model, setup=False):
 
     #Adiabatic gradient
     dTa_dr = adiabat_grad(r, core.Tcen, prm.core_adiabat_params)
+    if not prm.stable_layer:
+        dTa_dr[fes_idx:] = 0
+
     profiles['dTa_dr'] = dTa_dr
     ##########################
 

@@ -15,22 +15,17 @@ progress = leeds.progress
 def setup(model):
 
     prm = model.parameters
-    core = model.core
 
     #Does not work with iron snow
     assert not prm.iron_snow, 'Method does not work with iron snow.'
 
-    #Force initial stable layer to FeS layer size, then call leeds setup
-    prm.layer_thickness = prm.FeS_size
+    #Call leeds setup
     leeds.setup(model)
 
-    #In isothermal model, adiabat is flat so Tcen needs changing for given T_cmb.
-    if prm.stable_layer and prm.FeS_method == 'isothermal':
-        #Set Tcen such that T_cmb is correct to specified value
-        # taking into account the FeS layer
-        r_fes = prm.r_cmb - prm.FeS_size
-        core.Tcen =  core.T_cmb/polyval(prm.core_adiabat_params[::-1], r_fes)
-
+    #Set stable layer radius to be bottom of FeS layer
+    prm.layer_thickness                = prm.FeS_size
+    model.core.rs                      = prm.r_cmb - prm.FeS_size
+    model.stable_layer.layer_thickness = prm.FeS_size
 
 #Add on extra required parameters
 required_params = leeds.required_params
@@ -48,8 +43,9 @@ def evolve(model):
     prm = model.parameters
 
     #For the conducting method, initial thermal structure depends on Q_cmb
-    #so must be set here rather than in setup.
-    if model.it == 1 and prm.stable_layer and prm.FeS_method == 'conducting':
+    #so must be set here rather than in setup. This resets the bulk temperature
+    #to be consistent with T_cmb and Q_cmb.
+    if model.it == 1 and prm.stable_layer:
 
         #Initial temp in FeS layer is steady state profile fit to T_cmb and Q_cmb
 
@@ -71,6 +67,9 @@ def evolve(model):
         leeds.routines.profiles.basic_profiles(model)
         leeds.routines.profiles.temp_dependent_profiles(model)
 
+        #Conductive heat flow from bulk to FeS layer
+        core.Q_fes = -4*np.pi*A * core.profiles['k'][core._fes_idx]
+
 
     #Run standard leeds core model evolution
     leeds.evolve(model)
@@ -89,7 +88,8 @@ def evolve(model):
         rho_fes = prm.FeS_density
         cp_fes  = prm.FeS_cp
 
-        #Normalised secular cooling for FeS layer (normalised to Tcen).
+        #Normalised secular cooling for an isothermal FeS layer (normalised to Tcen).
+        #Not used if stable layer solution is included.
         Qs_tilde = -rho_fes*cp_fes * (4/3)*np.pi*(prm.r_cmb**3 - r_fes**3) * (core.T_cmb/core.Tcen)
 
         #Normlised heatflow at r_fes before we modify it.
@@ -97,9 +97,10 @@ def evolve(model):
 
         Q_rs = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde))
 
-        #If a stable layer is being used, then heat flow is always at least adiabatic at rs.
+        #If a stable layer is being used, then heat flow is always at least adiabatic at rs
+        #Or that defined by conductive profile.
         if prm.stable_layer:
-            Q_rs = np.max([Q_rs, core.Qa_rs])
+            Q_rs = np.max([core.Q_fes, core.Qa_rs])
 
         #Correct cooling rate for combined cooling of bulk and FeS layer
         dT_dt = Q_rs/Q_tilde
@@ -109,14 +110,18 @@ def evolve(model):
             setattr(core, x, getattr(core, x)*(dT_dt/core.dT_dt))
         core.dT_dt = dT_dt
 
-        #Reset Ej. Contribution from cooling FeS layer is added on when stable layer is evolved.
+        #Reset Ej. Contribution from cooling FeS layer is added on when stable layer evolve method is called.
         core.Ej = core.Es + core.El + core.Eg + core.Eh + core.Er + core.Eg_mgo - core.Ek - core.Ea
 
         #Heat flow extracted from bulk
         core.Q_rs  = Q_rs #core.Q_cmb - Qs_tilde * core.dT_dt #* (core.T_cmb/core.Tcen)
 
-        core.Q_fes = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde)) #heat flow at r_fes
-        # core.Q_fes = Q_rs
+        #If no stable layer solution, Q_fes is set here. Also add on secular cooling of FeS layer
+        if not prm.stable_layer:
+            core.Q_fes = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde)) #heat flow at r_fes
+            core.Qs += Qs_tilde * core.dT_dt* (core.T_cmb/core.Tcen) #Secular cooling of FeS layer.
+            #No need to add Ek and Es as both are zero for an isothermal FeS layer.
+
 
         
 
@@ -146,7 +151,7 @@ def set_Q_rs(model):
     #Adiabatic heat flow.
     Q_rs = profiles.adiabatic_heat_flow(core.rs, k[rs_idx-1], core.Tcen, prm.core_adiabat_params)
 
-    if prm.stable_layer and prm.FeS_method == 'conducting':
+    if prm.stable_layer:
         Q_rs = core.Q_fes
 
     return Q_rs

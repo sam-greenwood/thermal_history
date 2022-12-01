@@ -1,27 +1,14 @@
 # Overview:
 
-Development model for a liquid FeS layer embedded in a bulk Fe-Si core. 2 methods are included for testing during development, which can be specified using the parameter `FeS_method` set to the string `conducting` or `isothermal`. The isothermal model assumes that the FeS layer convects and is isothermal. The bulk core can thermally stratify beneath it. The conducting model assumes the FeS layer is always conducting and the bulk core can also thermally stratify beneath it. Note the core model `FeS` must also be used in conjunction with this stable layer model.
+Development model for a liquid FeS layer embedded in a bulk Fe-Si core. The model assumes the FeS layer is always conducting and the bulk core can also thermally stratify beneath it. Note the core model `FeS` must also be used in conjunction with this stable layer model.
 
-For the isothermal model, when the bulk is fully convecting, the heat flow into the FeS layer is not yet known when the evolve method of the core model is called. Instead an adiabatic heat flow is assumed and then when this stable layer method is called, the cooling rate (and all associated rates of change) are adjusted for the correct amount of cooling taking into account the liquid FeS. The secular cooling for the whole core becomes:
-
-$Q_s = \frac{dT_\mathrm{cen}}{dt}\frac{1}{T_\mathrm{cen}}\int\rho C_\mathrm{p} T dV_b + M_\mathrm{FeS} C_\mathrm{p,FeS}\frac{dT_\mathrm{cen}}{dt}\frac{T_\mathrm{cmb}}{T_\mathrm{cen}}$,
-
-where $C_\mathrm{p}, V, M, rho$ are the specific heat, volume, mass, and density. Subscript b denotes the value in the bulk of the core, and subscript FeS denotes the value in the FeS layer.
-
-When the bulk is thermally stratified, the upper boundary on the diffusion solution is fixed in temperature to the bottom of the FeS layer. The heat flow from the bulk into the FeS layer is calculated from the thermal gradient at the top of the bulk core. This heat flow, $Q_\mathrm{FeS}$, is used to calculate the cooling rate of the FeS layer in the next iteration.
-
-$Q_\mathrm{FeS} = -k_b 4\pi r_\mathrm{FeS}^2 \nabla T_\mathrm{FeS}^-$,
-
-where $T_\mathrm{FeS}$ is the temperature at the base of the FeS layer. The superscript - indicates that the gradient is taken on the lower side of the boundary between bulk and FeS layer.
-
-
-For the conducting model, when the bulk is fully convecting, the conduction solution for the FeS layer is fixed to the adiabat at it's lower boundary. The heat flow from the bulk into the FeS layer is then calculated from the thermal gradient at the base of the FeS layer, used for calculating the cooling rate of the core in the next iteration:
+When the bulk is fully convecting, the conduction solution for the FeS layer is fixed to the adiabat at it's lower boundary. The heat flow from the bulk into the FeS layer is then calculated from the thermal gradient at the base of the FeS layer, used for calculating the cooling rate of the core in the next iteration:
 
 $Q_\mathrm{FeS} = -k_\mathrm{FeS} 4\pi r_\mathrm{FeS}^2 \nabla T_\mathrm{FeS}^+$
 
 The superscript + indicates that the gradient is taken on the upper side of the boundary between bulk and FeS layer.
 
-When both models have thermal stratification in the bulk, the boundary condition at the base of the thermal layer and the method for advancing the layer deeper into the core is the same as the `leeds_thermal` method.
+When the thermal stratification reaches deeper into the bulk, the boundary condition at the base of the thermal layer and the method for advancing the layer deeper into the core is the same as the `leeds_thermal` method.
 
 
 # Expected attributes of other regions:
