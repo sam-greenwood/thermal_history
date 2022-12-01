@@ -376,8 +376,6 @@ def pure_thermal_method(model):
 
         #Thermal diffusivity
         D_T = k/(rho*cp)
-        #dk_dr * 1/(rho*cp). Not the same as the diffusivity gradient
-        dD_dr = np.gradient(k, r, edge_order=2)/(rho*cp)
         dk_dr = np.gradient(k, r, edge_order=2)
 
 
@@ -397,16 +395,6 @@ def pure_thermal_method(model):
 
         #Calculate diffusion solution
         T_new = diffusion(T, r, dt_small, D_T, k, dk_dr, (lb_type,lb),(1,ub))
-
-        # if r[0] == 0:
-        #     Tcen = T_new[0]
-
-        #     Qs_test = -4*np.pi*trapezoid(r, r**2 * ((T_new-T)/dt_small) *rho*cp)[-1]
-        #     heat_in = 4*np.pi*r[-1]**2 * -k[-1] * ub
-        #     breakpoint()
-
-        # if np.isnan(T_new[0]):
-        #     breakpoint()
 
 
         #Mix layer (experimental function, not used by default)
@@ -446,6 +434,10 @@ def pure_thermal_method(model):
                 if factor > 64 or ADR >= 1:
                     dt_small = model.dt - time_gone
                     factor = 1
+
+        #Ensure stable layer doesn't go below ICB
+        if r_s_new < core.ri:
+            r_s_new = np.min([core.ri+10e3, prm.r_cmb]) #At least 10km above ICB.
 
         layer_thickness = r_cmb - r_s_new
 
