@@ -99,7 +99,7 @@ mf_l                   = [0.05, 0.03]  # (Default None) Starting mole fraction o
                            # conc_l.
 #Tcen                   =   # (Default None) Initial temperature at the center of the core. If specified it will overrule T_cmb 
                            # (but may still be overrulled by contraint of T=Tm at ri.)
-#use_new_Cr             =   # (Default False) Use new Cr factor that takes into account depression of Tm with changing LE 
+use_new_Cr             = False  # (Default False) Use new Cr factor that takes into account depression of Tm with changing LE 
                            # concentration
 
 #stable_layer: leeds_chemical parameters

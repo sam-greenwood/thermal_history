@@ -197,30 +197,33 @@ def evolve(model):
         #Change in composition normalised to cooling rate
         Cc = 4*np.pi*r[ri_idx]**2*rho[ri_idx]*(core.conc_l-core.conc_s)/M_conv
 
-        #Change in melting temp with mole fraction. Assumes AL melting temperature parameterisation.
-        if core.profiles['dS'][ri_idx] == 0:
-            dTm_dmf = 0
-        elif type(prm.core_melting_params[0]) == str and not prm.core_melting_params[0] == 'AL':
-            logger.warning('Change in melting temp with mole fraction is only implemented with \'AL\' melting curve parameterisation. Defaulting to 0.')
-            dTm_dmf = 0
+        if prm.use_new_Cr:
+            #Change in melting temp with mole fraction. Assumes AL melting temperature parameterisation.
+            if core.profiles['dS'][ri_idx] == 0:
+                dTm_dmf = 0
+            elif type(prm.core_melting_params[0]) == str and not prm.core_melting_params[0] == 'AL':
+                logger.warning('Change in melting temp with mole fraction is only implemented with \'AL\' melting curve parameterisation. Defaulting to 0.')
+                dTm_dmf = 0
+            else:
+                dTm_dmf = -Tm_fe[ri_idx]*prm.kb/core.profiles['dS'][ri_idx]
+
+            #Calculate forward diff gradient in mole fraction with mass concentration for each LE
+            dmf_dc = np.zeros(core.conc_l.size)
+            for i in range(core.conc_l.size):
+                _mf = copy.copy(core.mf_l)
+                _mf[i] += 0.001
+                _mass = chem.mole_frac2mass_conc(_mf, prm.mm)
+
+                dmf_dc[i] = (_mf[i]-core.mf_l[i])/(_mass[i]-core.conc_l[i])
+            #############
+
+            #Change in melting temp with mass fraction
+            dTm_dc = dTm_dmf * dmf_dc
+
+            #Change in melting temp with inner core growth
+            dTm_dri = np.sum(dTm_dc*Cc)
         else:
-            dTm_dmf = -Tm_fe[ri_idx]*prm.kb/core.profiles['dS'][ri_idx]
-
-        #Calculate forward diff gradient in mole fraction with mass concentration for each LE
-        dmf_dc = np.zeros(core.conc_l.size)
-        for i in range(core.conc_l.size):
-            _mf = copy.copy(core.mf_l)
-            _mf[i] += 0.001
-            _mass = chem.mole_frac2mass_conc(_mf, prm.mm)
-
-            dmf_dc[i] = (_mf[i]-core.mf_l[i])/(_mass[i]-core.conc_l[i])
-        #############
-
-        #Change in melting temp with mass fraction
-        dTm_dc = dTm_dmf * dmf_dc
-
-        #Change in melting temp with inner core growth
-        dTm_dri = np.sum(dTm_dc*Cc)
+            dTm_dri = 0
 
         #ICB velocity normalised to cooling rate
         Cr = (1/(dTm_dr-dTa_dr + dTm_dri))*(Ta[ri_idx]/core.Tcen)
