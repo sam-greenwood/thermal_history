@@ -20,7 +20,7 @@ def test_simon_glatzel():
 
     from thermal_history.core_models.leeds.routines.chemistry import simon_glatzel, simon_glatzel_gradient
 
-    melting_params = np.array([1,2,2])
+    melting_params = np.array([1,2e9,2])
 
     P = np.array([6e9])
 
@@ -28,7 +28,7 @@ def test_simon_glatzel():
     assert Tm[0] == 2, f"iron_melting should give [2], not: {Tm}"
 
     Tm_grad = simon_glatzel_gradient(P, melting_params)
-    assert Tm_grad == 0.125, f"iron_melting_gradient should give [0.125], not : {Tm_grad}"
+    assert Tm_grad*1e9 == 0.125, f"iron_melting_gradient should give [0.125e-9], not : {Tm_grad}"
 
 
 if __name__ == '__main__':
