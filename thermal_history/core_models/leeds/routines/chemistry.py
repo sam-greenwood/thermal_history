@@ -299,7 +299,7 @@ def simon_glatzel(P, melting_params):
     '''
 
     T0, beta1, beta2 = melting_params
-    return T0 * (P/(1e9*beta1) + 1)**(1/beta2)
+    return T0 * (P/(beta1) + 1)**(1/beta2)
 
 def simon_glatzel_gradient(P, melting_params):
     '''Gradient of the melting temperature of iron alloy parameterised with Simon-Glatzel's equation.
@@ -317,7 +317,7 @@ def simon_glatzel_gradient(P, melting_params):
         The melting temperature gradient at P
     '''
     T0, beta1, beta2 = melting_params
-    return (T0/(beta1*beta2)) * (P/(1e9*beta1) + 1)**(1/beta2 - 1)
+    return (T0/(beta1*beta2)) * (P/(beta1) + 1)**(1/beta2 - 1)
 
 ###############################################################################
 #Convert mole fraction to mass concentration by equations in Labrosse (2014)

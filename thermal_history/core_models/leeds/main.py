@@ -193,7 +193,6 @@ def evolve(model):
         dTa_dr = Ta_grad[ri_idx]  #Adiabatic gradient
 
         dTm_dr = core.profiles['dTm_dP'][ri_idx-1]*(-rho[ri_idx-1]*g[ri_idx-1])
-        #breakpoint()
 
         #Change in composition normalised to cooling rate
         Cc = 4*np.pi*r[ri_idx]**2*rho[ri_idx]*(core.conc_l-core.conc_s)/M_conv
@@ -222,7 +221,6 @@ def evolve(model):
 
         #Change in melting temp with inner core growth
         dTm_dri = np.sum(dTm_dc*Cc)
-        dTm_dri = 0 #MAKE ZERO UNTIL PROPERLY TESTED
 
         #ICB velocity normalised to cooling rate
         Cr = (1/(dTm_dr-dTa_dr + dTm_dri))*(Ta[ri_idx]/core.Tcen)
@@ -494,6 +492,7 @@ def update(model):
         core.r_snow = snow.snow_radius(profiles['r'], profiles['T'], profiles['Tm'])
 
     else:
+
         core.ri = prof.ic_radius(profiles['r'],
                                 prof.adiabat(profiles['r'], core.Tcen, prm.core_adiabat_params),
                                 profiles['Tm'])
