@@ -87,6 +87,7 @@ def evolve(model):
     #initialise BC's
     sl.lb_T, sl.ub_T = 0,0
     sl.T_grad_s = 0
+    sl.c_grad_s = 0
 
     sl.alpha_D = 0
     sl.baro_grad = 0

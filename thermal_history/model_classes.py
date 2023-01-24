@@ -373,7 +373,7 @@ class ThermalModel(BaseModel):
                     logger.error(f'Could not append {r}.{key} to save_dict')
                     if not key in self.save_dict[r].keys():
                         logger.error(f"{key} not pre-exisiting in save_dict['{r}'].\
-                            Check this variable is created on the first iteration of the model and is included when ThermalModel.setup_save_dict() is called.")
+Check this variable is created on the first iteration of the model and is included when ThermalModel.setup_save_dict() is called.")
                     pass
 
     def print_progress(self):

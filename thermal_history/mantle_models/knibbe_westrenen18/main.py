@@ -341,6 +341,25 @@ def update(model):
     if mantle.Dl > (prm.r_surf-prm.r_cmb+mantle.delta_lower):
         mantle.Dl = prm.r_surf-prm.r_cmb+mantle.delta_lower
 
+
+def progress(model):
+    '''
+    Return text for this class when progress at each iteration is printed to STDOUT
+
+    Returns
+    -------
+    String
+        String of text to be printed to screen.
+    '''  
+
+    mantle = model.mantle
+
+    v = (mantle.Tm, mantle.Q_cmb/1e12)
+
+    text = f'    Tm: {float(v[0]):.2f} ˚K    Q_cmb: {float(v[1]):.2f} TW'
+
+    return text
+
 #Required parameters. Used to check given parameters before start. Give the name of the parameter as the key with a description as the associated value within the dictionary.
 
 required_params = {'Tm': 'Initial temperature of the mid mantle [K]. Float',
