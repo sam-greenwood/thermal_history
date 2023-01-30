@@ -1,11 +1,12 @@
 Description = 'Based on leeds model but with support for a liquid FeS layer. This is under development!'
 
 import numpy as np
-from ...utils.optimised_funcs import polyval
+from ...utils.optimised_funcs import polyval, trapezoid
 
 #Import redefined profiles functions. Need to at least import it to run the code
 #and refefine functions from the leeds model.
 from . import profiles
+from ..leeds.routines import energy as en
 
 #Define main functions based on leeds
 from .. import leeds
@@ -42,34 +43,9 @@ def evolve(model):
     sl = model.stable_layer
     prm = model.parameters
 
-    #For the conducting method, initial thermal structure depends on Q_cmb
-    #so must be set here rather than in setup. This resets the bulk temperature
-    #to be consistent with T_cmb and Q_cmb.
-    if model.it == 1 and prm.stable_layer:
+    #*# Changes associated with adapting this for a convecting FeS layer are marked with #*#
 
-        #Initial temp in FeS layer is steady state profile fit to T_cmb and Q_cmb
-
-        T_grad_cmb = model.mantle.Q_cmb/(-model.core.profiles['k'][-1]*4*np.pi*prm.r_cmb**2)
-
-        r_prof_fes = sl.profiles['fes']['r']
-        r_fes = r_prof_fes[0]        
-
-        A = prm.r_cmb**2 * T_grad_cmb
-        B = core.T_cmb + (A/prm.r_cmb)
-
-        #Steady state temperature
-        sl.profiles['fes']['T'] = -A/sl.profiles['fes']['r'] + B
-
-        #Reset bulk core temperture
-        core.Tcen = sl.profiles['fes']['T'][0]/polyval(prm.core_adiabat_params[::-1], r_fes)
-
-        #Reset profiles with new temperature profile
-        leeds.routines.profiles.basic_profiles(model)
-        leeds.routines.profiles.temp_dependent_profiles(model)
-
-        #Conductive heat flow from bulk to FeS layer
-        core.Q_fes = -4*np.pi*A * core.profiles['k'][core._fes_idx]
-
+    #*# removed setup for conducting region, not needed. Assumes Ta is the same in bulk and FeS region.
 
     #Run standard leeds core model evolution
     leeds.evolve(model)
@@ -88,14 +64,22 @@ def evolve(model):
         rho_fes = prm.FeS_density
         cp_fes  = prm.FeS_cp
 
-        #Normalised secular cooling for an isothermal FeS layer (normalised to Tcen).
-        #Not used if stable layer solution is included.
-        Qs_tilde = -rho_fes*cp_fes * (4/3)*np.pi*(prm.r_cmb**3 - r_fes**3) * (core.T_cmb/core.Tcen)
+        #*# Integrate across FeS layer to get normailsed secular cooling
+        profiles = core.profiles
+        idx      = core._fes_idx
+        r, Ta, Ta_grad, k, cp, = (profiles[key] for key in ['r','Ta','Ta_grad','k','cp'])
+        
+        #*# Normalised secular cooling for FeS layer (normalised to Tcen).
+        Qs_tilde_core, Es_tilde_core = en.secular_cool(r, rho_fes, Ta, cp, r.size)
+        Qs_tilde_bulk, Es_tilde_bulk = en.secular_cool(r, rho_fes, Ta, cp, idx)
+        Qs_tilde_fes, Es_tilde_fes = Qs_tilde_core-Qs_tilde_bulk,  Es_tilde_core-Es_tilde_bulk
+
+        # Qs_tilde = -rho_fes*cp_fes * (4/3)*np.pi*(prm.r_cmb**3 - r_fes**3) * (core.T_cmb/core.Tcen)
 
         #Normlised heatflow at r_fes before we modify it.
         Q_tilde = (core.Q_rs-core.Qr)/core.dT_dt
 
-        Q_rs = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde))
+        Q_rs = core.Q_cmb * (1 - Qs_tilde_fes/(Q_tilde + Qs_tilde_fes))
 
         #If a stable layer is being used, then heat flow is always at least adiabatic at rs
         #Or that defined by conductive profile.
@@ -116,11 +100,15 @@ def evolve(model):
         #Heat flow extracted from bulk
         core.Q_rs  = Q_rs #core.Q_cmb - Qs_tilde * core.dT_dt #* (core.T_cmb/core.Tcen)
 
-        #If no stable layer solution, Q_fes is set here. Also add on secular cooling of FeS layer
+        #If no stable layer solution, Q_fes is set here. Also add on secular cooling of FeS layer.
+        #These are handled in stable layer model instead if being used.
         if not prm.stable_layer:
-            core.Q_fes = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde)) #heat flow at r_fes
-            core.Qs += Qs_tilde * core.dT_dt* (core.T_cmb/core.Tcen) #Secular cooling of FeS layer.
-            #No need to add Ek and Es as both are zero for an isothermal FeS layer.
+            core.Q_fes = core.Q_cmb * (1 - Qs_tilde_fes/(Q_tilde + Qs_tilde_fes)) #heat flow at r_fes
+            core.Qs += Qs_tilde_fes * core.dT_dt* (core.T_cmb/core.Tcen) #Secular cooling of FeS layer.
+
+            #!# Add on Ek and Es contributions from FeS layer
+            core.Ek += en.cond_entropy(Ta[idx:], Ta_grad[idx:], k[idx:], r[idx:], r.size-idx)
+            core.Es += Es_tilde_fes*dT_dt
 
 
         

@@ -55,7 +55,8 @@ required_params['FeS_conductivity'] = 'Uniform thermal conductivity of liquid Fe
 
 optional_params = leeds_thermal.optional_params
 
-
+#!# indicates where method has changed from leeds_thermal
+#*# indicates where method has changed from conducting FeS model.
 #!# evolve method to account for FeS layer that is thermally conducting
 def evolve(model):
     '''Evolve the stable layer, taking into account the presence of a liquid FeS layer.
@@ -82,7 +83,6 @@ def evolve(model):
 
     #Check if conditions are sub-adiabatic and a layer should begin to grow
     check  = func.pure_thermal_check(model)
-    check = True #!# Always a least an FeS layer.
 
     #Initialise energies/entropies associated with this state.
     Qs, Es, Ek, Ej = 0, 0, 0, 0
@@ -95,6 +95,7 @@ def evolve(model):
     sl.baro_grad = 0
 
     #Run the method.
+
     r_initial = sl.profiles['r']
     T_initial = sl.profiles['T']
     dr = r_initial[1]-r_initial[0]
@@ -144,7 +145,7 @@ def evolve(model):
 
     dT_dt = (T2-T1)/model.dt
     
-    cp  = np.interp(r1, core.profiles['r'], core.profiles['cp']) #!# Just consider values below FeS
+    cp  = np.interp(r1, core.profiles['r'], core.profiles['cp'])
     rho = np.interp(r1, core.profiles['r'], core.profiles['rho']) 
     Qs = -4*np.pi*trapezoid(r1, r1**2*dT_dt*rho*cp)[-1]
     Es = -4*np.pi*trapezoid(r1, r1**2*dT_dt*rho*cp*(1/T1[-1] - 1/T1))[-1]
@@ -239,7 +240,7 @@ def conducting_FeS(model):
     r_prof_fes = sl.profiles['fes']['r']
     T_prof_fes = sl.profiles['fes']['T']
 
-    #!# Temp in the FeS layer. 
+    #!# Temp in the Bulk. 
     #!# Tracking profiles specific to FeS layer helps make sure Q_fes can be calculated
     r_prof_bulk = sl.profiles['bulk']['r']
     T_prof_bulk = sl.profiles['bulk']['T']
@@ -284,6 +285,9 @@ def conducting_FeS(model):
             r = np.append(r_prof_bulk[:-1], r_prof_fes)
             T = np.append(T_prof_bulk[:-1], T_prof_fes)
 
+            #*# Radial profiles actually only include bulk with convecting FeS (no need to calculate diffusion in FeS)
+            r, T = r_prof_bulk, T_prof_bulk
+
         else:
             #!# Just the FeS layer is conducting
             r, T = r_prof_fes, T_prof_fes
@@ -308,6 +312,13 @@ def conducting_FeS(model):
         Tcen = model.core.Tcen + dTa_dt*(time_gone+dt_small)
 
         Ta, Ta_grad = prof.adiabat(r, Tcen, core_adiabat), prof.adiabat_grad(r, Tcen, core_adiabat)
+
+
+        #*# Evolution of convecting FeS layer
+
+
+
+
 
         #!# Fixed value if bulk is convecting
         if sl.ADR > 1:
