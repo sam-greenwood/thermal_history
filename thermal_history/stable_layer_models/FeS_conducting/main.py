@@ -35,7 +35,7 @@ def setup(model):
     #Initialise bulk and fes profiles
     sl.profiles['bulk'] = {'r': np.array([]),
                             'T': np.array([])}
-    sl.profiles['fes'] = {'r': np.linspace(r_fes, prm.r_cmb, 3)} #This will remain fixed throughout simulation.
+    sl.profiles['fes'] = {'r': np.linspace(r_fes, prm.r_cmb, 10)} #This will remain fixed throughout simulation.
 
     #Adiabatic initial temperature
     sl.profiles['fes']['T'] = prof.adiabat(sl.profiles['fes']['r'], core.Tcen, prm.core_adiabat_params)
@@ -45,6 +45,10 @@ def setup(model):
     #Reset profiles with new temperature profile
     prof.basic_profiles(model)
     prof.temp_dependent_profiles(model)
+
+    #New boolean user can set to fix layer size constant in time.
+    if not hasattr(sl, 'hold'):
+        sl.hold = False
 
 #Add on extra required parameters
 required_params = leeds_thermal.required_params
@@ -97,15 +101,21 @@ def evolve(model):
     #Run the method.
     r_initial = sl.profiles['r']
     T_initial = sl.profiles['T']
-    dr = r_initial[1]-r_initial[0]
+
+    #*# FeS profiles
+    FeS_prof = sl.profiles['fes']
+    Bulk_prof = sl.profiles['bulk']
 
     #Calculate Ek
-    if dr == 0: #Layer is still of 0 thickness
-        Ek == 0
-    else:
-        dT_dr = np.gradient(T_initial, dr, edge_order=2)
-        k = np.interp(r_initial, core.profiles['r'], core.profiles['k'])
-        Ek = 4*np.pi*trapezoid(r_initial, k*(dT_dr/T_initial)**2*r_initial**2)[-1]
+    #*# FeS layer contribution. Doesn't always have even grid spacing across bulk+FeS layer.
+    dT_dr = np.gradient(FeS_prof['T'], FeS_prof['r'], edge_order=2)
+    Ek = 4*np.pi*trapezoid(FeS_prof['r'], prm.FeS_conductivity * (dT_dr/FeS_prof['T'])**2 * FeS_prof['r']**2)[-1]
+
+    if core.rs < r_fes:
+        #*# Contribution from stratified bulk
+        dT_dr = np.gradient(Bulk_prof['T'], Bulk_prof['r'], edge_order=2)
+        k     = np.interp(Bulk_prof['r'], core.profiles['r'][:fes_idx], core.profiles['k'][:fes_idx])
+        Ek   += 4*np.pi*trapezoid(Bulk_prof['r'], k * (dT_dr/Bulk_prof['T'])**2 * Bulk_prof['r']**2)[-1]
 
     #Time step model
     conducting_FeS(model)  #!# Changed to our new method
@@ -244,20 +254,23 @@ def conducting_FeS(model):
     r_prof_bulk = sl.profiles['bulk']['r']
     T_prof_bulk = sl.profiles['bulk']['T']
         
-
     core.Q_fes = 4*np.pi*r_fes**2 * prm.FeS_conductivity * -(T_prof_fes[1]-T_prof_fes[0])/(r_prof_fes[1]-r_prof_fes[0])
-
 
     #!# ADR defined at r_fes rather than r_cmb
     sl.ADR = core.Q_fes/core.profiles['Qa'][core._fes_idx-1]
+    core.ADR_s = sl.ADR #Overwrite old value form core model (FeS core model always gives=1)
 
     #For stability, reduce the time step size when layer is relatively thin.
     factor = 1
     time_gone = 0
     while time_gone < model.dt:
 
+        if sl.hold and layer_thickness == prm.FeS_size:
+            #!# Layer should not grow and just the FeS layer should be calculated
+            r, T = r_prof_fes, T_prof_fes
+
         #!# Only solve for FeS layer unless ADR<1
-        if sl.ADR < 1:
+        elif sl.ADR < 1:
 
             
             #!# Number of grid points in the bulk this iteration
@@ -283,6 +296,7 @@ def conducting_FeS(model):
             #!# Radial profiles over whole conducting region
             r = np.append(r_prof_bulk[:-1], r_prof_fes)
             T = np.append(T_prof_bulk[:-1], T_prof_fes)
+            
 
         else:
             #!# Just the FeS layer is conducting
@@ -310,7 +324,7 @@ def conducting_FeS(model):
         Ta, Ta_grad = prof.adiabat(r, Tcen, core_adiabat), prof.adiabat_grad(r, Tcen, core_adiabat)
 
         #!# Fixed value if bulk is convecting
-        if sl.ADR > 1:
+        if r[0] == r_fes:
             lb = Ta[0]
             lb_type = 0
         else:
@@ -332,6 +346,7 @@ def conducting_FeS(model):
             #Just FeS layer. diffusion_uneven() gives same results as diffusion() from leeds_thermal if
             #uniform grid is used. Can support an uneven grid spacing if needed.
             T_new = diffusion_uneven(T, r, dt_small, D_T, k, dk_dr, (lb_type,lb),(ub_type, ub)) #!# Uneven grid.
+
         else:
 
             #!# For diffusion solution with a discontinuity, constant material properties in each
@@ -355,7 +370,6 @@ def conducting_FeS(model):
             #!# Diffusion solution for a discontinuity in k.
             T_new = diffusion_discont(T, r, r_fes, dt_small, D_lower, D_upper, k_lower, k_upper, (lb_type, lb), (ub_type, ub))
 
-
         #!# Only need to change layer thickness if stable layer will grow/receed.
         if sl.ADR < 1 and layer_thickness > prm.FeS_size:
             #Mix layer (experimental function, not used by default)
@@ -365,7 +379,11 @@ def conducting_FeS(model):
 
             #Determine if layer should retreat
             #!# Just consider areas below FeS layer
-            r_s_new = func.retreat_layer(r[r<r_fes], T_new[r<r_fes], np.zeros(r.size)[r<r_fes], Tcen, 0, core_adiabat, (resolution,min_res,max_res), alpha[r<r_fes], 0)
+            #*# New boolean model.stable_layer.hold allows layer size to be fixed manually.
+            if sl.hold:
+                r_s_new = r[0]
+            else:
+                r_s_new = func.retreat_layer(r[r<r_fes], T_new[r<r_fes], np.zeros(r.size)[r<r_fes], Tcen, 0, core_adiabat, (resolution,min_res,max_res), alpha[r<r_fes], 0)
 
             #while core is stratified
             if r[0] == 0 and sl.ADR < 1:

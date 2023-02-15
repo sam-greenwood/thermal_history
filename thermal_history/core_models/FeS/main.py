@@ -116,11 +116,14 @@ def evolve(model):
         #Heat flow extracted from bulk
         core.Q_rs  = Q_rs #core.Q_cmb - Qs_tilde * core.dT_dt #* (core.T_cmb/core.Tcen)
 
-        #If no stable layer solution, Q_fes is set here. Also add on secular cooling of FeS layer
+        core.ADR_s = core.Q_rs/core.Qa_rs #Reset ADiabat Ratio.
+
+        core.Q_fes = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde)) #heat flow at r_fes
+
+        #If no stable layer solution add on secular cooling of FeS layer
         if not prm.stable_layer:
-            core.Q_fes = core.Q_cmb * (1 - Qs_tilde/(Q_tilde + Qs_tilde)) #heat flow at r_fes
             core.Qs += Qs_tilde * core.dT_dt* (core.T_cmb/core.Tcen) #Secular cooling of FeS layer.
-            #No need to add Ek and Es as both are zero for an isothermal FeS layer.
+            #No need to add Ek and Es as both are zero for an isothermal FeS layer (which is assumed if no stable layer method).
 
 
         
