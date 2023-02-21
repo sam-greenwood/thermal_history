@@ -38,7 +38,7 @@ def setup(model):
                             'T': np.array([])}
     sl.profiles['fes'] = {'r': np.linspace(r_fes, prm.r_cmb, 3)} #This will remain fixed throughout simulation.
 
-    #Adiabatic initial temperature
+    #Adiabatic initial temperature for FeS layer.
     sl.profiles['fes']['T'] = prof.adiabat(sl.profiles['fes']['r'], core.Tcen, prm.core_adiabat_params)
     model.core.Q_fes = core.profiles['Qa'][core._fes_idx-1]
 
@@ -448,9 +448,20 @@ def conducting_FeS(model):
     sl.profiles['bulk']['T'] = T #*#
 
     #*# FeS profiles just need their adiabat cooling
-    # sl.profiles['fes']['r'] = r[-r_prof_fes.size:]
-    sl.profiles['fes']['T'] += dT_dt_fes*(sl.profiles['fes']['T']/sl.profiles['fes']['T'][0])*model.dt
+    #Old depreciated method
+    # sl.profiles['fes']['T'] += dT_dt_fes*(sl.profiles['fes']['T']/sl.profiles['fes']['T'][0])*model.dt
 
+    #Update temperature of base of layer
+    sl.profiles['fes']['T'][0] += dT_dt_fes * model.dt
+
+    #Factor drop in adiabatic temperature from r=0 to r=r_fes. Just because this function always uses r=0 as reference point.
+    factor = prof.adiabat(r_fes, 1, prm.core_adiabat_params)
+
+    #Update rest of FeS layer.
+    sl.profiles['fes']['T'] = prof.adiabat(sl.profiles['fes']['r'], sl.profiles['fes']['T'][0]/factor, prm.core_adiabat_params)
+
+
+    
     #Save new profiles. Keep original profiles until update() has been called.
     # sl._next_profiles['r'] = r
     # sl._next_profiles['T'] = T
