@@ -1,7 +1,7 @@
 Description = 'Based on leeds model but with support for a liquid FeS layer. This is under development!'
 
 import numpy as np
-from ...utils.optimised_funcs import polyval
+from ...utils.optimised_funcs import polyval, trapezoid
 
 #Import redefined profiles functions. Need to at least import it to run the code
 #and refefine functions from the leeds model.
@@ -91,6 +91,10 @@ def evolve(model):
         #Normalised secular cooling for an isothermal FeS layer (normalised to Tcen).
         #Not used if stable layer solution is included.
         Qs_tilde = -rho_fes*cp_fes * (4/3)*np.pi*(prm.r_cmb**3 - r_fes**3) * (core.T_cmb/core.Tcen)
+
+        if prm.stable_layer:
+            r_prof_fes, T_prof_fes = (model.stable_layer.profiles['fes'][x] for x in ['r', 'T'])
+            Qs_tilde = -4*np.pi*trapezoid(r_prof_fes, prm.FeS_density * prm.FeS_cp * (T_prof_fes/T_prof_fes[0]) * r_prof_fes**2)[-1] * (T_prof_fes[0]/core.Tcen) #Normalised to Tcen
 
         #Normlised heatflow at r_fes before we modify it.
         Q_tilde = (core.Q_rs-core.Qr)/core.dT_dt
