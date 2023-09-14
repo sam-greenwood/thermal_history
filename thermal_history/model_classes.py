@@ -172,7 +172,7 @@ class ThermalModel(BaseModel):
         self.mantle       = Mantle(method_module=methods['mantle'])
         self.core         = Core(method_module=methods['core'])
         self.stable_layer = StableLayer(method_module=methods['stable_layer'])
-
+        
         regions = ['mantle', 'core', 'stable_layer'] #Order they are calculated
         setup_order = ['core', 'stable_layer', 'mantle'] #setup must be run in radius order to calculate gravity field.
         #Add any additional regions to the planet here^
@@ -187,7 +187,7 @@ class ThermalModel(BaseModel):
             for r in self.regions:
                 print('-',r)
 
-        #Set intitial conditions
+        #Set initial conditions
         for r in [x for x in setup_order if not methods[x]==None]:
             getattr(self,r).setup(self)
 
