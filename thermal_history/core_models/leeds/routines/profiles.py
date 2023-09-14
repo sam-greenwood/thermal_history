@@ -192,13 +192,22 @@ def temp_dependent_profiles(model, setup=False):
 
     #Conductivity (may depend on temperature depending on user choise of params.)
     k = conductivity(r, P, T, prm.core_conductivity_params)
+    
+    #CD - added in AP conductivity
+    if prm.core_conductivity_params[0] == 'AP':
+        k = prm.core_conductivity_params[1].astype('float')*core.conc_l[0]**2 + \
+        prm.core_conductivity_params[2].astype('float')*core.conc_l[0]    + \
+        prm.core_conductivity_params[3].astype('float')*P**3  + \
+        prm.core_conductivity_params[4].astype('float')*P**2  + \
+        prm.core_conductivity_params[5].astype('float')*P     + \
+        prm.core_conductivity_params[6].astype('float')*T     + \
+        prm.core_conductivity_params[7].astype('float')
+            
     core.profiles['k'] = k
     ##########################
 
     #Adiabatic heat flow. Depends on k and hence may depend on T.
     core.profiles['Qa'] = adiabatic_heat_flow(r, k, core.Tcen,  prm.core_adiabat_params)
-
-
 
 
 # @njit
@@ -555,7 +564,11 @@ def conductivity(r, P, T, conductivity_params):
 
     elif conductivity_params[0] == 'r':
         k = polyval(conductivity_params[1:].astype('float')[::-1], r)
-
+        
+    elif conductivity_params[0] == 'AP':
+        "Set outside routine as k depends on P, T and c"
+        k = 1
+        
     else:
         raise ValueError('Unless only one value is given in core_conductivity_params, first value must be a string denoting if polynomials are in r/T/P')
 
