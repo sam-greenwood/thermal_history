@@ -149,7 +149,7 @@ def melting_curve(model):
         Tm_fe = riv_Tm(P, 0, params)
         Tm = riv_Tm(P, core.conc_l[0], params)
         dTm = Tm-Tm_fe
-
+        
         dTm_dP = riv_dTm_dP(P, core.conc_l[0], params)
 
     else:
@@ -171,7 +171,7 @@ def riv_Tm(P, S, melting_params):
     Tm = Tm0 + Tm1*P + ... TmN*P**N
 
     '''
-
+    
     N = int(np.sqrt(len(melting_params))) - 1
 
     if not type(P) == np.ndarray:
@@ -185,6 +185,7 @@ def riv_Tm(P, S, melting_params):
 
         for j in range(0,N+1):
             temp += np.dot(melting_params[c+j], S**j)
+            
 
         Tm += temp*P**i
         c += N+1
