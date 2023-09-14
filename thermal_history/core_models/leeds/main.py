@@ -10,7 +10,9 @@ from .routines import profiles as prof
 from .routines import energy as en
 from .routines import chemistry as chem
 from .routines import snow as snow
-
+from .routines import rivoldini_eos as eos
+# CD - changed this import of rivoldini_eos from 
+# import rivoldini_eos as eos
 
 import logging
 logger = logging.getLogger(__name__)
@@ -295,7 +297,6 @@ def evolve(model):
         for i in range(core.conc_l.size):
             i_flux = en.mass_flux(rho[ri_idx:], prm.alpha_c[i], alpha_D[i], prm.diffusivity_c[i], 0, g[ri_idx:])
             Ea += en.mass_diffusion(r[ri_idx:], i_flux, alpha_D[i], T[ri_idx:])
-
     #############################
     core.alpha_D = alpha_D
 
@@ -453,7 +454,20 @@ def evolve(model):
     core.dTm = Tm[ri_idx] - Tm_fe[ri_idx]
     core.T_upper = Ta[rs_idx]
     core.L_ri = L[ri_idx]
+    
+   
+# check if at any depth conc_l is above eutectic or within stability field
 
+    if prm.core_melting_params[0] == 'XX': 
+        if not all(np.greater_equal(core.profiles["conc_l"],eos.pdFeC().xg(1e-9*P))):
+            model.critical_failure = True
+            model.critical_failure_reason = 'Reached end of graphite stability field!'
+            logger.critical(f'it: {model.it}. Reached end of graphite stability field!')
+    else:    
+        if not all(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
+            model.critical_failure = True
+            model.critical_failure_reason = 'Reached eutectic Fe-S eutectic!'
+            logger.critical(f'it: {model.it}. Reached eutectic Fe-S eutectic!')
 
 
 def update(model):
@@ -586,6 +600,7 @@ def progress(model):
 
     if model.parameters.iron_snow:
         text += f'    snow depth: {(prm.r_cmb-core.r_snow)/1000:.2f} km'
+        text += f'    liquid le cen and cmb: ({core.profiles["conc_l"][0]*100:.2f} {core.profiles["conc_l"][-1]*100:.2f}) wt%'
     else:
         text += f'    ri: {core.ri/1000:.2f} km'  
 
