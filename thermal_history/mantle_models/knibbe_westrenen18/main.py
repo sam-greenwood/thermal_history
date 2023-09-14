@@ -59,13 +59,13 @@ def setup(model):
 
     mantle.Qr_present = Q_total
     mantle.H_present  = H
-
+    
 
 def evolve(model):
     '''
     Calculates one timestep of the model.
     '''
-
+    
     #Read in variables from model and parameters file
     mantle = model.mantle
     prm    = model.parameters
@@ -147,12 +147,9 @@ def evolve(model):
 
     mantle.test = np.array([dT_lower, dT_upper])
 
-    # breakpoint()
-
     #TBL sizes. TESTING
     delta_upper = (rl-rc)*(Ra_c/Ra)**b_factor
 
-    # breakpoint()
     if np.abs(T_cmb-T_lower)>5:
         delta_lower = (kappa*eta_lower*Rai_c / (alpha*rho_man*g*(np.abs(dT_lower))))**b_factor #Use abs(dT_lower) otherwise it is not defined
     else:
@@ -243,8 +240,9 @@ def evolve(model):
 
     # T[4:] = T_lid - (r[4:]-rl)*(T_lid-T_surf)/(r_surf-rl)
 
-    #Mantle Melting
+    #Mantle Melting, KvW eqn A3
     D_ref = (0.2/3)*(prm.r_surf**3 - prm.r_cmb**3)/prm.r_surf**2
+
 
     #Calculate volume of mantle melting and volumetric average melt fraction
     V_melt, ma, melting_radii, dm_dT, profiles = melt.mantle_melt(D_ref, mantle.D_crust, r, rho, g, T, prm.mantle_solidus_params, prm.mantle_liquidus_params)
@@ -257,12 +255,13 @@ def evolve(model):
 
         Vm     = (4/3)*np.pi*(rl**3 - rc**3)
 
-        #Convection velocity
+        #Convection velocity, KvW eqn A7
         U = prm.convection_velocity * (Ra/Ra_c)**(2*1/3)
 
-        #Crustal growth
+        #Crustal growth, KvW eqn A1
         d_crust_dt = U * ma * V_melt / (4*np.pi*r_surf**3)
-
+        
+        # KvW eqn A8
         St = latent_heat*V_melt*dm_dT / (cp*Vm)
 
         #Thermal energy associated with crustal growth.
@@ -298,6 +297,7 @@ def evolve(model):
     #Save variables
     mantle.dD_crust_dt = d_crust_dt
     mantle.St = St
+    mantle.Vmelt = V_melt
 
     mantle.mass = mass
 
