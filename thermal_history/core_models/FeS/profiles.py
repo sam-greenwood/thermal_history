@@ -11,7 +11,6 @@ from .. import leeds
 import logging
 logger = logging.getLogger(__name__)
 
-
 #Redefine basic_profiles to include FeS layer
 def basic_profiles(model, setup=False):
     '''Main function setting radial profiles for core properties.
@@ -59,6 +58,7 @@ def basic_profiles(model, setup=False):
     #Add to profiles after pressure has been calculated
 
     #Find indexes for the start of each layer
+    
     for i in range(n):
         if r[i] == ri:
             core._ri_idx = i
@@ -174,7 +174,6 @@ def basic_profiles(model, setup=False):
     core.profiles = profiles
 
 leeds.routines.profiles.basic_profiles = basic_profiles
-
 
 #Redefine basic_profiles to include FeS layer conductivity
 def temp_dependent_profiles(model, setup=False):
