@@ -45,7 +45,7 @@ def evolve(model):
     #For the conducting method, initial thermal structure depends on Q_cmb
     #so must be set here rather than in setup. This resets the bulk temperature
     #to be consistent with T_cmb and Q_cmb.
-    if model.it == 1 and prm.stable_layer:
+    if model.it == 1 and prm.stable_layer and prm.sl_method_name == 'FeS_conducting':
 
         #Initial temp in FeS layer is steady state profile fit to T_cmb and Q_cmb
 
