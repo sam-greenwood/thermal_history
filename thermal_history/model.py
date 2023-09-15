@@ -50,7 +50,7 @@ def setup_model(parameters, core_method =         None,
     methods = {'core':         core_method,
                'stable_layer': stable_layer_method,
                'mantle':       mantle_method}
-
+    
     #Check which regions should be modelled have been specified
     for r in methods.keys():
         assert hasattr(parameters, r), f"parameters has no attribute {r}. Set to True or False"
@@ -106,6 +106,10 @@ def setup_model(parameters, core_method =         None,
         for key, value in optional_params[r].items():
             if not hasattr(parameters, key):
                 setattr(parameters, key, value[1])
+
+    parameters.core_method_name = core_method
+    parameters.sl_method_name   = stable_layer_method
+    parameters.mantle_method_name = mantle_method
 
     return ThermalModel(parameters, methods, verbose=verbose, log_file=log_file)
 
@@ -166,7 +170,7 @@ class Parameters:
                     spec.loader.exec_module(params[i])
 
         else:
-            #An exisiting parameters class has been provided
+            #An existing parameters class has been provided
             params = [parameters]
 
 
