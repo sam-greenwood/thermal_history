@@ -120,34 +120,36 @@ def snow_evolution(model):
         # dTm_dc = -Tm_fe[snow_idx]/(1+core.initial_conc_l) #Assumes WN melting curve
         if prm.core_melting_params[0] == 'RI': #Use Rivoldini data
             dTm_dc = chem.riv_dTm_dc(P[snow_idx], core.conc_l[0], prm.core_melting_params[1:].astype('float64'))
+            x_eu   = eos.xeFeS(1e-9*P[snow_idx])
 
         # *** INCLUDED RUCKRIEMEN PARAMETERISATION ***
         elif prm.core_melting_params[0] == 'RU': #Ruckriemen parameterisation
 
             params = prm.core_melting_params[1:].astype('float64') #Don't use first string
 
-            T_eutectic = params[0] - params[1]*(P[snow_idx]-params[2])
+            T_eutectic = eos.TeFeS(P[snow_idx]/1e9)
             Tm_fes = params[3] + params[4]*P[snow_idx] - params[5]*P[snow_idx]**2
-            #x_eu = 0.11 + 0.187*np.exp(-0.065e-9*P[snow_idx])
-            x_eu=eos.xeFeS(1e-9*P[snow_idx])
+            x_eu   = eos.xeFeS(1e-9*P[snow_idx])
             
+            if not all(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
+                model.critical_failure = True
+                model.critical_failure_reason = 'Reached Fe-S eutectic!'
+                logger.critical(f'it: {model.it}. Reached Fe-S eutectic!')
+                       
             dTm_dc = (Tm_fes-T_eutectic)/(0.3647-x_eu)
-            if core.conc_l[0] <= x_eu:
-                model.critical_failure =True 
-                #Set flag that critical failure has occured.
-                model.critical_failure_reason ='Eutectic concentration is reached in the deeper core below FeS layer'
-                logger.critical(f'it:{model.it}. Eutectic concentration is reached in the deeper core below FeS layer. Deeper core should be freezing.')
 
-        
         elif prm.core_melting_params[0] == 'XX':
             FeC=prm.core_melting_params[1]
             dTm_dc=FeC.dTmdx(core.conc_l[0],P[snow_idx]*1e-9)
             # check if C in convecting core is in the graphite stability field
-            #print(P[0]*1e-9,P[snow_idx]*1e-9,core.conc_l[0],FeC.xg(P[0]*1e-9),FeC.xg(P[snow_idx]*1e-9),T[snow_idx],FeC.Txg(P[snow_idx]*1e-9),T[0],FeC.Txg(0))
             if T[0] <= FeC.Txg(P[snow_idx]*1e-9) or core.conc_l[0]<=FeC.xg(P[0]*1e-9) :
                 model.critical_failure =True 
                 model.critical_failure_reason ='Outside graphite stability zone in r=0!'
                 logger.critical(f'it:{model.it}. Outside graphite stability zone in r=0!')
+            if not all(np.greater_equal(core.profiles["conc_l"],eos.pdFeC().xg(1e-9*P))):
+                model.critical_failure = True
+                model.critical_failure_reason = 'Composition outside stability field!'
+                logger.critical(f'it: {model.it}. Composition outside stability field!')
                 
         else:
             dTm_dc = 0

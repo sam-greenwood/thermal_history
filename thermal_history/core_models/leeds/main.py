@@ -398,6 +398,9 @@ def evolve(model):
 
     core.Qs = Qs_tilda*dT_dt
     core.Es = Es
+    
+    core.Qsnow = Q_snow_tilde*dT_dt
+    core.Esnow = E_snow_tilde*dT_dt
 
     core.Ek = Ek
     core.Eh = Eh
@@ -455,20 +458,14 @@ def evolve(model):
     core.T_upper = Ta[rs_idx]
     core.L_ri = L[ri_idx]
     
-   
-# check if at any depth conc_l is above eutectic or within stability field
+#   Chk snow eutectic here!
+    if all(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
+        model.critical_failure = True
+        model.critical_failure_reason = 'Reached eutectic Fe-S eutectic!'
+        logger.critical(f'it: {model.it}. Reached eutectic Fe-S eutectic!')
 
-    if prm.core_melting_params[0] == 'XX': 
-        if not all(np.greater_equal(core.profiles["conc_l"],eos.pdFeC().xg(1e-9*P))):
-            model.critical_failure = True
-            model.critical_failure_reason = 'Reached end of graphite stability field!'
-            logger.critical(f'it: {model.it}. Reached end of graphite stability field!')
-    else:    
-        if not all(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
-            model.critical_failure = True
-            model.critical_failure_reason = 'Reached eutectic Fe-S eutectic!'
-            logger.critical(f'it: {model.it}. Reached eutectic Fe-S eutectic!')
-
+    #print(core.profiles["conc_l"])
+    #print(eos.xeFeS(1e-9*P))
 
 def update(model):
     '''
