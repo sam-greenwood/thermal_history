@@ -71,8 +71,22 @@ def melting_curve(model):
     #beginning of melting_params. If no string is given, assume values are for Alfe parameterisation.
     #Can add more conditional statements to consider more parameterisations in the furture.
 
+    # External Tm
+    if melting_params[0] == 'XX':
+        # melting T of Fe-C above eutectic based on Fei and Brosh 2014       
+        #Simple partitioning
+        #exec(melting_params[2])       
+        FeC=melting_params[1]
+        core.conc_s = 1. #C pure graphite
+        Tm=FeC.Tm(core.conc_l[0],1e-9*core.profiles['P'])
+        Tm_fe=FeC.Tm(0,1e-9*core.profiles['P']) # don not know why this is useful
+        dTm_dP=1e-9*FeC.dTmdp(core.conc_l[0],1e-9*core.profiles['P'])
+
+        return Tm_fe,Tm,dTm_dP
+        
     #Alfe 2002 method
     if melting_params[0] == 'AL' or type(melting_params[0].item()) in (float, int):
+        
         if melting_params[0]=='AL':
             params = melting_params[1:].astype('float64') #Don't pass through first string
         else:
@@ -162,7 +176,7 @@ def melting_curve(model):
         
         dTm = Tm - Tm_fe
 
-
+        
     else:
 
         raise ValueError(f'Incorrect string denoting which melting parameterisation to use. See this function (core_models.leeds.routines.chemisty.melting_curve) for valid options. Supplied core_melting_params={melting_params}')
@@ -221,3 +235,18 @@ def melting_temp_R18(r, P, conc_l, melting_params):
     Tm_fe = (Tm_fes + (Tm_fes-T_eutectic)/(0.3647-x_eu)  * (0-0.3647))
 
     return Tm_fe, Tm, dTm_dP
+
+def liquidusFeC(x,p):
+    # melting T of Fe-C for x >=eutectic and derivatives with respect to p and x. do not use if p>6GPa
+    # p in GPa x in wt
+    # xeGraphite lowest C to have graphite
+    # TeGraphite temperature at lowest C to have graphite
+    # xe=0.0429251-0.000553585*p
+    # Te=1427.77+17.7561*p
+    xeGraphite=0.0437052+0.00355333*p
+    TeGraphite=1431.19+45.3298*p
+    Tm= -973.1949862972292 - 159.45023271197547*p - 2.649550966097275*p**2 + 64212.43996334035*x + 1271.4356827385757*p*x - 222434.25817139592*x**2
+    dTmdp=-159.45023271197562 - 5.299101932194669*p + 1271.4356827385748*x
+    dTmdx=64212.43996334037 + 1271.4356827385748*p - 444868.5163427913*x
+    return {"Tm":Tm,'dTmdp':dTmdp,'dTmdx':dTmdx,"Te":TeGraphite,'xe':xeGraphite }
+    

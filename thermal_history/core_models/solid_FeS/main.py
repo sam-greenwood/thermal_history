@@ -12,6 +12,7 @@ from thermal_history.utils.optimised_funcs import linspace, polyval, trapezoid
 from ..leeds.routines import profiles as prof
 from ..leeds.routines import energy as en
 from ..leeds.routines import snow as snow
+from ..leeds.routines import rivoldini_eos as eos
 
 import logging
 logger = logging.getLogger(__name__)
@@ -71,8 +72,12 @@ def snow_evolution(model):
         # *** NOT ASSUMED ***
         # #Concentration of slurry to depress Tm to adiabatic temperature
         # conc_l_profile[snow_idx:] = snow.snow_composition(T, Tm_fe, core.initial_conc_l, snow_idx, core.conc_l[0], P, prm.core_melting_params)
-
-        conc_l_profile[snow_idx:] = float(chem.mole_frac2mass_conc([0.5], prm.mm)) #Mass fraction for pure FeS
+        
+        if prm.core_melting_params[0] == 'XX': 
+            conc_l_profile[snow_idx:] = float(chem.mole_frac2mass_conc([1.0], prm.mm)) #Mass fraction for pure C
+        else:
+            conc_l_profile[snow_idx:] = float(chem.mole_frac2mass_conc([0.5], prm.mm)) #Mass fraction for pure FeS
+        
         core.profiles.update({'conc_l': conc_l_profile})
 
         # #Move melting temperature accordingly and update latent heat
@@ -123,10 +128,27 @@ def snow_evolution(model):
 
             T_eutectic = params[0] - params[1]*(P[snow_idx]-params[2])
             Tm_fes = params[3] + params[4]*P[snow_idx] - params[5]*P[snow_idx]**2
-            x_eu = 0.11 + 0.187*np.exp(-0.065e-9*P[snow_idx])
-
+            #x_eu = 0.11 + 0.187*np.exp(-0.065e-9*P[snow_idx])
+            x_eu=eos.xeFeS(1e-9*P[snow_idx])
+            
             dTm_dc = (Tm_fes-T_eutectic)/(0.3647-x_eu)
+            if core.conc_l[0] <= x_eu:
+                model.critical_failure =True 
+                #Set flag that critical failure has occured.
+                model.critical_failure_reason ='Eutectic concentration is reached in the deeper core below FeS layer'
+                logger.critical(f'it:{model.it}. Eutectic concentration is reached in the deeper core below FeS layer. Deeper core should be freezing.')
 
+        
+        elif prm.core_melting_params[0] == 'XX':
+            FeC=prm.core_melting_params[1]
+            dTm_dc=FeC.dTmdx(core.conc_l[0],P[snow_idx]*1e-9)
+            # check if C in convecting core is in the graphite stability field
+            #print(P[0]*1e-9,P[snow_idx]*1e-9,core.conc_l[0],FeC.xg(P[0]*1e-9),FeC.xg(P[snow_idx]*1e-9),T[snow_idx],FeC.Txg(P[snow_idx]*1e-9),T[0],FeC.Txg(0))
+            if T[0] <= FeC.Txg(P[snow_idx]*1e-9) or core.conc_l[0]<=FeC.xg(P[0]*1e-9) :
+                model.critical_failure =True 
+                model.critical_failure_reason ='Outside graphite stability zone in r=0!'
+                logger.critical(f'it:{model.it}. Outside graphite stability zone in r=0!')
+                
         else:
             dTm_dc = 0
 
@@ -208,7 +230,6 @@ def snow_evolution(model):
 
 leeds.snow_evolution = snow_evolution
 
-import matplotlib.pyplot as plt
 def update(model):
     '''
     Updates parameters based on rates of change calculatied in main fuction.
@@ -225,6 +246,7 @@ def update(model):
 
     #Update with RoC
     core.Tcen   += model.dt*core.dT_dt
+    #core.Tcmb    =profiles['T'][-1] # not updated in final result, why?
     core.conc_l += model.dt*core.dc_dt
     core.mf_l    = chem.mass_conc2mole_frac(core.conc_l, prm.mm)
     core.mf_s    = chem.mass_conc2mole_frac(core.conc_s, prm.mm)
