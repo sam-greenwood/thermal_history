@@ -185,16 +185,9 @@ This tells the documentation tool sphinx to add the markdown to the docstring us
 
 ## 4. Known Issues
 
-Sub/Super adiabatic oscillation with a stratified layer in the core.
-As a stratified layer begins to grows, it can do so even after Q_c > Q_a due to the thermal diffusion timescale being in mismatch with the system timestep. The layer can then cool faster than the adiabat and it will be eroded. At this point the core assumes an adiabatic profile which is inconsistent, causing an increase in Qc which causes a layer to form. This process can recur indefinitely whilst the layer is thin and easily eroded.
-By setting mix_layer = True (False by default) any super-adiabatic sub region of the stable is mixed.
-The temperature profile will then maintain a more realistic form as the layer begins to mix from the CMB down towards rs, reducing the jump in Tc when the layer finally erodes away.
-This routine takes the spatial grid, the quantity to conserve (in this case the thermal energy) minus the factor of temperature, and the temperature relative to the adiabat. It then mixes the profile to ensure the gradient is equal to or greater than 0 everywhere whilst conserving the total heat.
-This oscillation often only occurs at high light element concentrations.
-This routine has not been thoroughly tested. Use at your own discretion.
+Sub/Super adiabatic oscillation with a stratified layer in the core. As a stratified layer begins to grows, it can do so even after Q_c > Q_a due to the thermal diffusion timescale being in mismatch with the system timestep. The layer can then cool faster than the adiabat and it will be eroded. At this point the core assumes an adiabatic profile which is inconsistent, causing an increase in Qc which causes a layer to form. This process can recur indefinitely whilst the layer is thin and easily eroded. By setting mix_layer = True (False by default) any super-adiabatic sub region of the stable is mixed. The temperature profile will then maintain a more realistic form as the layer begins to mix from the CMB down towards rs, reducing the jump in Tc when the layer finally erodes away. This routine takes the spatial grid, the quantity to conserve (in this case the thermal energy) minus the factor of temperature, and the temperature relative to the adiabat. It then mixes the profile to ensure the gradient is equal to or greater than 0 everywhere whilst conserving the total heat. This oscillation often only occurs at high light element concentrations. This routine has not been thoroughly tested. Use at your own discretion.
 
-Mantle melting.
-Whilst the logic of the mantle melting appears to be correct, there is a bug whereby a mantle melt volume > 0 is not possible without the fine scale temperature being super-solidus at some point initially. This issue is under investigation.
+Mantle melting. Whilst the logic of the mantle melting appears to be correct, there is a bug whereby a mantle melt volume > 0 is not possible without the fine scale temperature being super-solidus at some point initially. This issue is under investigation.
 
 
 ![image](https://github.com/sam-greenwood/thermal_history/assets/17293082/ac9e7c85-c780-45d8-888d-4ebd8df93710)
