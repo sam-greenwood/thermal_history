@@ -554,7 +554,7 @@ def RHS_discont(y, x, x_discont, dt, D_lower, D_upper, k_lower, k_upper, dx, low
 
 
 
-def diffusion_discont_variable(y, x, x_discont dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='spherical'):
+def diffusion_discont_variable(y, x, x_discont, dt, D, k, dk_dx, lower_bc, upper_bc, constant=0, coord='spherical'):
 
     '''Numerical diffusion solution on an unevenly spaced grid, with a discontinuity in the conductivity. D and k must both be either a single number or 
     both an array of same size as x/y. dk_dx is either a single number or a single number/array if D/k are arrays.
