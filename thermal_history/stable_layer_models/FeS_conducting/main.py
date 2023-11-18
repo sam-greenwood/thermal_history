@@ -14,7 +14,7 @@ from .. import leeds_thermal
 
 from ...core_models.leeds.routines import profiles as prof
 from ..leeds_thermal.routines import functions as func
-from .routines.diffusion import diffusion_uneven, diffusion_discont
+from .routines.diffusion import diffusion_uneven, diffusion_discont, diffusion_discont_variable
 
 #Define main functions based on leeds_thermal
 # evolve = leeds_thermal.evolve
@@ -352,23 +352,27 @@ def conducting_FeS(model):
             #!# For diffusion solution with a discontinuity, constant material properties in each
             #!# region are assumed for now.
 
+            #Now we allow variable k/D
             #Check values are constant
-            for x in [rho, cp, k]:
-                if np.max(np.abs(np.diff(x[r<r_fes]))) > 0:
-                    logger.critical('Diffusion solution with discontinuity in k assumes rho, cp, k are constant in radius in bulk')
+            # for x in [rho, cp, k]:
+            #     if np.max(np.abs(np.diff(x[r<r_fes]))) > 0:
+            #         logger.critical('Diffusion solution with discontinuity in k assumes rho, cp, k are constant in radius in bulk')
 
-                if np.max(np.abs(np.diff(x[r>r_fes]))) > 0:
-                    logger.critical('Diffusion solution with discontinuity in k assumes rho, cp, k are constant in radius in FeS')
+            #     if np.max(np.abs(np.diff(x[r>r_fes]))) > 0:
+            #         logger.critical('Diffusion solution with discontinuity in k assumes rho, cp, k are constant in radius in FeS')
 
             #!# Thermal diffusivity
-            D_lower = k[0]/(rho[0]*cp[0])
-            D_upper = k[-1]/(rho[0]*cp[0])
+            # D_lower = k[0]/(rho[0]*cp[0])
+            # D_upper = k[-1]/(rho[0]*cp[0])
 
-            k_lower = k[0]
-            k_upper = k[-1]
+            # k_lower = k[0]
+            # k_upper = k[-1]
 
             #!# Diffusion solution for a discontinuity in k.
-            T_new = diffusion_discont(T, r, r_fes, dt_small, D_lower, D_upper, k_lower, k_upper, (lb_type, lb), (ub_type, ub))
+            # T_new = diffusion_discont(T, r, r_fes, dt_small, D_lower, D_upper, k_lower, k_upper, (lb_type, lb), (ub_type, ub))
+
+            T_new = diffusion_discont_variable(T, r, r_fes, dt_small, D_T, k, dk_dr, (lb_type, lb), (ub_type, ub))
+
 
         #!# Only need to change layer thickness if stable layer will grow/receed.
         if sl.ADR < 1 and layer_thickness > prm.FeS_size:

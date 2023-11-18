@@ -617,7 +617,7 @@ def diffusion_discont_variable(y, x, x_discont, dt, D, k, dk_dx, lower_bc, upper
     u_type = upper_bc[0]
 
     #Discritise into linear equations (Ay=B) under Crank-Nicolson scheme.
-    lower, main, upper = LHS_discont_variable(x, x_discont, dx, dt, D, k, dk_dx, l_type, u_type, coord=coord)
+    lower, main, upper = LHS_discont_variable(x, dx, x_discont, dt, D, k, dk_dx, l_type, u_type, coord=coord)
 
     #Solve for n iterations
     y_new = y.copy()
