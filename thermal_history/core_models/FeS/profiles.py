@@ -216,7 +216,8 @@ def temp_dependent_profiles(model, setup=False):
 
 
     #Conductivity (may depend on temperature depending on user choise of params.)
-    k = conductivity(r, P, T, prm.core_conductivity_params)
+    k = conductivity(r, P, T, core.conc_l, prm.core_conductivity_params)
+    
     core.profiles['k'] = k
     core.profiles['k'][core._fes_idx:] = prm.FeS_conductivity
     ##########################
