@@ -191,17 +191,7 @@ def temp_dependent_profiles(model, setup=False):
 
 
     #Conductivity (may depend on temperature depending on user choise of params.)
-    k = conductivity(r, P, T, prm.core_conductivity_params)
-    
-    #CD - added in AP conductivity
-    if prm.core_conductivity_params[0] == 'AP':
-        k = prm.core_conductivity_params[1].astype('float')*core.conc_l[0]**2 + \
-        prm.core_conductivity_params[2].astype('float')*core.conc_l[0]    + \
-        prm.core_conductivity_params[3].astype('float')*P**3  + \
-        prm.core_conductivity_params[4].astype('float')*P**2  + \
-        prm.core_conductivity_params[5].astype('float')*P     + \
-        prm.core_conductivity_params[6].astype('float')*T     + \
-        prm.core_conductivity_params[7].astype('float')
+    k = conductivity(r, P, T, core.conc_l, prm.core_conductivity_params)
             
     core.profiles['k'] = k
     ##########################
@@ -522,7 +512,7 @@ def adiabat_grad(r, Tcen, adiabat_params):
     return Ta
 
 
-def conductivity(r, P, T, conductivity_params):
+def conductivity(r, P, T, LE, conductivity_params):
     '''Thermal conductivity
 
     Calculates the thermal conductivity that, depending on the supplied parameters,
@@ -539,6 +529,8 @@ def conductivity(r, P, T, conductivity_params):
         pressure
     T : array
         temperature
+    LE : array
+        light element
     conductivity_params : array
         Conducitvity polynomial coefficients
 
@@ -566,9 +558,13 @@ def conductivity(r, P, T, conductivity_params):
         k = polyval(conductivity_params[1:].astype('float')[::-1], r)
         
     elif conductivity_params[0] == 'AP':
-        "Set outside routine as k depends on P, T and c"
-        k = 1
-        
+        k = conductivity_params[1].astype('float')*LE[0]**2 + \
+            conductivity_params[2].astype('float')*LE[0]    + \
+            conductivity_params[3].astype('float')*P**3  + \
+            conductivity_params[4].astype('float')*P**2  + \
+            conductivity_params[5].astype('float')*P     + \
+            conductivity_params[6].astype('float')*T     + \
+            conductivity_params[7].astype('float')                
     else:
         raise ValueError('Unless only one value is given in core_conductivity_params, first value must be a string denoting if polynomials are in r/T/P')
 
