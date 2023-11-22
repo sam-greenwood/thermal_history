@@ -58,6 +58,8 @@ def setup(model):
     sl.profiles['T'] = prof.adiabat(sl.profiles['r'], core.Tcen, prm.core_adiabat_params)
     sl.T_grad_s      = prof.adiabat_grad(core.rs, core.Tcen, prm.core_adiabat_params)
 
+    sl.profiles['k'] = np.ones(len(sl.profiles['r']))
+
 
 def evolve(model):
     '''Evolve the stable layer
@@ -192,6 +194,9 @@ def evolve(model):
     sl.profiles['r'], sl.profiles['T'] = r, T
 
     sl.profiles['Ta'] = prof.adiabat(r, core.Tcen, prm.core_adiabat_params)
+    
+    k_save = np.interp(r, core.profiles['r'], core.profiles['k'])
+    sl.profiles['k'] = k_save
 
     sl.T_cmb, sl.T_s= T[-1], T[0]
 
