@@ -33,14 +33,14 @@ def setup(model):
     r_fes = prm.r_cmb - prm.FeS_size
 
     #Initialise bulk and fes profiles
-    sl.profiles['bulk'] = {'r': np.array([]),
-                            'T': np.array([])}
-    sl.profiles['fes'] = {'r': np.linspace(r_fes, prm.r_cmb, 10)} #This will remain fixed throughout simulation.
+    sl.profiles['bulk'] = {'r': np.array([]), 'T': np.array([]), 'k': np.array([])}
+    sl.profiles['fes']  = {'r': np.linspace(r_fes, prm.r_cmb, 50)} #This will remain fixed throughout simulation.
+
+    sl.profiles['fes']['k']  = np.ones(len(sl.profiles['fes']['r'])) * prm.FeS_conductivity
 
     #Adiabatic initial temperature
     sl.profiles['fes']['T'] = prof.adiabat(sl.profiles['fes']['r'], core.Tcen, prm.core_adiabat_params)
     model.core.Q_fes = core.profiles['Qa'][core._fes_idx-1]
-
 
     #Reset profiles with new temperature profile
     prof.basic_profiles(model)
@@ -189,7 +189,10 @@ def evolve(model):
     r, T= sl.profiles['r'], sl.profiles['T']
 
     sl.profiles['r'], sl.profiles['T'] = r, T
-
+    
+    k_save = np.interp(r, core.profiles['r'], core.profiles['k'])
+    sl.profiles['k'] = k_save
+    
     sl.profiles['Ta'] = prof.adiabat(r, core.Tcen, prm.core_adiabat_params)
 
     sl.T_cmb, sl.T_s= T[-1], T[0]
@@ -432,10 +435,12 @@ def conducting_FeS(model):
 
 
             r, T = np.append(r_prof_bulk, r_prof_fes), np.append(T_prof_bulk, T_new[r>=r_fes])
+            k_save = np.interp(r, core.profiles['r'], core.profiles['k'])
 
         else:
             r_s_new = r_fes
             T = T_new
+            k_save = np.interp(r, core.profiles['r'], core.profiles['k'])
 
         time_gone += dt_small
   
@@ -448,9 +453,11 @@ def conducting_FeS(model):
     #!# Save separate bulk and FeS profiles.
     sl.profiles['bulk']['r'] = r[:-r_prof_fes.size]
     sl.profiles['bulk']['T'] = T[:-r_prof_fes.size]
+    sl.profiles['bulk']['k'] = k_save[:-r_prof_fes.size]
 
     sl.profiles['fes']['r'] = r[-r_prof_fes.size:]
     sl.profiles['fes']['T'] = T[-r_prof_fes.size:]
+    sl.profiles['fes']['k'] = k_save[-r_prof_fes.size:]
 
     sl.ds_dt = (r_s_new - r_s_original)/model.dt
 
