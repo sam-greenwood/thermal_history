@@ -243,12 +243,16 @@ def evolve(model):
     #Mantle Melting, KvW eqn A3
     D_ref = (0.2/3)*(prm.r_surf**3 - prm.r_cmb**3)/prm.r_surf**2
 
-
     #Calculate volume of mantle melting and volumetric average melt fraction
     V_melt, ma, melting_radii, dm_dT, profiles = melt.mantle_melt(D_ref, mantle.D_crust, r, rho, g, T, prm.mantle_solidus_params, prm.mantle_liquidus_params)
 
-    mantle.profiles = profiles
+    if V_melt < 0.0: 
+        model.critical_failure_reason = True
+        print("T_fine > T_sol not true anywhere!")
+        logger.critical('T_fine > T_sol not true anywhere!')
 
+    mantle.profiles = profiles
+    
     mantle.melting_radii = melting_radii
 
     if V_melt > 0:
