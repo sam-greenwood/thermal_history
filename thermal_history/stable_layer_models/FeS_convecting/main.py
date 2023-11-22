@@ -34,10 +34,11 @@ def setup(model):
     r_fes = prm.r_cmb - prm.FeS_size
 
     #Initialise bulk and fes profiles
-    sl.profiles['bulk'] = {'r': np.array([]),
-                            'T': np.array([])}
-    sl.profiles['fes'] = {'r': np.linspace(r_fes, prm.r_cmb, 3)} #This will remain fixed throughout simulation.
+    sl.profiles['bulk'] = {'r': np.array([]), 'T': np.array([]), 'k': np.array([])}
+    sl.profiles['fes']  = {'r': np.linspace(r_fes, prm.r_cmb, 20)} #This will remain fixed throughout simulation.
 
+    sl.profiles['fes']['k']  = np.ones(len(sl.profiles['fes']['r'])) * prm.FeS_conductivity
+    
     #Adiabatic initial temperature for FeS layer.
     sl.profiles['fes']['T'] = prof.adiabat(sl.profiles['fes']['r'], core.Tcen, prm.core_adiabat_params)
     model.core.Q_fes = core.profiles['Qa'][core._fes_idx-1]
@@ -107,7 +108,7 @@ def evolve(model):
     #*# FeS profiles
     FeS_prof = sl.profiles['fes']
     Bulk_prof = sl.profiles['bulk']
-
+    
     #Calculate Ek
     #*# FeS layer contribution. Doesn't have even grid spacing across bulk+FeS layer.
     dT_dr = np.gradient(FeS_prof['T'], FeS_prof['r'], edge_order=2)
@@ -121,11 +122,11 @@ def evolve(model):
         
     #Time step model
     conducting_FeS(model)  #!# Changed to our new method
-
+    
     #New radial profiles
     r_new = sl._next_profiles['r']
     T_new = sl._next_profiles['T']
-
+    
     #Secular cooling. Compare final profiles to those at the beginning of the time-step.
     if r_new[0] <= r_initial[0]:  #Layer has grown
 
@@ -161,7 +162,8 @@ def evolve(model):
     Qs = -4*np.pi*trapezoid(r1, r1**2*dT_dt*rho*cp)[-1]
     Es = -4*np.pi*trapezoid(r1, r1**2*dT_dt*rho*cp*(1/T1[-1] - 1/T1))[-1]
     sl.dT_dt_s = dT_dt[0]  #Save cooling rate at base of layer
-
+    sl.dT_dt_t = dT_dt[-1] #Save cooling rate at top of layer
+    
     Ej = Es - Ek
 
     #Save energies/entropies to model attributes
@@ -197,7 +199,7 @@ def evolve(model):
     sl.T_cmb, sl.T_s= T[-1], T[0]
 
     core.T_cmb,  core.T_s = sl.T_cmb, sl.T_s
-
+    
 
 #!# Thermal method with FeS
 def conducting_FeS(model):
@@ -255,7 +257,7 @@ def conducting_FeS(model):
     #!# Tracking profiles specific to FeS layer helps make sure Q_fes can be calculated
     r_prof_bulk = sl.profiles['bulk']['r']
     T_prof_bulk = sl.profiles['bulk']['T']
-        
+    
     #*# FeS evolution
     if sl.layer_thickness > prm.FeS_size:
         core.Q_fes = 4*np.pi*r_fes**2 *model.core.profiles['k'][fes_idx-1] * -(T_prof_bulk[-1]-T_prof_bulk[-2])/(r_prof_bulk[-1]-r_prof_bulk[-2])
@@ -365,9 +367,9 @@ def conducting_FeS(model):
             #uniform grid is used. Can support an uneven grid spacing if needed.
             T_new = diffusion_uneven(T, r, dt_small, D_T, k, dk_dr, (lb_type,lb),(ub_type, ub))
 
-
             #!# Only need to change layer thickness if stable layer will grow/receed.
             if sl.ADR < 1 and layer_thickness > prm.FeS_size:
+                                
                 #Mix layer (experimental function, not used by default)
                 if prm.mix_layer:
                     T_rel = func.mix_profile(r, cp*rho*r**2, T_new-Ta)
@@ -388,7 +390,7 @@ def conducting_FeS(model):
 
                 #Grow layer
                 elif r_s_new == r[0]:
-
+                    
                     #Find radius on adiabat that matches temperature at base of layer
                     def f(guess,T,Tcen):
                         return T - prof.adiabat(guess,Tcen,core_adiabat)
@@ -398,17 +400,19 @@ def conducting_FeS(model):
                     else:
                         #!# Limit search to 0 -> r_fes
                         r_s_new = bisect(f,0,r_fes,args=(T_new[0],Tcen),maxiter=200) 
-
+                        
                 #Shrink layer
                 else:
                     #Give up if layer will still not grow after generous time step increases.
+                    #Needed at 1 instance in time to get layer growth going. 
+                    #Happens with thin layers
                     if r_s_new >= r_fes-TOL:     #!# replaced r_cmb with r_fes
-
+                    
                         #No stratification
                         r_s_new = r_fes        #!# replaced r_cmb with r_fes
                         factor = factor*2      
                         time_gone =- dt_small  #¡# Reset timer back to start
-
+                        
                         if factor > 64 or sl.ADR >= 1:
                             dt_small = model.dt - time_gone
                             factor = 1
@@ -419,7 +423,7 @@ def conducting_FeS(model):
                     r_s_new = np.min([ri_new+10e3, prm.r_cmb]) #At least 10km above ICB.
 
                 layer_thickness = r_cmb - r_s_new
-
+                
                 #Regrid domain, keeping temperature relative to the adiabat.
                 T_rel = T_new[r<=r_fes] - prof.adiabat(r[r<=r_fes], Tcen, core_adiabat)
 
@@ -442,10 +446,12 @@ def conducting_FeS(model):
             time_gone = model.dt
             r = np.array([r_fes, r_fes])
             T = prof.adiabat(r, model.core.Tcen + dTa_dt*model.dt, prm.core_adiabat_params)
+            k = np.interp(r, core.profiles['r'][:fes_idx], core.profiles['k'][:fes_idx])
 
     #!# Save separate bulk and FeS profiles.
     sl.profiles['bulk']['r'] = r #*#
     sl.profiles['bulk']['T'] = T #*#
+    sl.profiles['bulk']['k'] = np.interp(r, core.profiles['r'][:fes_idx], core.profiles['k'][:fes_idx]) #*#
 
     #*# FeS profiles just need their adiabat cooling
     #Old depreciated method
