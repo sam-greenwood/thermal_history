@@ -85,7 +85,6 @@ def setup(model):
         logger.warning(' T_cmb not consistent with given ri, resetting the temperature of the core.')
         chem.calibrate_temperature(model)
 
-
     #Calculate temperature profile and profiles that do/may depend on temperature:
     prof.temp_dependent_profiles(model, setup=True)
 
@@ -221,6 +220,8 @@ def evolve(model):
 
             #Change in melting temp with mass fraction
             dTm_dc = dTm_dmf * dmf_dc
+            
+            # CD - Could add call to chem.riv_dTmdc() to use new Cr fac with RI melting parameterisation
 
             #Change in melting temp with inner core growth
             dTm_dri = np.sum(dTm_dc*Cc)
@@ -418,6 +419,10 @@ def evolve(model):
         core.Cp = snow_dict['Cp']
         Cp = snow_dict['Cp']
         core.L_r_snow = L[snow_idx]
+        core.dTm_dc_rs = snow_dict['dTmdc_snow'] 
+        core.dTmdr_rs  = snow_dict['dTmdr_snow']
+        core.dTadr_rs  = snow_dict['dTadr_snow']
+        
     else:
         Cp = 0
 
@@ -461,8 +466,8 @@ def evolve(model):
 #   Chk snow eutectic here!
     if all(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
         model.critical_failure = True
-        model.critical_failure_reason = 'Reached eutectic Fe-S eutectic!'
-        logger.critical(f'it: {model.it}. Reached eutectic Fe-S eutectic!')
+        model.critical_failure_reason = 'Reached Fe-S eutectic!'
+        logger.critical(f'it: {model.it}. Reached Fe-S eutectic!')
 
     #print(core.profiles["conc_l"])
     #print(eos.xeFeS(1e-9*P))
@@ -717,12 +722,15 @@ def snow_evolution(model):
         if prm.core_melting_params[0] == 'RI': #Use Rivoldini data
             dTm_dc = chem.riv_dTm_dc(P[snow_idx], core.conc_l[0], prm.core_melting_params[1:].astype('float64'))
 
+        #Cp factor, normalises changing mass fraction in liquid region to changes in slurry mass fraction (which in turn uses Cl to relate to cooling)
+        #Uses DP18 eqn 20
+        Cp_snow = snow.Cp_factor(r, rho, Cl, T, M_liquid, snow_idx)
 
         if prm.use_new_Cr:
-            Cr_snow = (1/(dTm_dr + dT_dr + dTm_dc*Cc_snow))*(T[snow_idx]/core.Tcen)  #Tested this enough to determine it is required.
+            # New CORRECT expression added on 21/09/2023
+            Cr_snow  = (1/(dTm_dr - dT_dr))*(T[snow_idx]/core.Tcen - dTm_dc*Cp_snow)       
         else:
             Cr_snow = (1/(dTm_dr - dT_dr))*(T[snow_idx]/core.Tcen)
-
 
         #Normalised latent heat from moving snow zone radius (DP18 Qlb eq 14). Analagous to inner core growth.
         Ql_snow_tilde, El_snow_tilde = en.latent_heat(core.r_snow, rho*phi_snow[snow_idx], T, Cr_snow, L, snow_idx) #Multiply density by phi for just mass of freezing solid.
@@ -731,11 +739,6 @@ def snow_evolution(model):
         #(DP18 Qls and Qll)
         Ql_freezing_tilde, El_freezing_tilde = snow.latent_snow(r, rho, L,            Cl, conc_l_profile, T, snow_idx)
         Ql_melting_tilde,  El_melting_tilde  = snow.latent_snow(r, rho, -L[snow_idx], Cl, conc_l_profile, T, snow_idx)
-
-
-        #Cp factor, normalises changing mass fraction in liquid region to changes in slurry mass fraction (which in turn uses Cl to relate to cooling)
-        #Uses DP18 eqn 20
-        Cp_snow = snow.Cp_factor(r, rho, Cl, T, M_liquid, snow_idx)
 
         #Gravitational energy release from removal of solid by melting, then increasing density of the liquid region (DP18 eqn 16/17)
         Qg_freezing_tilde, Eg_freezing_tilde = snow.gravitational_freezing(r, rho, psi, prm.alpha_c[0], Cl, T, snow_idx)
@@ -757,12 +760,12 @@ def snow_evolution(model):
         Cc_snow, Cr_snow, Cp_snow = np.zeros(core.conc_l.size), 0, 0
         Ql_snow_tilde, Ql_freezing_tilde, Ql_melting_tilde, Qg_freezing_tilde, Qg_melting_tilde, Qg_snow_tilde = 0,0,0,0,0,0
         El_snow_tilde, El_freezing_tilde, El_melting_tilde, Eg_freezing_tilde, Eg_melting_tilde, Eg_snow_tilde = 0,0,0,0,0,0
+        dTm_dc, dTm_dr, dT_dr = 0,0,0
 
         if core.r_snow == 0:
             model.critical_failure = True   #Set flag that critical failure has occured.
             model.critical_failure_reason = 'Snow zone covers whole core'
             logger.critical(f'it: {model.it}. Snow zone has encompassed entire core, not defined how to continue!')
-
 
     #Normalised energies and entropies associated with the snow zone. Values to be returned to the main evolution function
     snow_dict = dict(zip(['Ql_b', 'Ql_s', 'Ql_l', 'Qg_b', 'Qg_s', 'Qg_l'], [Ql_snow_tilde, Ql_freezing_tilde, Ql_melting_tilde, Qg_snow_tilde, Qg_freezing_tilde, Qg_melting_tilde]))
@@ -771,6 +774,9 @@ def snow_evolution(model):
     snow_dict['Cr'] = Cr_snow
     snow_dict['Cc'] = Cc_snow
     snow_dict['Cp'] = Cp_snow
+    snow_dict['dTmdc_snow'] = dTm_dc
+    snow_dict['dTmdr_snow'] = dTm_dr
+    snow_dict['dTadr_snow'] = dT_dr
 
     #Update profiles
     core.profiles.update({'L': L, 'Cl': Cl, 'phi_snow': phi_snow, 'Tm': Tm, 'conc_l': conc_l_profile, 'T': T})
