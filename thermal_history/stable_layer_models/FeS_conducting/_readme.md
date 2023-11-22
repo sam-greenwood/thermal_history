@@ -1,14 +1,23 @@
 # Overview:
 
-Development model for a liquid FeS layer embedded in a bulk Fe-Si core. The model assumes the FeS layer is always conducting and the bulk core can also thermally stratify beneath it. Note the core model `FeS` must also be used in conjunction with this stable layer model.
+Development model for a liquid FeS layer embedded in a bulk Fe-Si core. 
+The model assumes the FeS layer is always conducting and the bulk core can also 
+thermally stratify beneath it. Note the core model `FeS` must also be used in 
+conjunction with this stable layer model.
 
-When the bulk is fully convecting, the conduction solution for the FeS layer is fixed to the adiabat at it's lower boundary. The heat flow from the bulk into the FeS layer is then calculated from the thermal gradient at the base of the FeS layer, used for calculating the cooling rate of the core in the next iteration:
+When the bulk is fully convecting, the conduction solution for the FeS layer 
+is fixed to the adiabat at it's lower boundary. The heat flow from the bulk 
+into the FeS layer is then calculated from the thermal gradient at the base 
+of the FeS layer, used for calculating the cooling rate of the core in the next iteration:
 
 $Q_\mathrm{FeS} = -k_\mathrm{FeS} 4\pi r_\mathrm{FeS}^2 \nabla T_\mathrm{FeS}^+$
 
-The superscript + indicates that the gradient is taken on the upper side of the boundary between bulk and FeS layer.
+The superscript + indicates that the gradient is taken on the upper side of the 
+boundary between bulk and FeS layer.
 
-When the thermal stratification reaches deeper into the bulk, the boundary condition at the base of the thermal layer and the method for advancing the layer deeper into the core is the same as the `leeds_thermal` method.
+When the thermal stratification reaches deeper into the bulk, the boundary 
+condition at the base of the thermal layer and the method for advancing the 
+layer deeper into the core is the same as the `leeds_thermal` method.
 
 
 # Expected attributes of other regions:
