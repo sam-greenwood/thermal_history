@@ -566,8 +566,17 @@ def conductivity(r, P, T, conductivity_params):
         k = polyval(conductivity_params[1:].astype('float')[::-1], r)
         
     elif conductivity_params[0] == 'AP':
+
+        LE = np.array([0.1]) #Set to fixed value for now just as an example
+        
         "Set outside routine as k depends on P, T and c"
-        k = 1
+        k = conductivity_params[1].astype('float')*LE[0]**2 + \
+            conductivity_params[2].astype('float')*LE[0]    + \
+            conductivity_params[3].astype('float')*P**3  + \
+            conductivity_params[4].astype('float')*P**2  + \
+            conductivity_params[5].astype('float')*P     + \
+            conductivity_params[6].astype('float')*T     + \
+            conductivity_params[7].astype('float')
         
     else:
         raise ValueError('Unless only one value is given in core_conductivity_params, first value must be a string denoting if polynomials are in r/T/P')

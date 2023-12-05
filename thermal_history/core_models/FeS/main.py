@@ -103,8 +103,14 @@ def evolve(model):
 
         #If a stable layer is being used, then heat flow is always at least adiabatic at rs
         #Or that defined by conductive profile.
-        if prm.stable_layer:
-            Q_rs = np.max([core.Q_fes, core.Qa_rs])
+        #If stable layer is in the bulk then the assumption from the leeds evolution makes is correct:
+        #Q_rs is the adiabatic heatflow so this only 
+        if prm.stable_layer and model.stable_layer.layer_thickness == prm.FeS_size:
+            if prm.sl_method_name == 'FeS_conducting':
+                Q_rs = core.Q_fes #Should always be conductive heat flow in this case
+            else:
+                Q_rs = np.max([core.Q_fes, core.Qa_rs]) #Should always be at least adiabatic heat flow.
+            
 
         #Correct cooling rate for combined cooling of bulk and FeS layer
         dT_dt = Q_rs/Q_tilde
