@@ -35,7 +35,7 @@ def setup(model):
     #Initialise bulk and fes profiles
     sl.profiles['bulk'] = {'r': np.array([]),
                             'T': np.array([])}
-    sl.profiles['fes'] = {'r': np.linspace(r_fes, prm.r_cmb, 10)} #This will remain fixed throughout simulation.
+    sl.profiles['fes'] = {'r': np.linspace(r_fes, prm.r_cmb, 20)} #This will remain fixed throughout simulation.
 
     #Adiabatic initial temperature
     sl.profiles['fes']['T'] = prof.adiabat(sl.profiles['fes']['r'], core.Tcen, prm.core_adiabat_params)
@@ -83,6 +83,10 @@ def evolve(model):
     T_grad_cmb = sl.Q_cmb/(-core.profiles['k'][fes_idx-1]*4*np.pi*prm.r_cmb**2)
     ADR = T_grad_cmb/core.profiles['dTa_dr'][-1]
     sl.ADR = ADR
+
+    # if model.it >= 244:
+    #     breakpoint()
+
 
     #Check if conditions are sub-adiabatic and a layer should begin to grow
     check  = func.pure_thermal_check(model)
@@ -253,11 +257,12 @@ def conducting_FeS(model):
     #!# Tracking profiles specific to FeS layer helps make sure Q_fes can be calculated
     r_prof_bulk = sl.profiles['bulk']['r']
     T_prof_bulk = sl.profiles['bulk']['T']
-        
+
     core.Q_fes = 4*np.pi*r_fes**2 * prm.FeS_conductivity * -(T_prof_fes[1]-T_prof_fes[0])/(r_prof_fes[1]-r_prof_fes[0])
 
     #!# ADR defined at r_fes rather than r_cmb
     sl.ADR = core.Q_fes/core.profiles['Qa'][core._fes_idx-1]
+
     core.ADR_s = sl.ADR #Overwrite old value form core model (FeS core model always gives=1)
 
     #For stability, reduce the time step size when layer is relatively thin.
@@ -269,10 +274,14 @@ def conducting_FeS(model):
             #!# Layer should not grow and just the FeS layer should be calculated
             r, T = r_prof_fes, T_prof_fes
 
-        #!# Only solve for FeS layer unless ADR<1
-        elif sl.ADR < 1:
 
-            
+        elif layer_thickness == prm.FeS_size and sl.ADR > 1:
+            #!# Just the FeS layer is conducting
+            r, T = r_prof_fes, T_prof_fes
+
+        #Otherwise give the core a change to stratify
+        else:
+
             #!# Number of grid points in the bulk this iteration
             n_points = int(np.max([min_res,layer_thickness*resolution]))
             n_points = int(np.min([max_res,n_points]))
@@ -298,9 +307,9 @@ def conducting_FeS(model):
             T = np.append(T_prof_bulk[:-1], T_prof_fes)
             
 
-        else:
-            #!# Just the FeS layer is conducting
-            r, T = r_prof_fes, T_prof_fes
+        # else:
+        #     #!# Just the FeS layer is conducting
+        #     r, T = r_prof_fes, T_prof_fes
 
         #Set timestep
         dt_small = model.dt*factor
@@ -375,7 +384,7 @@ def conducting_FeS(model):
 
 
         #!# Only need to change layer thickness if stable layer will grow/receed.
-        if sl.ADR < 1 and layer_thickness > prm.FeS_size:
+        if layer_thickness > prm.FeS_size: #sl.ADR < 1 and layer_thickness > prm.FeS_size:
             #Mix layer (experimental function, not used by default)
             if prm.mix_layer:
                 T_rel = func.mix_profile(r, cp*rho*r**2, T_new-Ta)
