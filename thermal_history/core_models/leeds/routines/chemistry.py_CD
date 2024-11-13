@@ -40,7 +40,7 @@ def melting_curve(model):
     this would be represented as core_melting_params = ['WN', Tl0, 1, Tl1, Tl2]
 
     'RI': Uses a polynomial fit to Rivoldini's EOS model. Polynomial coefficients are for both Pressure and Compositional dependence
-    and are calculated in the included stand-alone script riv_pre_compute_poly.py.
+    and are calculated in the included stand-alone script riv_pre_compute_poly.py. 
 
     Parameters
     ----------
@@ -71,19 +71,8 @@ def melting_curve(model):
     #beginning of melting_params. If no string is given, assume values are for Alfe parameterisation.
     #Can add more conditional statements to consider more parameterisations in the furture.
 
-    # external
-    if melting_params[0] == 'external':
-        # melting T external
-        #Simple partitioning
-        FeX=melting_params[1]
-        core.conc_s = core.conc_l * prm.partition_coeff
-        Tm=FeX.Tm(core.conc_l[0],1e-9*core.profiles['P'])
-        Tm_fe=FeX.Tm(0,1e-9*core.profiles['P'])
-        dTm_dP=1e-9*FeX.dTmdp(core.conc_l[0],1e-9*core.profiles['P'])
-        dTm = Tm-Tm_fe
-
     #Alfe 2002 method
-    elif melting_params[0] == 'AL' or type(melting_params[0].item()) in (float, int):
+    if melting_params[0] == 'AL' or type(melting_params[0].item()) in (float, int):
         if melting_params[0]=='AL':
             params = melting_params[1:].astype('float64') #Don't pass through first string
         else:
@@ -160,7 +149,7 @@ def melting_curve(model):
         Tm_fe = riv_Tm(P, 0, params)
         Tm = riv_Tm(P, core.conc_l[0], params)
         dTm = Tm-Tm_fe
-
+        
         dTm_dP = riv_dTm_dP(P, core.conc_l[0], params)
 
     else:
@@ -175,14 +164,14 @@ def riv_Tm(P, S, melting_params):
     '''
     Calculate melting temperature given polynomial coefficients (to degree N) for pressure and composition.
 
-    Tm0 = melting_params[0] + melting_params[1]*S + melting_params[2]*S**2 + ....
+    Tm0 = melting_params[0] + melting_params[1]*S + melting_params[2]*S**2 + .... 
     Tm1 = melting_params[N+1] + ...
     TmN = ....
 
     Tm = Tm0 + Tm1*P + ... TmN*P**N
 
     '''
-
+    
     N = int(np.sqrt(len(melting_params))) - 1
 
     if not type(P) == np.ndarray:
@@ -196,6 +185,7 @@ def riv_Tm(P, S, melting_params):
 
         for j in range(0,N+1):
             temp += np.dot(melting_params[c+j], S**j)
+            
 
         Tm += temp*P**i
         c += N+1
@@ -340,7 +330,7 @@ def mole_frac2mass_conc(mf, mm):
     ----------
     mf : array
         mole fractions of light elements
-    mm : array
+    mm : array 
         molar masses of iron followed by light elements
 
     Returns
@@ -367,7 +357,7 @@ def mass_conc2mole_frac(conc, mm):
     ----------
     conc : array
         mass fractions of light elements
-    mm : array
+    mm : array 
         molar masses of iron followed by light elements
 
     Returns

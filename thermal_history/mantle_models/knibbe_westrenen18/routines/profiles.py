@@ -30,6 +30,8 @@ def liquidus(pressure, liquidus_params):
     return T
 
 def solidus(pressure, solidus_params):
+    
+    """Eqn A6 ofKvW18 """
 
     T = polyval(np.array(solidus_params[::-1]), pressure)
 

@@ -207,7 +207,7 @@ def evolve(model):
                 dTm_dmf = 0
             else:
                 dTm_dmf = -Tm_fe[ri_idx]*prm.kb/core.profiles['dS'][ri_idx]
-
+                            
             #Calculate forward diff gradient in mole fraction with mass concentration for each LE
             dmf_dc = np.zeros(core.conc_l.size)
             for i in range(core.conc_l.size):
@@ -464,7 +464,7 @@ def evolve(model):
     core.L_ri = L[ri_idx]
     
 #   Chk snow eutectic here!
-    if all(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
+    if any(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
         model.critical_failure = True
         model.critical_failure_reason = 'Reached Fe-S eutectic!'
         logger.critical(f'it: {model.it}. Reached Fe-S eutectic!')

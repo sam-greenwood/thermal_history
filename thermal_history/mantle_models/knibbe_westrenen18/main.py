@@ -30,6 +30,9 @@ def setup(model):
     mantle.Dl = cp.deepcopy(prm.stagnant_lid_thickness)
     mantle.D_crust = prm.r_surf - prm.r_crust
 
+    # CD - add
+    mantle.U = 0
+    mantle.max = 0
 
     #Calculate the total budget of radiogenic heating at present. Used for calculating Qr at each timestep.
 
@@ -53,7 +56,7 @@ def setup(model):
     H = np.array([1e-11*(1288/265), 7e-12*(90/20), 3.5e-12*(90/20), 2e-12*(155/69)])
     H = H/np.exp(np.log(2)*(4.3e9*prm.ys)/HPE_half_lives)
 
-    #Present day total radiogenic heating assuming a 38km crust.
+    #Present day total radiogenic heating assuming a 38km crust. B2 at t_present
     Q_total =   H*prm.crust_density                  *(4/3)*np.pi*(prm.r_surf**3 - r_crust**3) \
               + H*prm.HPE_fraction*prm.mantle_density*(4/3)*np.pi*(r_crust**3    - prm.r_cmb**3)
 
@@ -195,13 +198,13 @@ def evolve(model):
     #Half lives in seconds. Must be the same as defined in setup() above
     HPE_half_lives = np.array([1.25e9, 7.04e8, 4.47e9, 1.40e10])*prm.ys
 
-    #Total amount of radiogenic heating in the mantle+crust
+    #Total amount of radiogenic heating in the mantle+crust. B1
     Q_K, Q_U235, Q_U238, Q_Th = mantle.Qr_present * np.exp(np.log(2)*age/HPE_half_lives)
 
     #Crustal heating rate, W/kg
     H = np.sum(mantle.H_present * np.exp(np.log(2)*age/HPE_half_lives))
 
-    #Mantle heating rate, W/kg
+    #Mantle heating rate, W/kg. B3
     H_man = (np.sum([Q_K, Q_U235, Q_U238, Q_Th]) - H * rho_crust * (4/3)*np.pi*(r_surf**3-r_crust**3))/mass_mantle
 
     #Radiogenic heating totals
@@ -271,6 +274,9 @@ def evolve(model):
         #Thermal energy associated with crustal growth.
         crust_term = (rho_crust*latent_heat + rho_crust*cp_crust*(T_upper-T_lid))*d_crust_dt
 
+        #CD print extras
+        mantle.U = U
+        mantle.ma = ma
 
     else:
         d_crust_dt = 0
@@ -292,7 +298,7 @@ def evolve(model):
     mantle.Q_conv = 4*np.pi*rl**2 * F_m
     mantle.Q_lid  = 4*np.pi*rl**2 * F_lid
     mantle.Q_vol  = 4*np.pi*rl**2 * crust_term
-
+    
     epsilon = Tm/T_upper
     epsilon = 1 #KW keep this as 1
     mass = (4*np.pi/3)*(rl**3-rc**3)*rho_man

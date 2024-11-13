@@ -564,7 +564,16 @@ def conductivity(r, P, T, LE, conductivity_params):
             conductivity_params[4].astype('float')*P**2  + \
             conductivity_params[5].astype('float')*P     + \
             conductivity_params[6].astype('float')*T     + \
-            conductivity_params[7].astype('float')                
+            conductivity_params[7].astype('float')    
+                        
+        if len(conductivity_params)==11:
+            r_fes  = conductivity_params[8].astype('float')
+            r_fade = conductivity_params[9].astype('float')
+            k_fes  = conductivity_params[10].astype('float')
+             
+            sigmoid =  1./(1.+np.exp(-(r-r_fes)*5./r_fade))
+            ksig    = k * (1.-sigmoid) + k_fes * sigmoid
+            k = ksig
     else:
         raise ValueError('Unless only one value is given in core_conductivity_params, first value must be a string denoting if polynomials are in r/T/P')
 

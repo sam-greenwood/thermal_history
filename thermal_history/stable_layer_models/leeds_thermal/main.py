@@ -100,6 +100,7 @@ def evolve(model):
         sl.dT_dt_s = 0
         sl._next_profiles['r'] = np.ones(prm.max_resolution)*prm.r_cmb
         sl._next_profiles['T'] = prof.adiabat(sl._next_profiles['r'], core.Tcen, prm.core_adiabat_params)
+        sl._next_profiles['k'] = np.ones(prm.max_resolution)*core.profiles['k'][-1]
 
     #Otherwise run the method.
     else:
@@ -195,7 +196,7 @@ def evolve(model):
 
     sl.profiles['Ta'] = prof.adiabat(r, core.Tcen, prm.core_adiabat_params)
     
-    k_save = np.interp(r, core.profiles['r'], core.profiles['k'])
+    k_save = np.interp(r, core.profiles['r'], core.profiles['k'])    
     sl.profiles['k'] = k_save
 
     sl.T_cmb, sl.T_s= T[-1], T[0]
@@ -219,9 +220,10 @@ def update(model):
     #Update profiles
     sl.profiles['r'] = sl._next_profiles['r']
     sl.profiles['T'] = sl._next_profiles['T']
+    #sl.profiles['k'] = sl._next_profiles['k']
     sl.profiles['Ta'] = prof.adiabat(sl.profiles['r'], core.Tcen, prm.core_adiabat_params)
     sl.T_grad_s = prof.adiabat_grad(core.rs, core.Tcen, prm.core_adiabat_params)
-
+    
     #Update core profiles if no core model is being used.
     if not prm.core:
         prof.basic_profiles(model)
@@ -459,6 +461,10 @@ def pure_thermal_method(model):
     #Save new profiles. Keep original profiles until update() has been called.
     sl._next_profiles['r'] = r
     sl._next_profiles['T'] = T
+        
+    k_save = np.interp(r, core.profiles['r'], core.profiles['k'])        
+    
+    sl._next_profiles['k'] = k_save
 
     sl.ds_dt = (r_s_new - r_s_original)/model.dt
 

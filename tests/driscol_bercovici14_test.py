@@ -6,6 +6,9 @@ their results and still produces a thermal catastrophe. Only the last 1 Ga is mo
 produced by the code before the catastophe occurs.
 """
 
+import sys
+sys.path.append('C:\\Users\\earcd\\Documents\\GitHub\\thermal_history')
+
 from tests.driscol_bercovici14_params import Q_surface
 
 def test_driscol_bercovici14():
@@ -19,8 +22,10 @@ def test_driscol_bercovici14():
     model.time = 4.5e9*prm.ys #Start from present day
     dt = -1e6*prm.ys          #Iterate backwards in time.
 
-    for i in range(1000):
+    for i in range(2900):
         model.evolve(dt, print_freq=100)
+        
+    model.write_data("DB14.pik", overwrite=True)
 
     assert model.core.ri == 0, 'Inner core should have melted by 1 Ga.'
 

@@ -109,7 +109,7 @@ def evolve(model):
 
     nu_upper = viscosity_reference*np.exp(Av/(Rg*Tm))/10
     nu_lower = nu_upper*f_visco
-
+    
     dT_upper = np.abs(Ta_upper-T_surf)
     delta_upper = D*((kappa*nu_upper*Rac)/((D**3)*alpha*g*dT_upper))**(1/3)
 

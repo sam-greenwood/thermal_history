@@ -13,7 +13,7 @@ def mantle_melt(D_ref, D_crust, r, rho, g, T, solidus_params, liquidus_params):
     T_fine = np.interp(r_fine, r, T)
     
     # KvW eqn A2
-    T_sol = prof.solidus(P_fine, solidus_params) + (D_crust/D_ref)* 150 
+    T_sol = prof.solidus(P_fine, solidus_params) + (D_crust/D_ref)* 150  #KvW eqn A2
     T_liq = prof.liquidus(P_fine, liquidus_params) 
 
     mask = np.zeros(r_fine.size)

@@ -10,3 +10,9 @@ __pycache__/
 docs/_source/thermal_history*.rst
 docs/_source/API_index.rst
 docs/_build/
+tests/DB14.pik
+tests/.ipynb_checkpoints/DB14_test-checkpoint.ipynb
+thermal_history/core_models/leeds/routines/chemistry.py_AR
+thermal_history/core_models/leeds/routines/chemistry.py_CD
+thermal_history/core_models/leeds/routines/chemistry.py_AR
+thermal_history/core_models/leeds/routines/chemistry.py_CD
