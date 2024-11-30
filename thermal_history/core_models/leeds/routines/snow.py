@@ -132,7 +132,28 @@ def snow_composition(Ta,Tm_fe,initial_conc,snow_index, conc_l, P, melting_params
 
     n = snow_index
 
-    if melting_params[0] == 'RI':
+    if melting_params[0] == 'external':
+
+         #FeX=melting_params[1]
+
+         #Difference between polynomial evalutation at guessed composition and the target temp
+         def f(guess,P,Target):
+             return melting_params[1].Tm(guess,1e-9*P) - Target
+
+         conc_l_snow = np.zeros(P[n:].size)
+
+         conc_l_snow[0] = brentq(f, 0, 1, args=(P[n],Ta[n])) #Calculate first value at interface
+
+         #Find composition that gives Tm=Ta.
+         for i in range(n+1,P.size):
+             try:
+                 #Try optimiser brackets close to the previous value for speed. We generally expect small changes in composition from grid point to grid point
+                 conc_l_snow[i-n] = brentq(f, conc_l_snow[i-n-1]-0.001, conc_l_snow[i-n-1]+0.001, args=(P[i],Ta[i]), rtol=0.0001)
+             except:
+                 #If that fails it's likely because f(a) and f(b) are not opposite signs. Try the full range of possible values
+                 conc_l_snow[i-n] = brentq(f, 0, 1, args=(P[i],Ta[i]), rtol=0.0001)
+                 
+    elif melting_params[0] == 'RI':
 
         params = melting_params[1:].astype('float64')
     

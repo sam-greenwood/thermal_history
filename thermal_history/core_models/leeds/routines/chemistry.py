@@ -73,13 +73,11 @@ def melting_curve(model):
 
     # external
     if melting_params[0] == 'external':
-        # melting T external
         #Simple partitioning
-        FeX=melting_params[1]
         core.conc_s = core.conc_l * prm.partition_coeff
-        Tm=FeX.Tm(core.conc_l[0],1e-9*core.profiles['P'])
-        Tm_fe=FeX.Tm(0,1e-9*core.profiles['P'])
-        dTm_dP=1e-9*FeX.dTmdp(core.conc_l[0],1e-9*core.profiles['P'])
+        Tm=melting_params[1].Tm(core.conc_l[0],1e-9*core.profiles['P'])
+        Tm_fe=melting_params[1].Tm(0.,1e-9*core.profiles['P'])
+        dTm_dP=1e-9*melting_params[1].dTm_dp(core.conc_l[0],1e-9*core.profiles['P'])
         dTm = Tm-Tm_fe
 
     #Alfe 2002 method

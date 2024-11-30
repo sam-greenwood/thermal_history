@@ -11,7 +11,7 @@ from .routines import energy as en
 from .routines import chemistry as chem
 from .routines import snow as snow
 from .routines import rivoldini_eos as eos
-# CD - changed this import of rivoldini_eos from 
+# CD - changed this import of rivoldini_eos from
 # import rivoldini_eos as eos
 
 import logging
@@ -36,6 +36,23 @@ def setup(model):
     #Core density polynomials
     rho_l = prm.core_liquid_density_params
     rho_s = prm.core_solid_density_params
+
+# check if configuration can work with iron snow
+    if prm.iron_snow:
+        if not(prm.core_melting_params[0] == 'RI' or prm.core_melting_params[0] == 'WN' or prm.core_melting_params[0] == 'external'):
+            model.critical_failure = True
+            model.critical_failure_reason = 'Iron snow only with WN, RI, or external liquidii!'
+            logger.critical('Iron snow only with WN, RI, or external liquidii!')
+
+        if prm.conc_l.size>1:
+            model.critical_failure = True
+            model.critical_failure_reason = 'Iron snow only for 1 light element!'
+            logger.critical('Iron snow only for 1 light element!')
+
+        if not (prm.partition_coeff[0]==0):
+            model.critical_failure = True
+            model.critical_failure_reason = 'Iron snow only if light element partitioning in Fe is 0 !'
+            logger.critical('Iron snow only if light element partitioning in Fe is 0 !')
 
     #Set initial conditions
     core.ri   = copy.deepcopy(prm.ri)
@@ -199,40 +216,50 @@ def evolve(model):
         Cc = 4*np.pi*r[ri_idx]**2*rho[ri_idx]*(core.conc_l-core.conc_s)/M_conv
 
         if prm.use_new_Cr:
-            #Change in melting temp with mole fraction. Assumes AL melting temperature parameterisation.
-            if core.profiles['dS'][ri_idx] == 0:
-                dTm_dmf = 0
-            elif type(prm.core_melting_params[0]) == str and not prm.core_melting_params[0] == 'AL':
-                logger.warning('Change in melting temp with mole fraction is only implemented with \'AL\' melting curve parameterisation. Defaulting to 0.')
-                dTm_dmf = 0
-            else:
-                dTm_dmf = -Tm_fe[ri_idx]*prm.kb/core.profiles['dS'][ri_idx]
-                            
-            #Calculate forward diff gradient in mole fraction with mass concentration for each LE
-            dmf_dc = np.zeros(core.conc_l.size)
-            for i in range(core.conc_l.size):
-                _mf = copy.copy(core.mf_l)
-                _mf[i] += 0.001
-                _mass = chem.mole_frac2mass_conc(_mf, prm.mm)
+            #Change in melting temp with mole fraction.
+           if type(prm.core_melting_params[0]) == str and prm.core_melting_params[0] == 'AL':
+                #Assumes AL melting temperature parameterisation.
+                if core.profiles['dS'][ri_idx] == 0:
+                    dTm_dmf = 0
+                elif type(prm.core_melting_params[0]) == str and not prm.core_melting_params[0] == 'AL':
+                    logger.warning('Change in melting temp with mole fraction is only implemented with \'AL\' melting curve parameterisation. Defaulting to 0.')
+                    dTm_dmf = 0
+                else:
+                    dTm_dmf = -Tm_fe[ri_idx]*prm.kb/core.profiles['dS'][ri_idx]
 
-                dmf_dc[i] = (_mf[i]-core.mf_l[i])/(_mass[i]-core.conc_l[i])
-            #############
+                #Calculate forward diff gradient in mole fraction with mass concentration for each LE
+                dmf_dc = np.zeros(core.conc_l.size)
+                for i in range(core.conc_l.size):
+                    _mf = copy.copy(core.mf_l)
+                    _mf[i] += 0.001
+                    _mass = chem.mole_frac2mass_conc(_mf, prm.mm)
 
-            #Change in melting temp with mass fraction
-            dTm_dc = dTm_dmf * dmf_dc
-            
-            # CD - Could add call to chem.riv_dTmdc() to use new Cr fac with RI melting parameterisation
+                    dmf_dc[i] = (_mf[i]-core.mf_l[i])/(_mass[i]-core.conc_l[i])
 
-            #Change in melting temp with inner core growth
-            dTm_dri = np.sum(dTm_dc*Cc)
+                #Change in melting temp with mass fraction
+                dTm_dc = dTm_dmf * dmf_dc
+
+           elif type(prm.core_melting_params[0]) == str and prm.core_melting_params[0] == 'RI':
+               dTm_dc = chem.riv_dTm_dc(P[ri_idx], core.conc_l[0], prm.core_melting_params[1:].astype('float64'))
+
+           elif type(prm.core_melting_params[0]) == str and prm.core_melting_params[0] == 'external':
+               dTm_dc=prm.core_melting_params[1].dTm_dc(core.conc_l,P[ri_idx]*1e-9)
+
+           else:
+               logger.warning('Change in melting temp with mole fraction is only implemented with \'AL\' ,\'RI\', and \'external\' melting curve parameterisation. Defaulting dTm_dri to 0.')
+               dTm_dc =np.zeros(len(core.conc_l))
+
+           #Change in melting temp with inner core growth
+           dTm_dri = np.sum(dTm_dc*Cc)
         else:
-            dTm_dri = 0
+           dTm_dri = 0
 
         #ICB velocity normalised to cooling rate
         Cr = (1/(dTm_dr-dTa_dr + dTm_dri))*(Ta[ri_idx]/core.Tcen)
 
 
     else:
+        # no inner core yet or ri=r_cmb
         Cc = np.zeros(len(core.conc_l))
         Cr = 0
 
@@ -281,7 +308,7 @@ def evolve(model):
         Qr, Er = en.radiogenic_heating((model.time-4.5e9*prm.ys), r, rho, Ta, core.M0, prm.core_h0, prm.half_life)
     else:
         Qr, Er = 0, 0
-   
+
 
 
     #Entropy of conduction down the adiabat
@@ -399,7 +426,7 @@ def evolve(model):
 
     core.Qs = Qs_tilda*dT_dt
     core.Es = Es
-    
+
     core.Qsnow = Q_snow_tilde*dT_dt
     core.Esnow = E_snow_tilde*dT_dt
 
@@ -419,10 +446,10 @@ def evolve(model):
         core.Cp = snow_dict['Cp']
         Cp = snow_dict['Cp']
         core.L_r_snow = L[snow_idx]
-        core.dTm_dc_rs = snow_dict['dTmdc_snow'] 
+        core.dTm_dc_rs = snow_dict['dTmdc_snow']
         core.dTmdr_rs  = snow_dict['dTmdr_snow']
         core.dTadr_rs  = snow_dict['dTadr_snow']
-        
+
     else:
         Cp = 0
 
@@ -462,19 +489,28 @@ def evolve(model):
     core.dTm = Tm[ri_idx] - Tm_fe[ri_idx]
     core.T_upper = Ta[rs_idx]
     core.L_ri = L[ri_idx]
-    
-#   Chk snow eutectic here!
-    if any(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):        
-        model.critical_failure = True
-        model.critical_failure_reason = 'Reached Fe-S eutectic!'
-        logger.critical(f'it: {model.it}. Reached Fe-S eutectic!')
 
-    #print(core.profiles["conc_l"])
-    #print(eos.xeFeS(1e-9*P))
+# check if at any depth conc_l is above eutectic or within stability field
+# only works for RI and external liquidus
+# need to have a min max fence for all liquidii to make this test more generic
+# we should not have a call to eos here
+
+    if prm.core_melting_params[0] == 'external':
+        if any(np.greater(core.profiles["conc_l"],prm.core_melting_params[1].conc_max(1.e-9*P))) or any(np.less(core.profiles["conc_l"],prm.core_melting_params[1].conc_min(1.e-9*P))):
+            model.critical_failure = True
+            model.critical_failure_reason = 'Composition outside liquidus definition range!'
+            logger.critical(f'it: {model.it}. Composition outside liquidus definition range!')
+
+    elif prm.core_melting_params[0] == 'RI':
+        if any(np.greater_equal(core.profiles["conc_l"],eos.xeFeS(1e-9*P))):
+            print('Reached eutectic Fe-S eutectic!',core.profiles["conc_l"],eos.xeFeS(1e-9*P))
+            model.critical_failure = True
+            model.critical_failure_reason = 'Reached eutectic Fe-S eutectic!'
+            logger.critical(f'it: {model.it}. Reached eutectic Fe-S eutectic!')
 
 def update(model):
     '''
-    Updates parameters based on rates of change calculatied in main fuction.
+    Updates parameters based on rates of change calculated in main function.
 
     Parameters
     ----------
@@ -504,7 +540,7 @@ def update(model):
 
     profiles['Tm_fe'], profiles['Tm'], profiles['dTm_dP'] = chem.melting_curve(model)
 
-        
+
     #New snow/ICB radius
     if prm.iron_snow:
 
@@ -527,7 +563,7 @@ def update(model):
 
     #Melting temperature constrained to temperature profile with iron snow
     if prm.iron_snow:
-    
+
         flag = snow.check_top_down_freezing(profiles['r'], profiles['T'], profiles['Tm'])
         if not flag:
             model.critical_failure = True
@@ -591,7 +627,7 @@ def progress(model):
     -------
     String
         String of text to be printed to screen.
-    '''  
+    '''
 
     core = model.core
     prm = model.parameters
@@ -604,7 +640,7 @@ def progress(model):
         text += f'    snow depth: {(prm.r_cmb-core.r_snow)/1000:.2f} km'
         text += f'    liquid le cen and cmb: ({core.profiles["conc_l"][0]*100:.2f} {core.profiles["conc_l"][-1]*100:.2f}) wt%'
     else:
-        text += f'    ri: {core.ri/1000:.2f} km'  
+        text += f'    ri: {core.ri/1000:.2f} km'
 
     return text
 
@@ -718,9 +754,20 @@ def snow_evolution(model):
         # dTm_dr = (Tm[snow_idx-2]-Tm[snow_idx-1])/(r[snow_idx-2]-r[snow_idx-1])
         dT_dr  = (T[snow_idx-2]-T[snow_idx-1])/  (r[snow_idx-2]-r[snow_idx-1])
 
-        dTm_dc = -Tm_fe[snow_idx]/(1+core.initial_conc_l) #Assumes WN melting curve
-        if prm.core_melting_params[0] == 'RI': #Use Rivoldini data
+        if prm.core_melting_params[0] == 'WN':
+            dTm_dc = -Tm_fe[snow_idx]/(1+core.initial_conc_l)
+
+        elif prm.core_melting_params[0] == 'RI':
             dTm_dc = chem.riv_dTm_dc(P[snow_idx], core.conc_l[0], prm.core_melting_params[1:].astype('float64'))
+            if type(dTm_dc) == np.ndarray:
+                dTm_dc=dTm_dc[0]
+
+        elif prm.core_melting_params[0] == 'external':
+            dTm_dc=prm.core_melting_params[1].dTm_dc(core.conc_l[0],P[snow_idx]*1e-9)
+        else:
+            model.critical_failure = True
+            model.critical_failure_reason = 'Snow only implemented for WN, RI, and external liquidus'
+            logger.critical(f'it: {model.it}. Snow only implemented for WN, RI, and external liquidus')
 
         #Cp factor, normalises changing mass fraction in liquid region to changes in slurry mass fraction (which in turn uses Cl to relate to cooling)
         #Uses DP18 eqn 20
@@ -728,7 +775,7 @@ def snow_evolution(model):
 
         if prm.use_new_Cr:
             # New CORRECT expression added on 21/09/2023
-            Cr_snow  = (1/(dTm_dr - dT_dr))*(T[snow_idx]/core.Tcen - dTm_dc*Cp_snow)       
+            Cr_snow  = (1/(dTm_dr - dT_dr))*(T[snow_idx]/core.Tcen - dTm_dc*Cp_snow)
         else:
             Cr_snow = (1/(dTm_dr - dT_dr))*(T[snow_idx]/core.Tcen)
 
