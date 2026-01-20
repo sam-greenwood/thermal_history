@@ -153,8 +153,7 @@ def snow_evolution(model):
                 
         else:
             dTm_dc = 0
-
- 
+             
         if prm.use_new_Cr:
             Cr_snow = (1/(dTm_dr - dT_dr + dTm_dc*Cc_snow))*(T[snow_idx]/core.Tcen)
         else:
@@ -210,6 +209,7 @@ def snow_evolution(model):
         Cc_snow, Cr_snow, Cp_snow = np.zeros(core.conc_l.size), 0, 0
         Ql_snow_tilde, Ql_freezing_tilde, Ql_melting_tilde, Qg_freezing_tilde, Qg_melting_tilde, Qg_snow_tilde = 0,0,0,0,0,0
         El_snow_tilde, El_freezing_tilde, El_melting_tilde, Eg_freezing_tilde, Eg_melting_tilde, Eg_snow_tilde = 0,0,0,0,0,0
+        dTm_dc, dTm_dr, dT_dr = 0,0,0
 
         if core.r_snow == 0:
             model.critical_failure = True   #Set flag that critical failure has occured.
@@ -224,6 +224,9 @@ def snow_evolution(model):
     snow_dict['Cr'] = Cr_snow
     snow_dict['Cc'] = Cc_snow
     snow_dict['Cp'] = Cp_snow
+    snow_dict['dTmdc_snow'] = dTm_dc
+    snow_dict['dTmdr_snow'] = dTm_dr
+    snow_dict['dTadr_snow'] = dT_dr
 
     #Update profiles
     core.profiles.update({'L': L, 'Cl': Cl, 'phi_snow': phi_snow, 'Tm': Tm, 'conc_l': conc_l_profile, 'T': T})

@@ -39,19 +39,20 @@ def setup(model):
 
 # check if configuration can work with iron snow
     if prm.iron_snow:
-        if not(prm.core_melting_params[0] == 'RI' or prm.core_melting_params[0] == 'WN' or prm.core_melting_params[0] == 'external'):
+        if not(prm.core_melting_params[0] == 'RI' or prm.core_melting_params[0] == 'WN' 
+               or prm.core_melting_params[0] == 'external' or prm.core_melting_params[0] == 'RU'):
             model.critical_failure = True
-            model.critical_failure_reason = 'Iron snow only with WN, RI, or external liquidii!'
+            model.critical_failure_reason = 'Core_model_leeds: Iron snow only with WN, RI, or external liquidii!'
             logger.critical('Iron snow only with WN, RI, or external liquidii!')
 
         if prm.conc_l.size>1:
             model.critical_failure = True
-            model.critical_failure_reason = 'Iron snow only for 1 light element!'
+            model.critical_failure_reason = 'Core_model_leeds: Iron snow only for 1 light element!'
             logger.critical('Iron snow only for 1 light element!')
 
         if not (prm.partition_coeff[0]==0):
             model.critical_failure = True
-            model.critical_failure_reason = 'Iron snow only if light element partitioning in Fe is 0 !'
+            model.critical_failure_reason = 'Core_model_leeds: Iron snow only if light element partitioning in Fe is 0 !'
             logger.critical('Iron snow only if light element partitioning in Fe is 0 !')
 
     #Set initial conditions
