@@ -72,6 +72,23 @@ def melting_curve(model):
     #Can add more conditional statements to consider more parameterisations in the furture.
 
     # External Tm
+    #
+    if melting_params[0] == "external":
+        # generic
+        # Simple partitioning
+        # exec(melting_params[2])
+
+        liquidusFeX = melting_params[1]
+        core.conc_s = 0.3647  # FeS
+        x = core.conc_l
+        p = 1e-9 * core.profiles["P"]
+        Tm = liquidusFeX(x, p)
+        Tm = Tm
+        Tm_fe = liquidusFeX(0, p) ## not melting T of Fe if x>eutectic need to fix
+        dTm_dP = 1e-9 * liquidusFeX.dTm_dP(x, p)
+
+        return Tm_fe, Tm, dTm_dP
+    
     if melting_params[0] == 'XX':
         # melting T of Fe-C above eutectic based on Fei and Brosh 2014       
         #Simple partitioning

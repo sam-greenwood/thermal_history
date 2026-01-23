@@ -151,6 +151,18 @@ def snow_evolution(model):
                 model.critical_failure_reason = 'Composition outside stability field!'
                 logger.critical(f'it: {model.it}. Composition outside stability field!')
                 
+        elif prm.core_melting_params[0] == "external":
+            p = P[snow_idx] * 1e-9
+            FeX = prm.core_melting_params[1]
+            dTm_dc = FeX.dTm_dc(core.conc_l[0], p)
+            x_eu = FeX.conc_min(p)
+            if core.conc_l[0] <= x_eu:
+                model.critical_failure = True
+                # Set flag that critical failure has occured.
+                print('Eutectic')
+                model.critical_failure_reason = "Eutectic concentration is reached."
+                logger.critical(f"it:{model.it}. Eutectic concentration is reached.")  
+                
         else:
             dTm_dc = 0
              
